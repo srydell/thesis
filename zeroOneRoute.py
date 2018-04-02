@@ -1,30 +1,10 @@
 import numpy as np
 
-# Number of rows
-N = 10
-# Number of columns
-M = 8
-sizeOfGitter = (N, M)
-
-J = 0.5
-# Temperature
-T = 1
-
-K = J/T
-
-# Initialize the gitter as NxM matrix
-gitter = np.zeros(sizeOfGitter)
-
-# Initialize starting link as some random [x, y] within the gitter
-currentLink = [np.random.randint(N), np.random.randint(M)]
-
-# Number of iterations
-n = 2
-
-def colorLink(link):
+def colorLink(gitter, link):
     """Marks link in gitter as moved to
 
     :link: 2x1 matrix
+    :gitter: NxM matrix
     :returns: link
 
     """
@@ -52,7 +32,7 @@ def isAccepted(K, linkWeight):
 
 def getDirection():
     """
-    :returns: a random direction
+    :returns: a random new direction
 
     """
 
@@ -75,11 +55,14 @@ def applyBoundaryConditions(link, sizeOfGitter, boundaryCondition):
         newLink = [ link[0] % sizeOfGitter[0], link[1] % sizeOfGitter[1] ]
         return newLink
 
-def moveDirectionIfAccepted(currentLink, direction):
+def moveDirectionIfAccepted(currentLink, direction, gitter, K, sizeOfGitter):
     """Move current in currentLink in the direction direction
 
     :currentLink: 1x2 matrix
     :direction: 1x2 matrix
+    :gitter: NxM matrix
+    :K: J/T number
+    :sizeOfGitter: 1x2 tuple
     :returns: old link if rejected, link in direction if accepted
 
     """
@@ -92,26 +75,55 @@ def moveDirectionIfAccepted(currentLink, direction):
 
     if isAccepted(K, gitter[newLink[0]][newLink[1]]):
         # Return link after it has been colored ( 0 <-> 1 )
-        return colorLink(newLink)
+        return colorLink(gitter, newLink)
     else:
         # Return link without doing anything
         return currentLink
 
-# Simulation
-# The first link has a weight of 1
-colorLink(currentLink)
-while n > 0:
-    print("The current link is:")
-    print(currentLink)
-    print("The gitter is:")
-    print(gitter)
-    print()
+def main():
+    """Main simulation function
+    """
 
-    # Get a new random direction
-    direction = getDirection()
+    J = 0.5
+    # Temperature
+    T = 1
 
-    # Move in the new direction if accepted otherwise stay
-    currentLink = moveDirectionIfAccepted(currentLink, direction)
+    K = J/T
 
-    # Decrement number of iterations
-    n -= 1
+    # Number of rows in gitter
+    N = 10
+    # Number of columns in gitter
+    M = 8
+    sizeOfGitter = (N, M)
+    
+    # Initialize the gitter as NxM matrix
+    gitter = np.zeros(sizeOfGitter)
+
+    # Initialize starting link as some random [x, y] within the gitter
+    currentLink = [np.random.randint(N), np.random.randint(M)]
+
+    # The first link has a weight of 1
+    colorLink(gitter, currentLink)
+
+    # Number of iterations
+    n = 2
+
+    # Simulation
+    while n > 0:
+        print("The current link is:")
+        print(currentLink)
+        print("The gitter is:")
+        print(gitter)
+        print()
+
+        # Get a new random direction
+        direction = getDirection()
+
+        # Move in the new direction if accepted otherwise stay
+        currentLink = moveDirectionIfAccepted(currentLink, direction, gitter, K, sizeOfGitter)
+
+        # Decrement number of iterations
+        n -= 1
+
+if __name__ == '__main__':
+    main()
