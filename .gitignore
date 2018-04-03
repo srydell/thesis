@@ -9,6 +9,12 @@
 # !exampleFile.txt
 # !exampleDir/
 
+# Files
 !.gitignore
 !zeroOneRoute.py
+!graphFunctions.py
+!isingWorm.py
 !README.md
+
+# Directories
+!literature/

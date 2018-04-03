@@ -1,4 +1,5 @@
 import numpy as np
+import time
 
 def colorLink(gitter, link):
     """Marks link in gitter as moved to
@@ -8,8 +9,13 @@ def colorLink(gitter, link):
     :returns: link
 
     """
-    # Change the gitter
-    gitter[link[0]][link[1]] = 1 if gitter[link[0]][link[1]] == 0 else 0
+    if gitter[link[0]][link[1]] == 0:
+        # Change the gitter
+        print("Should turn to one!")
+        gitter[link[0]][link[1]] = 1
+    else:
+        print("Should turn zero!")
+        gitter[link[0]][link[1]] = 0
 
     return link
 
@@ -25,19 +31,26 @@ def isAccepted(K, linkWeight):
     # Probability of being accepted
     p = np.power(np.tanh(K), 1 - linkWeight)
 
-    if np.random.random() > p:
+    if np.random.random() < p:
         return True
     else:
         return False
 
-def getDirection():
+def getDirection(pastDirection):
     """
-    :returns: a random new direction
+
+    :pastDirection: 1x2 matrix
+    :returns: a random direction
 
     """
 
     # Directions = [right, up, left, down]
-    directions = [(1, 0), (0, 1), (-1, 0), (0, -1)]
+    directions = [[1, 0], [0, 1], [-1, 0], [0, -1]]
+
+    if pastDirection:
+        # Ensure that it cannot turn around instantly
+        oppositeDirection = [-x for x in pastDirection]
+        directions.remove(oppositeDirection)
 
     return directions[np.random.randint(len(directions))]
 
@@ -55,15 +68,13 @@ def applyBoundaryConditions(link, sizeOfGitter, boundaryCondition):
         newLink = [ link[0] % sizeOfGitter[0], link[1] % sizeOfGitter[1] ]
         return newLink
 
-def moveDirectionIfAccepted(currentLink, direction, gitter, K, sizeOfGitter):
-    """Move current in currentLink in the direction direction
+def getNewLinkWithBoundaryConditions(boundaryCondition, currentLink, direction, sizeOfGitter):
+    """
 
+    :boundaryCondition: string with value in ["periodic"]
     :currentLink: 1x2 matrix
     :direction: 1x2 matrix
-    :gitter: NxM matrix
-    :K: J/T number
-    :sizeOfGitter: 1x2 tuple
-    :returns: old link if rejected, link in direction if accepted
+    :returns: newLink 1x2 matrix
 
     """
 
@@ -71,14 +82,9 @@ def moveDirectionIfAccepted(currentLink, direction, gitter, K, sizeOfGitter):
     newLink = [ currentLink[0] + direction[0], currentLink[1] + direction[1] ]
 
     # Apply boundary conditions
-    newLink = applyBoundaryConditions(newLink, sizeOfGitter, "periodic")
+    newLink = applyBoundaryConditions(newLink, sizeOfGitter, boundaryCondition)
 
-    if isAccepted(K, gitter[newLink[0]][newLink[1]]):
-        # Return link after it has been colored ( 0 <-> 1 )
-        return colorLink(gitter, newLink)
-    else:
-        # Return link without doing anything
-        return currentLink
+    return newLink
 
 def main():
     """Main simulation function
@@ -100,30 +106,47 @@ def main():
     gitter = np.zeros(sizeOfGitter)
 
     # Initialize starting link as some random [x, y] within the gitter
-    currentLink = [np.random.randint(N), np.random.randint(M)]
+    firstLink = [np.random.randint(N), np.random.randint(M)]
+    currentLink = firstLink
 
     # The first link has a weight of 1
     colorLink(gitter, currentLink)
 
     # Number of iterations
-    n = 2
+    n = 50
 
+    direction = []
     # Simulation
     while n > 0:
-        print("The current link is:")
-        print(currentLink)
-        print("The gitter is:")
-        print(gitter)
-        print()
+        # Get a new random direction that is not turning 180 degrees
+        direction = getDirection(direction)
 
-        # Get a new random direction
-        direction = getDirection()
+        newLink = getNewLinkWithBoundaryConditions("periodic", currentLink, direction, sizeOfGitter)
 
         # Move in the new direction if accepted otherwise stay
-        currentLink = moveDirectionIfAccepted(currentLink, direction, gitter, K, sizeOfGitter)
+        # probability tanh(K) to be accepted if link in direction has weight 1
+        # and probability 1 otherwise
+        if isAccepted(K, gitter[newLink[0]][newLink[1]]):
+            if currentLink == newLink:
+                print("We found a loop")
+                break
+
+            # Return link after it has been colored ( 0 <-> 1 )
+            currentLink = colorLink(gitter, newLink)
+        # Else currentLink stays the same
+
+        # TODO: Update correlation function on the fly:
+        #       Add +1 to G(i - i0) for the open path from i0 to i
 
         # Decrement number of iterations
         n -= 1
+
+        print()
+        print()
+        print()
+        print(gitter)
+        print()
+        time.sleep(1)
 
 if __name__ == '__main__':
     main()
