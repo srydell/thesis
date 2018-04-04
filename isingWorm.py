@@ -39,14 +39,16 @@ def main():
     K = J/T
 
     # Number of rows in gitter
-    N = 3
+    N = 300
     # Number of columns in gitter
-    M = 3
-    gitter, gitterSize = buildGraph(N, M)
+    M = 300
+    gitter, gitterSize = buildGraph(N, M, bc="periodic")
     
     # Initialize starting site as some random [i, j] within the gitter
     firstSite = [random.randrange(0, N), random.randrange(0, M)]
     currentSite = firstSite
+    # Track the previous site to avoid that the current turns 180 degrees
+    previousSite = None
 
     # Initialize the random number generator with current time as seed
     random.seed()
@@ -54,22 +56,19 @@ def main():
     # Number of iterations
     n = 50
 
-    previousDirection = None
-
     loop = False
     # Simulation
     # while n > 0:
     print("First site:", firstSite)
     while not loop:
-        n -= 1
-
-        newDirection, newSite = getRandomNeighbour(currentSite, gitter, previousDirection)
+        # n -= 1
+        newSite = getRandomNeighbour(site=currentSite, exceptSite=previousSite, graph=gitter)
 
         if isAccepted(K, currentSite, newSite, gitter):
             colorLinkBetween(currentSite, newSite, gitter)
 
+            previousSite = currentSite
             currentSite = newSite
-            print("current site:", currentSite)
             
             # TODO: Update correlation function on the fly:
             #       add +1 to G(i-i0) for the open path from i0 to i
