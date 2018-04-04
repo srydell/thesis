@@ -9,12 +9,19 @@
 # !exampleFile.txt
 # !exampleDir/
 
-# Files
+# --- Files ---
+# Meta
 !.gitignore
-!zeroOneRoute.py
-!graphFunctions.py
-!isingWorm.py
+!TODO.md
 !README.md
+
+# Python
+!zeroOneRoute.py
+!isingWorm.py
+!graphFunctions.py
+!plotGraph.py
 
 # Directories
 !literature/
+!figures/
+!data/
