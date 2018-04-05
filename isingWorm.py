@@ -42,7 +42,8 @@ def main():
     N = 300
     # Number of columns in gitter
     M = 300
-    gitter, gitterSize = buildGraph(N, M, bc="periodic")
+    gitterSize = (N, M)
+    gitter = buildGraph(N, M, bc="periodic")
     
     # Initialize starting site as some random [i, j] within the gitter
     firstSite = [random.randrange(0, N), random.randrange(0, M)]

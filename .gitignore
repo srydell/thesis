@@ -4,6 +4,7 @@
 # Ignore all files named .DS_Store or ending with .log
 **/.DS_Store
 **.log
+**/__pycache__
 
 # Except these
 # !exampleFile.txt
@@ -25,3 +26,4 @@
 !literature/
 !figures/
 !data/
+!test/
