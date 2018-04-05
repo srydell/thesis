@@ -24,3 +24,6 @@ class TestIsingWorm(unittest.TestCase):
         :returns: gitter
         """
         pass
+
+if __name__ == '__main__':
+    unittest.main()

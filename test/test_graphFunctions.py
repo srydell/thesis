@@ -7,59 +7,58 @@ import graphFunctions
  
 class TestGraphFunctions(unittest.TestCase):
 
-    def test_buildGraph(self):
-        """Creates a graph in the form of a dictionary. Assumes periodic boundary conditions.
+    @classmethod
+    def setUpClass(cls):
+        """Runs at the start of the test and creates the graphs used for testing.
+        NOTE: This assumes that the function buildGraph works.
 
-        :N: Number of rows
-        :M: Number of columns
-        :bc: Boundary condition - String in ["periodic", "dirichlet"]
-        :returns: graph dictionary in the form graph[site] = [[siteNeighbour0, weight0], [siteNeighbour1, weight1], ...] and graph size
+        :cls: class
         """
+
+        cls.graphDirichlet = graphFunctions.buildGraph(3, 3, "dirichlet")
+        cls.graphPeriodic = graphFunctions.buildGraph(3, 3, "periodic")
+
+    def test_buildGraph(self):
+
+        # Check that we have 3*3=9 sites
+        self.assertEqual(len(self.graphPeriodic), 9)
+        self.assertEqual(len(self.graphDirichlet), 9)
+
+        # Check that all sites have weight 0 at the start in periodic graph
+        for site in self.graphPeriodic:
+            for neighbourData in self.graphPeriodic[site]:
+                self.assertEqual(neighbourData[1], 0)
+
+        # Check that all sites have weight 0 at the start in dirichlet graph
+        for site in self.graphDirichlet:
+            for neighbourData in self.graphDirichlet[site]:
+                self.assertEqual(neighbourData[1], 0)
+
+        # Check that buildGraph throws exception for unsupported bc strings
+        with self.assertRaises(graphFunctions.unsupportedBoundaryCondition):
+            graphFunctions.buildGraph(3, 3, "unsupported boundary condition")
+
+    def test_colorLinkBetween(self):
+        # Only calls flipSiteWeight
+        pass
+        
+    def test_flipSiteWeight(self):
         pass
 
     def test_getLinkWeight(self):
-        """
-        :site0: 1x2 matrix [i, j]
-        :site1: 1x2 matrix [i, j]
-        :graph: dictionary
-        :returns: link weight between site0 and site1
-        """
-        pass
-
-    def test_flipSiteWeight(self):
-        """Flips the site weight between 0 and 1
-
-        :site0: 1x2 matrix [i, j]
-        :site1: 1x2 matrix [i, j]
-        :graph: dictionary
-        :returns: None
-        """
-        pass
-
-    def test_colorLinkBetween(self):
-        """Changes the link weight between site0 and site1
-
-        :site0: 1x2 matrix
-        :site1: 1x2 matrix
-        :graph: dictionary
-        :returns: None
-        """
-        pass
-        
-    def test_getRandomNeighbour(self):
-        """ Get random neighbour to site that is not exceptSite
-
-        :site: 1x2 matrix [i, j]
-        :exceptSite: 1x2 matrix [i, j], is None for firstSite
-        :graph: dictionary
-        :returns: 1x2 matrix, neighbour from site in graph [i, j]
-        """
         pass
 
     def test_getLinkedNeighbours(self):
-        """
-        :site: 1x2 matrix
-        :graph: dictionary
-        :returns: Array of arrays - All neighbours to site in graph with weight 1
-        """
         pass
+
+    def test_getRandomNeighbour(self):
+        pass
+
+    def test_isOnBorder(self):
+        pass
+
+    def test_removeOnBorder(self):
+        pass
+
+if __name__ == '__main__':
+    unittest.main()

@@ -1,12 +1,13 @@
 import random
 
 def buildGraph(N, M, bc="periodic"):
-    """Creates a graph in the form of a dictionary. Assumes periodic boundary conditions.
+    """Creates a graph in the form of a dictionary.
+    graph is as graph[site] = [[siteNeighbour0, weight0], [siteNeighbour1, weight1], ...]
 
-    :N: Number of rows
-    :M: Number of columns
-    :bc: Boundary condition - String in ["periodic", "dirichlet"]
-    :returns: graph dictionary in the form graph[site] = [[siteNeighbour0, weight0], [siteNeighbour1, weight1], ...] and graph size
+    :N: Int - Number of rows
+    :M: Int - Number of columns
+    :bc: String in ["periodic", "dirichlet"]
+    :returns: dictionary 
     """
 
     graph = {}
@@ -19,31 +20,30 @@ def buildGraph(N, M, bc="periodic"):
     
     for i in range(N):
         for j in range(M):
-            # Directions in the gitter
-
+            # Create an array of neighbours from (i, j) the graph
             if bc == "periodic":
                 right = (i, (j+1)%M)
                 up = ((i-1)%N, j)
                 left = (i, (j-1)%M)
                 down = ((i+1)%N, j)
-                directions = [right, up, left, down]
+                neighbours = [right, up, left, down]
 
             elif bc == "dirichlet":
+                # Must be arrays since passed into a function to be modified
                 right = [i, j+1]
                 up = [i-1, j]
                 left = [i, j-1]
                 down = [i+1, j]
-                directions = [right, up, left, down]
+                neighbours = [right, up, left, down]
 
-                removeOnBorder(directions, N, M)
+                removeOnBorder(neighbours, N, M)
 
-            print(f"Iterating over: {directions}")
+            # Initialize the site
             graph[(i, j)] = []
-            for direction in directions:
-                print(f"Direction to be added: {direction}")
-                graph[(i, j)].append([tuple(direction), weight])
+            for neighbour in neighbours:
+                graph[(i, j)].append([tuple(neighbour), weight])
 
-            # Should look like:
+            # Should now look like:
             # graph[(i, j)] = [ [right, weight], [up, weight], [left, weight], [down, weight] ]
 
     return graph
@@ -89,11 +89,11 @@ def flipSiteWeight(site0, site1, graph):
             graph[site0][n][1] = 1 if siteData[1]==0 else 0
 
 def getLinkWeight(site0, site1, graph):
-    """
+    """ Link weight between site0 and site1 in graph
     :site0: 1x2 matrix [i, j]
     :site1: 1x2 matrix [i, j]
     :graph: dictionary
-    :returns: link weight between site0 and site1
+    :returns: Int - link weight
     """
     
     # Convert sites to tuples (tuples can be used as hash values but not arrays)
@@ -109,10 +109,10 @@ def getLinkWeight(site0, site1, graph):
     return weight
 
 def getLinkedNeighbours(site, graph):
-    """
+    """ All neighbours to site in graph with weight 1
     :site: 1x2 matrix
     :graph: dictionary
-    :returns: Array of arrays - All neighbours to site in graph with weight 1
+    :returns: 1xn matrix of 1x2 matrices
     """
 
     linkedNeighbours = []
@@ -125,12 +125,11 @@ def getLinkedNeighbours(site, graph):
     return linkedNeighbours
 
 def getRandomNeighbour(site, exceptSite, graph):
-    """ Get random neighbour to site that is not exceptSite
-
-    :site: 1x2 matrix [i, j]
-    :exceptSite: 1x2 matrix [i, j], is None for firstSite
+    """ Get random neighbour to site that is not exceptSite in graph
+    :site: 1x2 matrix - [i, j]
+    :exceptSite: 1x2 matrix - [i, j]
     :graph: dictionary
-    :returns: 1x2 matrix, neighbour from site in graph [i, j]
+    :returns: 1x2 matrix
     """
 
     # Convert sites to a tuples (tuples can be used as hash values but not arrays)
@@ -152,19 +151,19 @@ def getRandomNeighbour(site, exceptSite, graph):
     # Since neighbour will be changed a lot use a list
     return list(neighbour)
 
-def isOnBorder(direction, N, M):
-    """
-    :direction: 1x2 matrix
-    :N: int
-    :M: int
-    :returns: True if one of [-1, N, M] can be found in direction, False otherwise
+def isOnBorder(site, N, M):
+    """ True if one of [-1, N, M] can be found in site, False otherwise
+    :site: 1x2 matrix
+    :N: Int
+    :M: Int
+    :returns: Boolean
     """
     
-    return -1 in direction or N in direction or M in direction
+    return -1 in site or N in site or M in site
 
-def removeOnBorder(directions, N, M):
-    """
-    :directions: 1xn matrix of 1x2 matrices
+def removeOnBorder(sites, N, M):
+    """ Remove site from sites if site is outside of NxM graph
+    :sites: 1xn matrix of 1x2 matrices
     :N: int
     :M: int
     :returns: None
@@ -173,14 +172,14 @@ def removeOnBorder(directions, N, M):
     toBeDeleted = []
 
     # Cannot remove directly in loop since the array is being iterated upon
-    for direction in directions:
-        if isOnBorder(direction, N, M):
-            toBeDeleted.append(direction)
+    for site in sites:
+        if isOnBorder(site, N, M):
+            toBeDeleted.append(site)
 
-    # Since directions is an array,
+    # Since sites is an array,
     # this will affect the array passed to the function
-    for deleteDirection in toBeDeleted:
-        directions.remove(deleteDirection)
+    for borderSite in toBeDeleted:
+        sites.remove(borderSite)
 
 class unsupportedBoundaryCondition(Exception):
     """Unsupported boundary condition called."""

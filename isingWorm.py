@@ -2,14 +2,13 @@ from graphFunctions import *
 from math import tanh, pow
 
 def isAccepted(K, site0, site1, gitter):
-    """Check if the link is accepted
+    """ Check if the link between site0 and site1 in gitter is accepted
 
-    :K: J/T
-    :site0: 1x2 matrix [i, j]
-    :site1: 1x2 matrix [i, j]
+    :K: Float - J/T
+    :site0: 1x2 matrix - [i, j]
+    :site1: 1x2 matrix - [i, j]
     :gitter: dictionary
-    :returns: True if accepted and False otherwise
-
+    :returns: Boolean - True if accepted and False otherwise
     """
 
     # Convert sites to a tuples (tuples can be used as hash values but not arrays)
@@ -27,9 +26,8 @@ def isAccepted(K, site0, site1, gitter):
         return False
 
 def main():
-    """Main simulation function
-    :returns: gitter
-
+    """ Simulate ising worm algorithm
+    :returns: dictionary - gitter
     """
 
     J = 0.5

@@ -9,10 +9,13 @@
 all: graphFunctions isingWorm plotGraph
 
 graphFunctions:
-	python -m unittest test_graphFunctions.py
+	@printf "\nTesting graphFunctions\n"
+	@python -m unittest test_graphFunctions.py
 
 isingWorm:
-	python -m unittest test_isingWorm.py
+	@printf "\nTesting isingWorm\n"
+	@python -m unittest test_isingWorm.py
 
 plotGraph:
-	python -m unittest test_plotGraph.py
+	@printf "\nTesting plotGraph\n"
+	@python -m unittest test_plotGraph.py

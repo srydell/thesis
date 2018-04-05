@@ -1,9 +1,10 @@
 # Ignore everything
 /*
 
-# Ignore all files named .DS_Store or ending with .log
+# Ignore all files named .DS_Store, __pycache__ or ending with .log, .pyc
 **/.DS_Store
 **.log
+**.pyc
 **/__pycache__
 
 # Except these
