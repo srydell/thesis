@@ -12,7 +12,8 @@
 ### isingWorm ###
 
 * Write test code for isingWorm
-* Let main() take arguments instead of setting them statically. Easier to test maybe. This would mean that in the C++ code, the main function would have to parse args from the command line, maybe using a bash script to store configs.
+* Add check to see if all loops are closed
+* Add check to see if another worm needs to start (and where it is)
 
 ### graphFunctions ###
 

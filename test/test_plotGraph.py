@@ -11,11 +11,6 @@ class TestPlotGraph(unittest.TestCase):
         pass
 
     def test_plotGraph(self):
-        """
-        :graph: dictionary
-        :saveGraph: Boolean
-        :returns: None
-        """
         pass
 
 if __name__ == '__main__':

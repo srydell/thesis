@@ -25,22 +25,15 @@ def isAccepted(K, site0, site1, gitter):
     else:
         return False
 
-def main():
+def main(K, N, M):
     """Simulate ising worm algorithm
 
+    :K: Float - J/T
+    :N: Int - Number of rows
+    :M: Int - Number of rows
     :returns: dictionary - gitter
     """
 
-    J = 0.5
-    # Temperature
-    T = 1
-
-    K = J/T
-
-    # Number of rows in gitter
-    N = 300
-    # Number of columns in gitter
-    M = 300
     gitterSize = (N, M)
 
     # gitter = buildGraph(N, M, bc="periodic")
@@ -56,7 +49,7 @@ def main():
     random.seed()
 
     # Number of iterations
-    n = 50
+    # n = 50
 
     loop = False
     # Simulation
@@ -84,7 +77,19 @@ def main():
     return gitter
 
 if __name__ == '__main__':
-    gitter = main()
+    J = 0.5
+    # Temperature
+    T = 1
+
+    K = J/T
+
+    # Number of rows in gitter
+    N = 300
+    # Number of columns in gitter
+    M = 300
+
+    # Run the simulation
+    gitter = main(K, N, M)
 
     saveToFile = False
     if saveToFile:
