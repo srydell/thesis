@@ -1,3 +1,5 @@
+# Master thesis of Simon Rydell
+
 # Todo list for exwork #
 
 ## Questions for Mats ##
