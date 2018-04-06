@@ -89,7 +89,8 @@ def flipSiteWeight(site0, site1, graph):
             graph[site0][n][1] = 1 if siteData[1]==0 else 0
 
 def getLinkWeight(site0, site1, graph):
-    """ Link weight between site0 and site1 in graph
+    """Link weight between site0 and site1 in graph
+
     :site0: 1x2 matrix [i, j]
     :site1: 1x2 matrix [i, j]
     :graph: dictionary
@@ -109,7 +110,8 @@ def getLinkWeight(site0, site1, graph):
     return weight
 
 def getLinkedNeighbours(site, graph):
-    """ All neighbours to site in graph with weight 1
+    """All neighbours to site in graph with weight 1
+    
     :site: 1x2 matrix
     :graph: dictionary
     :returns: 1xn matrix of 1x2 matrices
@@ -125,7 +127,8 @@ def getLinkedNeighbours(site, graph):
     return linkedNeighbours
 
 def getRandomNeighbour(site, exceptSite, graph):
-    """ Get random neighbour to site that is not exceptSite in graph
+    """Get random neighbour to site that is not exceptSite in graph
+
     :site: 1x2 matrix - [i, j]
     :exceptSite: 1x2 matrix - [i, j]
     :graph: dictionary
@@ -152,7 +155,8 @@ def getRandomNeighbour(site, exceptSite, graph):
     return list(neighbour)
 
 def isOnBorder(site, N, M):
-    """ True if one of [-1, N, M] can be found in site, False otherwise
+    """True if one of [-1, N, M] can be found in site, False otherwise
+
     :site: 1x2 matrix
     :N: Int
     :M: Int
@@ -162,7 +166,8 @@ def isOnBorder(site, N, M):
     return -1 in site or N in site or M in site
 
 def removeOnBorder(sites, N, M):
-    """ Remove site from sites if site is outside of NxM graph
+    """Remove site from sites if site is outside of NxM graph
+
     :sites: 1xn matrix of 1x2 matrices
     :N: int
     :M: int

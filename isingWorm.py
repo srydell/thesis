@@ -2,7 +2,7 @@ from graphFunctions import *
 from math import tanh, pow
 
 def isAccepted(K, site0, site1, gitter):
-    """ Check if the link between site0 and site1 in gitter is accepted
+    """Check if the link between site0 and site1 in gitter is accepted
 
     :K: Float - J/T
     :site0: 1x2 matrix - [i, j]
@@ -26,7 +26,8 @@ def isAccepted(K, site0, site1, gitter):
         return False
 
 def main():
-    """ Simulate ising worm algorithm
+    """Simulate ising worm algorithm
+
     :returns: dictionary - gitter
     """
 
