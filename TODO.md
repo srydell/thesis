@@ -12,17 +12,17 @@
 ## isingWorm ##
 
 * Write test code for isingWorm
-* Maybe let main() take arguments instead of setting them statically. Easier to test maybe. This would mean that in the C++ code, the main function would have to parse args from the command line, maybe using a bash script to store configs.
+* Let main() take arguments instead of setting them statically. Easier to test maybe. This would mean that in the C++ code, the main function would have to parse args from the command line, maybe using a bash script to store configs.
 
 ## graphFunctions ##
 
 * Write test code for graphFunctions
-* Add functionality for boundary conditions in [buildGraph, ]
+* Add functionality for boundary conditions in (buildGraph, ) (Maybe done, needs more testing)
 
 ## plotGraph ##
 
 * Write test code for plotGraph
-* Save graphs (pickle, SQL, ...)
-* Load graphs (from file)
-* plot graph (option from file or live)
+* Rewrite save graphs to saving SQL table. (Call each table NxMboundaryCondition and add a row for each data point)
+* Rewrite load graphs to load from SQL table
+* plot graph (option for file or live)
 * Put plotting configs into its own function and let it take graphSize as arg to set axis
