@@ -1,4 +1,5 @@
 import random
+import pickle
 
 def buildGraph(N, M, bc="periodic"):
     """Creates a graph in the form of a dictionary.
@@ -185,6 +186,28 @@ def removeOnBorder(sites, N, M):
     # this will affect the array passed to the function
     for borderSite in toBeDeleted:
         sites.remove(borderSite)
+
+def saveGraph(graph, filename="graph"):
+    """Save graph to the filesystem
+
+    :graph: dictionary
+    :filename: String - Optional (default: graph)
+    :returns: None
+    """
+
+    with open(f"./data/{filename}.pickle", "wb") as f:
+        pickle.dump(graph, f, protocol=pickle.HIGHEST_PROTOCOL)
+
+def loadGraph(filename="graph"):
+    """Load graph from the filesystem
+
+    :filename: String - Optional (default: graph)
+    :returns: dictionary - The loaded graph
+    """
+
+    with open(f"./data/{filename}.pickle", "rb") as f:
+        g = pickle.load(f)
+    return g
 
 class unsupportedBoundaryCondition(Exception):
     """Unsupported boundary condition called."""

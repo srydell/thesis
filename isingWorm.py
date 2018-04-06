@@ -42,7 +42,9 @@ def main():
     # Number of columns in gitter
     M = 300
     gitterSize = (N, M)
-    gitter = buildGraph(N, M, bc="periodic")
+
+    # gitter = buildGraph(N, M, bc="periodic")
+    gitter = buildGraph(N, M, bc="dirichlet")
     
     # Initialize starting site as some random [i, j] within the gitter
     firstSite = [random.randrange(0, N), random.randrange(0, M)]
@@ -83,3 +85,8 @@ def main():
 
 if __name__ == '__main__':
     gitter = main()
+
+    saveToFile = False
+    if saveToFile:
+        saveGraph(gitter)
+
