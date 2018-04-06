@@ -74,7 +74,7 @@ def main():
             if newSite != firstSite:
                 continue
             else:
-                # TODO: Update averages: add +1 to G(0) add current loop length to <L>
+                # TODO: Update averages: add +1 to G(0), add current loop length to <L>
                 print("We found a loop")
                 loop = True
 
