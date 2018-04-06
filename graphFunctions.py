@@ -3,7 +3,7 @@ import pickle
 
 def buildGraph(N, M, bc="periodic"):
     """Creates a graph in the form of a dictionary.
-    graph is as graph[site] = [[siteNeighbour0, weight0], [siteNeighbour1, weight1], ...]
+    graph is as graph[site] = {siteNeighbour0: weight0, siteNeighbour1: weight1, ...}
 
     :N: Int - Number of rows
     :M: Int - Number of columns
@@ -12,7 +12,7 @@ def buildGraph(N, M, bc="periodic"):
     """
 
     graph = {}
-    weight = 0
+    startingWeight = 0
     supportedBC = ["periodic", "dirichlet"]
 
     # I sometimes have fat fingers
@@ -40,12 +40,12 @@ def buildGraph(N, M, bc="periodic"):
                 removeOnBorder(neighbours, N, M)
 
             # Initialize the site
-            graph[(i, j)] = []
+            graph[(i, j)] = {}
             for neighbour in neighbours:
-                graph[(i, j)].append([tuple(neighbour), weight])
+                graph[(i, j)][tuple(neighbour)] = startingWeight
 
             # Should now look like:
-            # graph[(i, j)] = [ [right, weight], [up, weight], [left, weight], [down, weight] ]
+            # graph[(i, j)] = {right: startingWeight, up: startingWeight, left: startingWeight, down: startingWeight}
 
     return graph
 
@@ -58,10 +58,6 @@ def colorLinkBetween(site0, site1, graph):
     :returns: None
     """
     
-    # Convert sites to tuples (tuples can be used as hash values but not arrays)
-    site0 = tuple(site0)
-    site1 = tuple(site1)
-
     # Flip the two weights
     # NOTE: There is no direction in the graph so we need to update
     #       both link between site0 and site1
@@ -82,12 +78,9 @@ def flipSiteWeight(site0, site1, graph):
     site0 = tuple(site0)
     site1 = tuple(site1)
 
-    # Iterate over graph to find which weight to change
-    for n, siteData in enumerate(graph[site0]):
-        # siteData looks like [neighbourSite, weight]
-        if siteData[0] == site1:
-            # Flip the weight
-            graph[site0][n][1] = 1 if siteData[1]==0 else 0
+    currentWeight = graph[site0][site1]
+
+    graph[site0][site1] = 1 if currentWeight == 0 else 0
 
 def getLinkWeight(site0, site1, graph):
     """Link weight between site0 and site1 in graph
@@ -102,13 +95,7 @@ def getLinkWeight(site0, site1, graph):
     site0 = tuple(site0)
     site1 = tuple(site1)
 
-    # Iterate over graph to find which weight to change
-    for n, siteData in enumerate(graph[site0]):
-        # siteData looks like [neighbourSite, weight]
-        if siteData[0] == site1:
-            # Get the weight
-            weight = graph[site0][n][1]
-    return weight
+    return graph[site0][site1]
 
 def getLinkedNeighbours(site, graph):
     """All neighbours to site in graph with weight 1
@@ -120,9 +107,8 @@ def getLinkedNeighbours(site, graph):
 
     linkedNeighbours = []
     for neighbour in graph[site]:
-        weight = neighbour[1]
-        if weight == 1:
-            linkedNeighbours.append(list(neighbour[0]))
+        if graph[site][neighbour] == 1:
+            linkedNeighbours.append(list(neighbour))
 
     # linkedNeighbours is as [[x, y], [z, w], ...]
     return linkedNeighbours
@@ -136,21 +122,17 @@ def getRandomNeighbour(site, exceptSite, graph):
     :returns: 1x2 matrix
     """
 
-    # Convert sites to a tuples (tuples can be used as hash values but not arrays)
+    # Convert sites to a tuples (tuples can be used as hash keys but not arrays)
     site = tuple(site)
 
-    # graph[site] gives a list of all neighbours on the form [(neighbourIndices), linkWeight]
-    neighboursData = graph[site]
+    # Get all the neighbours to site and convert into keys
+    # neighbours is as [(i, j+1), ...]
+    neighbours = list(graph[site].keys())
 
     if exceptSite is not None:
-        exceptSite = tuple(exceptSite)
-        # Remove exceptSite from neighbourData
-        for neighbour in neighboursData:
-            # neighbour is as [(i, j), weight]
-            if neighbour[0] == exceptSite:
-                neighboursData.remove(neighbour)
+        neighbours.remove(tuple(exceptSite))
 
-    neighbour = random.choice(neighboursData)[0]
+    neighbour = random.choice(neighbours)
 
     # Since neighbour will be changed a lot use a list
     return list(neighbour)
@@ -206,15 +188,12 @@ def loadGraph(filename="graph"):
     """
 
     with open(f"./data/{filename}.pickle", "rb") as f:
-        g = pickle.load(f)
-    return g
+        graph = pickle.load(f)
+    return graph
 
 class unsupportedBoundaryCondition(Exception):
     """Unsupported boundary condition called."""
 
 if __name__ == '__main__':
-    graphDirichlet = buildGraph(2, 2, "dirichlet")
-    graphPeriodic = buildGraph(2, 2, "periodic")
-    # buildGraph(3, 3, "dirichlet")
-    # print(graphSize)
-    # print(graph)
+    graphDirichlet = buildGraph(3, 3, "dirichlet")
+    graphPeriodic = buildGraph(3, 3, "periodic")

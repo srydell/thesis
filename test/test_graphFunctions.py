@@ -25,8 +25,8 @@ class TestGraphFunctions(unittest.TestCase):
         cls.graphPeriodic3x5 = buildGraph(3, 5, "periodic")
 
         # Two 2x2 edge case graphs created by hand
-        cls.edgeDirichlet2x2 = {(0, 0): [[(0, 1), 0], [(1, 0), 0]], (0, 1): [[(0, 0), 0], [(1, 1), 0]], (1, 0): [[(1, 1), 0], [(0, 0), 0]], (1, 1): [[(0, 1), 0], [(1, 0), 0]]}
-        cls.edgePeriodic2x2 = {(0, 0): [[(0, 1), 0], [(1, 0), 0], [(0, 1), 0], [(1, 0), 0]], (0, 1): [[(0, 0), 0], [(1, 1), 0], [(0, 0), 0], [(1, 1), 0]], (1, 0): [[(1, 1), 0], [(0, 0), 0], [(1, 1), 0], [(0, 0), 0]], (1, 1): [[(1, 0), 0], [(0, 1), 0], [(1, 0), 0], [(0, 1), 0]]}
+        cls.edgeDirichlet2x2 = {(0, 0): {(0, 1): 0, (1, 0): 0}, (0, 1): {(0, 0): 0, (1, 1): 0}, (1, 0): {(1, 1): 0, (0, 0): 0}, (1, 1): {(0, 1): 0, (1, 0): 0}}
+        cls.edgePeriodic2x2 = {(0, 0): {(0, 1): 0, (1, 0): 0, (0, 1): 0, (1, 0): 0}, (0, 1): {(0, 0): 0, (1, 1): 0, (0, 0): 0, (1, 1): 0}, (1, 0): {(1, 1): 0, (0, 0): 0, (1, 1): 0, (0, 0): 0}, (1, 1): {(1, 0): 0, (0, 1): 0, (1, 0): 0, (0, 1): 0}}
 
         # This way we can iterate over the graphs
         cls.graphs = [cls.graphDirichlet3x3, cls.graphPeriodic3x3,
@@ -36,8 +36,8 @@ class TestGraphFunctions(unittest.TestCase):
     def compareAllWeights(self, graph, weight):
         # Check that all sites have weight weight in graph
         for site in graph:
-            for neighbourData in graph[site]:
-                self.assertEqual(neighbourData[1], weight)
+            for neighbour in graph[site]:
+                self.assertEqual(graph[site][neighbour], weight)
         
     def test_buildGraph(self):
 
@@ -60,17 +60,33 @@ class TestGraphFunctions(unittest.TestCase):
             buildGraph(3, 3, "some unsupported boundary condition")
 
     def test_colorLinkBetween(self):
-        # Only calls flipSiteWeight
+        # Only calls flipSiteWeight twice
         pass
 
     def test_flipSiteWeight(self):
-        # Flip in the corner from 0 to 1
-        # and asser that it is flipped
-        # for graph in self.graphs:
-        #     flipSiteWeight((0, 0), (0, 1), graph)
-        pass
+        # Test sites
+        cornerSite = (0, 0)
+        cornerNeighbour = (0, 1)
+        middleSite = (1, 1)
+        middleNeighbour = (1, 0)
 
-    def test_getLinkWeight(self):
+        # Go through all graph cases
+        for graph in self.graphs:
+            # Flip corner and assert weight is now 1
+            flipSiteWeight(cornerSite, cornerNeighbour, graph)
+            self.assertEqual(graph[cornerSite][cornerNeighbour], 1)
+            # Flip corner and assert weight is now 0
+            flipSiteWeight(cornerSite, cornerNeighbour, graph)
+            self.assertEqual(graph[cornerSite][cornerNeighbour], 0)
+
+            # Flip middle and assert weight is now 1
+            flipSiteWeight(middleSite, middleNeighbour, graph)
+            self.assertEqual(graph[middleSite][middleNeighbour], 1)
+            # Flip middle and assert weight is now 0
+            flipSiteWeight(middleSite, middleNeighbour, graph)
+            self.assertEqual(graph[middleSite][middleNeighbour], 0)
+
+    def test_getWeight(self):
         pass
 
     def test_getLinkedNeighbours(self):

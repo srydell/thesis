@@ -20,14 +20,13 @@ def plotGraph(graph, savePlot=False):
         linkedNeighbours = getLinkedNeighbours(site, graph)
 
         for neighbour in linkedNeighbours:
-            # print(f"Plotting {site} to {neighbour}\n")
+            # print(f"Plotting from {site} to {neighbour}\n")
             x[1] = neighbour[0]
             y[1] = neighbour[1]
 
             plt.plot(x, y)
 
-            # In seconds
-
+    # Pause after every frame. Time argument is in seconds
     plt.pause(0.1)
 
     if savePlot:
