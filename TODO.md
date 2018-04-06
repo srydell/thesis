@@ -19,6 +19,7 @@
 
 * Write test code for graphFunctions
 * Add functionality for boundary conditions in (buildGraph, ) (Maybe done, needs more testing)
+* Write buildGraph to return a dictionary of dictionaries instead of a dictionary of lists
 
 ### plotGraph ###
 

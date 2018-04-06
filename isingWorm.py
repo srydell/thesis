@@ -40,9 +40,9 @@ def main(K, N, M):
     gitter = buildGraph(N, M, bc="dirichlet")
     
     # Initialize starting site as some random [i, j] within the gitter
+    # Track the previous site to avoid that the current turns 180 degrees
     firstSite = [random.randrange(0, N), random.randrange(0, M)]
     currentSite = firstSite
-    # Track the previous site to avoid that the current turns 180 degrees
     previousSite = None
 
     # Initialize the random number generator with current time as seed
