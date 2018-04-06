@@ -30,14 +30,16 @@ def buildGraph(N, M, bc="periodic"):
                 neighbours = [right, up, left, down]
 
             elif bc == "dirichlet":
-                # Must be arrays since passed into a function to be modified
+                # Must be arrays since passed into a function
                 right = [i, j+1]
                 up = [i-1, j]
                 left = [i, j-1]
                 down = [i+1, j]
-                neighbours = [right, up, left, down]
+                neighbours = []
 
-                removeOnBorder(neighbours, N, M)
+                for site in [right, up, left, down]:
+                    if not isOnBorder(site, N, M):
+                        neighbours.append(site)
 
             # Initialize the site
             graph[(i, j)] = {}
@@ -147,27 +149,6 @@ def isOnBorder(site, N, M):
     """
     
     return -1 in site or N in site or M in site
-
-def removeOnBorder(sites, N, M):
-    """Remove site from sites if site is outside of NxM graph
-
-    :sites: 1xn matrix of 1x2 matrices
-    :N: int
-    :M: int
-    :returns: None
-    """
-
-    toBeDeleted = []
-
-    # Cannot remove directly in loop since the array is being iterated upon
-    for site in sites:
-        if isOnBorder(site, N, M):
-            toBeDeleted.append(site)
-
-    # Since sites is an array,
-    # this will affect the array passed to the function
-    for borderSite in toBeDeleted:
-        sites.remove(borderSite)
 
 def saveGraph(graph, filename="graph"):
     """Save graph to the filesystem
