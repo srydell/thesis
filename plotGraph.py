@@ -1,5 +1,5 @@
 import random
-from graphFunctions import getLinkedNeighbours, loadGraph
+from graphs import getLinkedNeighbours, loadGraph
 import matplotlib.pyplot as plt
 
 def pause():

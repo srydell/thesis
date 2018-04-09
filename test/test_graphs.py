@@ -3,7 +3,7 @@ import sys
 sys.path.append("../")
 
 import unittest
-from graphFunctions import *
+from graphs import *
  
 class TestGraphFunctions(unittest.TestCase):
 
