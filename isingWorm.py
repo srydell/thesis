@@ -1,4 +1,4 @@
-from graphFunctions import *
+from graphs import *
 from math import tanh, pow
 
 def isAccepted(K, site0, site1, gitter):
