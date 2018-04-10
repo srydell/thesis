@@ -4,13 +4,13 @@
 # April 2018
 #
 
-.PHONY: all graphFunctions isingWorm plotGraph
+.PHONY: all graphs isingWorm plotGraph
 
-all: graphFunctions isingWorm plotGraph
+all: graphs isingWorm plotGraph
 
-graphFunctions:
-	@printf "\nTesting graphFunctions\n"
-	@python -m unittest test_graphFunctions.py
+graphs:
+	@printf "\nTesting graphs\n"
+	@python -m unittest test_graphs.py
 
 isingWorm:
 	@printf "\nTesting isingWorm\n"
