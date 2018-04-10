@@ -6,7 +6,7 @@
 
 * What is the initial value of the correlation function G(i)?
 * Have I interpreted bij the correct way? (As the weight of the link between sites i and j)
-* Is there something special about G(0)?
+* Is there something special about G(0)? (G(i0 - i0) each site has to have itself)
 * <L> in the pdf should be interpreted as the total length of the finished loop or the average length of all loops so far?
 
 ### isingWorm ###
@@ -15,9 +15,9 @@
 * Add check to see if all loops are closed
 * Add check to see if another worm needs to start (and where it is)
 
-### graphFunctions ###
+### graphs ###
 
-* Write test code for graphFunctions
+* Write test code for graphs
 * Add functionality for boundary conditions in (buildGraph, ) (Maybe done, needs more testing)
 * Write buildGraph to return a dictionary of dictionaries instead of a dictionary of lists
 
