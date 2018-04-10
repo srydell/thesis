@@ -38,6 +38,9 @@ def main(K, N, M):
 
     # gitter = buildGraph(N, M, bc="periodic")
     gitter = buildGraph(N, M, bc="dirichlet")
+
+    # Correlation function
+    # corr = buildGraph(N, M, bc="dirichlet")
     
     # Initialize starting site as some random [i, j] within the gitter
     # Track the previous site to avoid that the current turns 180 degrees
@@ -67,10 +70,12 @@ def main(K, N, M):
             
             # TODO: Update correlation function on the fly:
             #       add +1 to G(i-i0) for the open path from i0 to i
+            # corr[site][newSite] += 1
             if newSite != firstSite:
                 continue
             else:
                 # TODO: Update averages: add +1 to G(0), add current loop length to <L>
+                # corr[site][site] += 1
                 print("We found a loop")
                 loop = True
 
