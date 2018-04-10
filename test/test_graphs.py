@@ -5,7 +5,7 @@ sys.path.append("../")
 import unittest
 from graphs import *
  
-class TestGraphFunctions(unittest.TestCase):
+class TestGraphs(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
