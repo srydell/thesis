@@ -25,31 +25,93 @@ def isAccepted(K, site0, site1, gitter):
     else:
         return False
 
-def main(K, N, M):
+def buildCorr(firstSite, N, M):
+    """Brute force loop through every site value and add r^2 as a key to correlation function
+
+    :firstSite: 1x2 matrix - Starting site, [x, y]
+    :N: Int - Number of rows
+    :M: Int - Number of columns
+    :returns: dictionary - correlation function for r^2
+    """
+    x0 = firstSite[0]
+    x0 = firstSite[1]
+
+    G = {}
+    for i in range(list(range(x0-N, N-x0))):
+        for j in range(list(range(y0-M, M-y0))):
+            G[j * j + i * i] = 0
+
+    return G
+
+def addXToCorr(firstSite, newSite, value, corr):
+    """TODO: Docstring for addXToCorr.
+
+    :firstSite: 1x2 matrix - site to calculate corr from
+    :newSite: 1x2 matrix - site to calculate corr to
+    :value: Int - value to add to the key
+    :corr: dictionary - Correlation function
+    :returns: None
+    """
+
+    # x value
+    key = firstSite[0] - newSite[0]
+
+    if corr.get(key) == None:
+        # key have not been hashed before, use 0 as starting value and then add value
+        corr[key] = value
+    else:
+        # key has been hashed before, add value
+        corr[key] += value
+
+def addToCorr(firstSite, newSite, value, corr):
+    """Add value to corr on the radius from firstSite to newSite
+
+    :firstSite: 1x2 matrix - site to calculate corr from
+    :newSite: 1x2 matrix - site to calculate corr to
+    :value: Int - value to add to the key
+    :corr: dictionary - Correlation function
+    :returns: None
+    """
+
+    # r^2 = x^2 + y^2
+    key = pow(firstSite[0] - newSite[0], 2) + pow(firstSite[1] - newSite[1], 2)
+
+    # Faster to hash ints
+    key = int(key)
+
+    if corr.get(key) == None:
+        # key have not been hashed before, use 0 as starting value and then add value
+        corr[key] = value
+    else:
+        # key has been hashed before, add value
+        corr[key] += value
+
+def main(K, N, M, bc):
     """Simulate ising worm algorithm
 
     :K: Float - J/T
     :N: Int - Number of rows
-    :M: Int - Number of rows
+    :M: Int - Number of columns
+    :bc: String - Boundary condition in ["periodic", "dirichlet"]
     :returns: dictionary - gitter
     """
 
     gitterSize = (N, M)
 
-    # gitter = buildGraph(N, M, bc="periodic")
-    gitter = buildGraph(N, M, bc="dirichlet")
+    gitter = buildGraph(N, M, bc)
 
-    # Correlation function
-    # corr = buildGraph(N, M, bc="dirichlet")
-    
+    # Initialize the random number generator with current time as seed
+    random.seed()
+
     # Initialize starting site as some random [i, j] within the gitter
     # Track the previous site to avoid that the current turns 180 degrees
     firstSite = [random.randrange(0, N), random.randrange(0, M)]
     currentSite = firstSite
     previousSite = None
 
-    # Initialize the random number generator with current time as seed
-    random.seed()
+    # Correlation function for r
+    G = {}
+    Gx = {}
 
     # Number of iterations
     # n = 50
@@ -68,9 +130,10 @@ def main(K, N, M):
             previousSite = currentSite
             currentSite = newSite
             
-            # TODO: Update correlation function on the fly:
-            #       add +1 to G(i-i0) for the open path from i0 to i
-            # corr[site][newSite] += 1
+            # Update correlation function on the fly:
+            # add +1 to G(i-i0) for the open path from i0 to i
+            addToCorr(firstSite, newSite, 1, G)
+            addXToCorr(firstSite, newSite, 1, Gx)
             if newSite != firstSite:
                 continue
             else:
@@ -79,7 +142,7 @@ def main(K, N, M):
                 print("We found a loop")
                 loop = True
 
-    return gitter
+    return gitter, G, Gx
 
 if __name__ == '__main__':
     J = 0.5
@@ -93,8 +156,10 @@ if __name__ == '__main__':
     # Number of columns in gitter
     M = 300
 
+    bc = "periodic"
+
     # Run the simulation
-    gitter = main(K, N, M)
+    gitter, G, Gx = main(K, N, M, bc)
 
     saveToFile = False
     if saveToFile:
