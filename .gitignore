@@ -23,6 +23,7 @@
 !graphs.py
 !plotGraph.py
 !hoshenKopelman.py
+!indexClusters.py
 
 # Directories
 !literature/

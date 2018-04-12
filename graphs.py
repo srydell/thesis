@@ -13,6 +13,7 @@ def buildGraph(N, M, bc="periodic"):
 
     graph = {}
     startingWeight = 0
+    startingIndex = 0
     supportedBC = ["periodic", "dirichlet"]
 
     # I sometimes have fat fingers
@@ -43,11 +44,12 @@ def buildGraph(N, M, bc="periodic"):
 
             # Initialize the site
             graph[(i, j)] = {}
+            graph[(i, j)]["index"] = startingIndex
             for neighbour in neighbours:
                 graph[(i, j)][tuple(neighbour)] = startingWeight
 
             # Should now look like:
-            # graph[(i, j)] = {right: startingWeight, up: startingWeight, left: startingWeight, down: startingWeight}
+			# graph[(i, j)] = {"index": startingIndex, right: startingWeight, up: startingWeight, left: startingWeight, down: startingWeight}
 
     return graph
 
@@ -114,6 +116,25 @@ def getLinkedNeighbours(site, graph):
 
     # linkedNeighbours is as [[x, y], [z, w], ...]
     return linkedNeighbours
+
+def getIndex(listOfSites, graph):
+	"""Get the "index" property in graph for each site in listOfSites
+
+	:listOfSites: 1xn matrix - On the form [[i, j], [i+1, j], ...]
+	:graph: dictionary
+	:returns: 1xn matrix - Indices on the form [1, 3, ...]
+	"""
+	pass
+
+def setIndex(index, listOfSites, graph):
+	"""Get the "index" property in graph for each site in listOfSites
+
+	:index: Int - The index that will be set
+	:listOfSites: 1xn matrix - On the form [[i, j], [i+1, j], ...]
+	:graph: dictionary
+	:returns: None
+	"""
+	pass
 
 def getRandomNeighbour(site, exceptSite, graph):
     """Get random neighbour to site that is not exceptSite in graph
