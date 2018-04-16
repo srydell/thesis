@@ -38,9 +38,11 @@ def buildGraph(N, M, bc="periodic"):
                 down = [i+1, j]
                 neighbours = []
 
+                input(f"Neighbours to {[i, j]}: {right}, {up}, {left}, {down}")
                 for site in [right, up, left, down]:
                     if not isOnBorder(site, N, M):
                         neighbours.append(site)
+                input(f"Neighbours to {[i, j]} after border: {neighbours}")
 
             # Initialize the site
             graph[(i, j)] = {}
@@ -171,7 +173,7 @@ def isOnBorder(site, N, M):
     :returns: Boolean
     """
     
-    return -1 in site or N in site or M in site
+    return -1 in site or N == site[0] or M == site[1]
 
 def saveGraph(graph, filename="graph"):
     """Save graph to the filesystem
