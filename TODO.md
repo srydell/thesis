@@ -26,3 +26,5 @@
 ### indexClusters ###
 
 * Write some function that finds all heads of each worm in clusters
+* Write findClusterEnds() to find the 'heads' of the worm
+* Write isLoop() to find out if a cluster is a loop. A loop is something where every site in a cluster exists two times in the others linked neighbours.
