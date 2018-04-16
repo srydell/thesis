@@ -111,30 +111,12 @@ def getLinkedNeighbours(site, graph):
 
     linkedNeighbours = []
     for neighbour in graph[site]:
-        if graph[site][neighbour] == 1:
-            linkedNeighbours.append(list(neighbour))
+        if neighbour != "index":
+            if graph[site][neighbour] == 1:
+                linkedNeighbours.append(list(neighbour))
 
     # linkedNeighbours is as [[x, y], [z, w], ...]
     return linkedNeighbours
-
-def getIndex(listOfSites, graph):
-    """Get the "index" property in graph for each site in listOfSites
-
-    :listOfSites: 1xn matrix - On the form [[i, j], [i+1, j], ...]
-    :graph: dictionary
-    :returns: 1xn matrix - Indices on the form [1, 3, ...]
-    """
-    pass
-
-def setIndex(index, listOfSites, graph):
-    """Get the "index" property in graph for each site in listOfSites
-
-    :index: Int - The index that will be set
-    :listOfSites: 1xn matrix - On the form [[i, j], [i+1, j], ...]
-    :graph: dictionary
-    :returns: None
-    """
-    pass
 
 def getRandomNeighbour(site, exceptSite, graph):
     """Get random neighbour to site that is not exceptSite in graph
