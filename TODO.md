@@ -8,7 +8,8 @@
 
 * Write test code for isingWorm
 * Add check to see if all loops are closed
-* Add check to see if another worm needs to start (and where it is)
+* Loop over all the heads of each worm and move one step for each
+* Write more general code for adding new thing to dictionary (correlation function). I have written one in indexClusters called addIfNotExists. Adapt this to fit for the correlation function.
 
 ### graphs ###
 
