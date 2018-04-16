@@ -29,6 +29,7 @@ def setIndex(index, listOfSites, graph):
 
 def addIfNotExists(key, value, dictionary):
     """Adds the entry (key: value) to dictionary if not exists
+    If it dictionary[key] exists and is a list, append value to it
 
     :key: Something hashable
     :value: Some value to be stored
@@ -38,6 +39,9 @@ def addIfNotExists(key, value, dictionary):
 
     if dictionary.get(key) is None:
         dictionary[key] = value
+        return
+    elif type(dictionary[key]) == list:
+        dictionary[key].append(value)
 
 def compareList(value, cList):
     """Checks if every entry in cList is equal to value
@@ -49,22 +53,35 @@ def compareList(value, cList):
 
     return all(listVal == value for listVal in cList)
 
-def removeDuplicates(clusters, graph):
-    """Goes through each key in clusters and check if the site still has that index
+def removeDeprecated(clusters, graph):
+    """Goes through each key in clusters and check if the site still has that index in the graph
 
     :clusters: dictionary
     :graph: dictionary
     :returns: None
     """
 
-    remove = []
-    for site in clusters:
-        # If the index has changed (e.g. it was overwritten for something smaller)
-        if graph[site]["index"] != clusters[site]:
-            remove.append(site)
+    toBeRemoved = []
+    emptyClusterIndices = []
+    # clusters is as: {index0: [site0, site1, ...], index1: ...}
+    for index in clusters:
+        for site in clusters[index]:
+            # If the index has changed (e.g. it was overwritten for something smaller)
+            if graph[site]["index"] != index:
+                toBeRemoved.append(site)
 
-    for site in remove:
-        clusters.pop(site)
+        # No longer looping over the list so it's safe to remove the sites
+        for site in toBeRemoved:
+            clusters[index].remove(site)
+
+        if clusters[index] == []:
+            emptyClusterIndices.append(index)
+        # For the next cluster to be inspected
+        toBeRemoved = []
+
+    # Cleanup empty clusters
+    for index in emptyClusterIndices:
+        clusters.pop(index)
 
 def visualizeIndex(graph, N, M):
     """Creates a matrix to visualize the indices
@@ -84,9 +101,22 @@ def visualizeIndex(graph, N, M):
 
     return matrix
 
+def findClusterEnds(clusters, graph):
+    """Find the cluster end in graph for each site in clusters
+    An end is a site that has some index and only one link
+    If a loop is found it is removed from clusters
+
+    :clusters: dictionary - {site: index, ...}
+    :graph: dictionary
+    :returns: None
+    """
+
+    pass
+
 def indexClusters(clusters, graph):
     """Loop through the graph and index the clusters,
     also adds the site where every new cluster is found to clusters
+    In the end it removes all deprecated sites in clusters (with indices that have been overwritten)
 
     :clusters: dictionary
     :graph: dictionary
@@ -113,7 +143,8 @@ def indexClusters(clusters, graph):
                     indexHasChanged = True
                     largestIndex += 1
                     # print(f"Setting {largestIndex} on {[site, *neighbours]}")
-                    addIfNotExists(site, largestIndex, clusters)
+                    # Add a new cluster list to clusters
+                    addIfNotExists(largestIndex, [site], clusters)
                     setIndex(largestIndex, [site, *neighbours], graph)
                     # Go to next in the for loop through sites
                     continue
@@ -130,9 +161,13 @@ def indexClusters(clusters, graph):
                     indexHasChanged = True
                     # print(f"Not all clusters have the smallest index {minClusterIndex}")
                     # print(f"Setting {minClusterIndex} on {[site, *neighbours]}")
+                    addIfNotExists(minClusterIndex, site, clusters)
                     setIndex(minClusterIndex, [site, *neighbours], graph)
                     # Go to next in the for loop through sites
                     continue
+
+    # Remove deprecated sites from clusters
+    removeDeprecated(clusters, graph)
 
 if __name__ == '__main__':
     numRows = 3
@@ -152,7 +187,6 @@ if __name__ == '__main__':
     clusters = {}
     before = copy.deepcopy(clusterGraph)
     indexClusters(clusters, clusterGraph)
-    removeDuplicates(clusters, clusterGraph)
     after = clusterGraph
 
     # index* is a matrix showing only the indices of each site
