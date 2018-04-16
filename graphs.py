@@ -109,6 +109,7 @@ def getLinkedNeighbours(site, graph):
     :returns: 1xn matrix of 1x2 matrices
     """
 
+    site = tuple(site)
     linkedNeighbours = []
     for neighbour in graph[site]:
         if neighbour != "index":
