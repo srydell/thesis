@@ -148,9 +148,11 @@ def getRandomNeighbour(site, exceptSite, graph):
     # Convert sites to a tuples (tuples can be used as hash keys but not arrays)
     site = tuple(site)
 
-    # Get all the neighbours to site and convert into keys
+    # Get all the neighbours to site
     # neighbours is as [(i, j+1), ...]
     neighbours = list(graph[site].keys())
+    # Remove "index" value so that only the neighbours remain
+    neighbours.remove("index")
 
     if exceptSite is not None:
         neighbours.remove(tuple(exceptSite))
