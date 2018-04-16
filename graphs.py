@@ -38,11 +38,9 @@ def buildGraph(N, M, bc="periodic"):
                 down = [i+1, j]
                 neighbours = []
 
-                input(f"Neighbours to {[i, j]}: {right}, {up}, {left}, {down}")
                 for site in [right, up, left, down]:
                     if not isOnBorder(site, N, M):
                         neighbours.append(site)
-                input(f"Neighbours to {[i, j]} after border: {neighbours}")
 
             # Initialize the site
             graph[(i, j)] = {}
@@ -120,23 +118,23 @@ def getLinkedNeighbours(site, graph):
     return linkedNeighbours
 
 def getIndex(listOfSites, graph):
-	"""Get the "index" property in graph for each site in listOfSites
+    """Get the "index" property in graph for each site in listOfSites
 
-	:listOfSites: 1xn matrix - On the form [[i, j], [i+1, j], ...]
-	:graph: dictionary
-	:returns: 1xn matrix - Indices on the form [1, 3, ...]
-	"""
-	pass
+    :listOfSites: 1xn matrix - On the form [[i, j], [i+1, j], ...]
+    :graph: dictionary
+    :returns: 1xn matrix - Indices on the form [1, 3, ...]
+    """
+    pass
 
 def setIndex(index, listOfSites, graph):
-	"""Get the "index" property in graph for each site in listOfSites
+    """Get the "index" property in graph for each site in listOfSites
 
-	:index: Int - The index that will be set
-	:listOfSites: 1xn matrix - On the form [[i, j], [i+1, j], ...]
-	:graph: dictionary
-	:returns: None
-	"""
-	pass
+    :index: Int - The index that will be set
+    :listOfSites: 1xn matrix - On the form [[i, j], [i+1, j], ...]
+    :graph: dictionary
+    :returns: None
+    """
+    pass
 
 def getRandomNeighbour(site, exceptSite, graph):
     """Get random neighbour to site that is not exceptSite in graph
