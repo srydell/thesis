@@ -40,6 +40,11 @@ def addIfNotExists(key, value, dictionary):
     if dictionary.get(key) is None:
         dictionary[key] = value
         return
+
+    elif type(dictionary[key]) == int or type(dictionary[key]) == float:
+        dictionary[key] += value
+        return
+
     elif type(dictionary[key]) == list:
         # Only append if it is not already there
         if value not in dictionary[key]:
