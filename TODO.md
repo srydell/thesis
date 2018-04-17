@@ -9,7 +9,7 @@
 * Write test code for isingWorm
 * Add check to see if all loops are closed
 * Loop over all the heads of each worm and move one step for each
-* Write more general code for adding new thing to dictionary (correlation function). I have written one in indexClusters called addIfNotExists. Adapt this to fit for the correlation function.
+* Write simulateWormStep that just moves one worm one step and updates the correlation function
 
 ### graphs ###
 
@@ -25,6 +25,3 @@
 
 ### indexClusters ###
 
-* Write some function that finds all heads of each worm in clusters
-* Write findClusterEnds() to find the 'heads' of the worm
-* Write isLoop() to find out if a cluster is a loop. A loop is something where every site in a cluster exists two times in the others linked neighbours.
