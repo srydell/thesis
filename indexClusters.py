@@ -41,7 +41,9 @@ def addIfNotExists(key, value, dictionary):
         dictionary[key] = value
         return
     elif type(dictionary[key]) == list:
-        dictionary[key].append(value)
+        # Only append if it is not already there
+        if value not in dictionary[key]:
+            dictionary[key].append(value)
 
 def compareList(value, cList):
     """Checks if every entry in cList is equal to value
@@ -65,16 +67,16 @@ def removeDeprecated(clusters, graph):
     emptyClusterIndices = []
     # clusters is as: {index0: [site0, site1, ...], index1: ...}
     for index in clusters:
-        for site in clusters[index]:
+        for site in clusters[index]["sites"]:
             # If the index has changed (e.g. it was overwritten for something smaller)
             if graph[site]["index"] != index:
                 toBeRemoved.append(site)
 
         # No longer looping over the list so it's safe to remove the sites
         for site in toBeRemoved:
-            clusters[index].remove(site)
+            clusters[index]["sites"].remove(site)
 
-        if clusters[index] == []:
+        if clusters[index]["sites"] == []:
             emptyClusterIndices.append(index)
         # For the next cluster to be inspected
         toBeRemoved = []
@@ -101,17 +103,18 @@ def visualizeIndex(graph, N, M):
 
     return matrix
 
-def findClusterEnds(clusters, graph):
-    """Find the cluster end in graph for each site in clusters
-    An end is a site that has some index and only one link
-    If a loop is found it is removed from clusters
+def findClusterLoopsAndEnds(clusters, graph):
+    """Find the cluster end and loops in graph in clusters
+    An end is a site that is found an odd number of times in all linked neighbours in the cluster
+    A loop is where every site in the cluster is found an even amount of times in all linked neighbours
+    Modifies clusters so that it is as: {index: {'end': endSite, 'sites': listOfSites}, ...}
+    If enSite is None, then that cluster is a loop
 
-    :clusters: dictionary - {site: index, ...}
+    :clusters: dictionary - {index: listOfSites, ...}
     :graph: dictionary
     :returns: None
     """
 
-    pass
 
 def indexClusters(clusters, graph):
     """Loop through the graph and index the clusters,
@@ -143,9 +146,11 @@ def indexClusters(clusters, graph):
                     indexHasChanged = True
                     largestIndex += 1
                     # print(f"Setting {largestIndex} on {[site, *neighbours]}")
+                    # print(f"Creating new entry into clusters: {largestIndex}: 'end': None, 'sites': {[site]}")
                     # Add a new cluster list to clusters
-                    addIfNotExists(largestIndex, [site], clusters)
+                    addIfNotExists(largestIndex, {"end": None, "sites": [site]}, clusters)
                     setIndex(largestIndex, [site, *neighbours], graph)
+                    # print(f"Now clusters look like: {clusters}")
                     # Go to next in the for loop through sites
                     continue
 
@@ -161,13 +166,20 @@ def indexClusters(clusters, graph):
                     indexHasChanged = True
                     # print(f"Not all clusters have the smallest index {minClusterIndex}")
                     # print(f"Setting {minClusterIndex} on {[site, *neighbours]}")
-                    addIfNotExists(minClusterIndex, site, clusters)
+                    # print(f"Adding site {site} to dict {clusters[minClusterIndex]}")
+                    # Add a new cluster list to clusters
                     setIndex(minClusterIndex, [site, *neighbours], graph)
-                    # Go to next in the for loop through sites
-                    continue
+
+                # Always add the site to the cluster dictionary
+                addIfNotExists("sites", site, clusters[minClusterIndex])
+                # print(f"Now clusters look like: {clusters}")
 
     # Remove deprecated sites from clusters
+    print(clusters)
+    input(" ")
     removeDeprecated(clusters, graph)
+    print(clusters)
+    input(" ")
 
 if __name__ == '__main__':
     numRows = 3
