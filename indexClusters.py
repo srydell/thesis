@@ -103,18 +103,39 @@ def visualizeIndex(graph, N, M):
 
     return matrix
 
-def findClusterLoopsAndEnds(clusters, graph):
+def classifyClusters(clusters, graph):
     """Find the cluster end and loops in graph in clusters
-    An end is a site that is found an odd number of times in all linked neighbours in the cluster
-    A loop is where every site in the cluster is found an even amount of times in all linked neighbours
-    Modifies clusters so that it is as: {index: {'end': endSite, 'sites': listOfSites}, ...}
-    If enSite is None, then that cluster is a loop
+    An end is a site that has an odd number of linked neighbours
+    A loop is where every site in the cluster has an even number of linked neighbours
+    Finds endSite and modifies clusters as: {index: {'end': endSite, 'sites': listOfSites}, ...}
+    If no end has been found, it stays as None
 
-    :clusters: dictionary - {index: listOfSites, ...}
+    :clusters: dictionary - {index: {"end": None, "sites": listOfSites}, ...}
     :graph: dictionary
     :returns: None
     """
 
+    for index in clusters:
+        # Will be {site0: numOfTimesFound, site1: ...}
+        checked = {}
+        for site in clusters[index]["sites"]:
+            neighbours = getLinkedNeighbours(site, graph)
+            for neighbour in neighbours:
+                neighbour = tuple(neighbour)
+                if checked.get(neighbour) is None:
+                    # If it has not been found before
+                    checked[neighbour] = 1
+                else:
+                    # It has been found before, add +1
+                    checked[neighbour] += 1
+
+        for site in checked:
+            # If we found an end (site with odd number of neighbours)
+            # NOTE: This only finds the first end,
+            # there must be a second one that we don't care about
+            if checked[site] % 2 == 1:
+                clusters[index]["end"] = site
+                break
 
 def indexClusters(clusters, graph):
     """Loop through the graph and index the clusters,
@@ -175,11 +196,7 @@ def indexClusters(clusters, graph):
                 # print(f"Now clusters look like: {clusters}")
 
     # Remove deprecated sites from clusters
-    print(clusters)
-    input(" ")
     removeDeprecated(clusters, graph)
-    print(clusters)
-    input(" ")
 
 if __name__ == '__main__':
     numRows = 3
