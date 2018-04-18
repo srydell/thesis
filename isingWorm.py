@@ -78,33 +78,30 @@ def main(K, N, M, boundaryCondition):
     Gx = {}
 
     clusters = {}
-    allLoop = False
+    allClustersAreLoops = False
     colorLinkBetween(currentSite, previousSite, gitter)
 
     # Initialize clusters
     indexClusters(clusters, gitter)
     classifyClusters(clusters, gitter)
-    for row in visualizeIndex(gitter, N, M):
-        print(row)
-    input(" ")
-    while not allLoop:
+
+    while not allClustersAreLoops:
         # Check if all clusters are loops
-        if all(clusters[index]["end"] is None for index in clusters):
-            allLoop = True
-            continue
+        if all(clusters[index]["ends"] == [] for index in clusters):
+            allClustersAreLoops = True
 
         else:
             for index in clusters:
-                if clusters[index]["end"] is not None:
-                    currentSite = clusters[index]["end"]
-                    # currentSite only has one neighbour (it is an end of a cluster)
-                    previousSite = getLinkedNeighbours(currentSite, gitter)[0]
-                    simulateWormStep(K, Gx, currentSite, firstSite, gitter, previousSite)
+                if clusters[index]["ends"] != []:
+                    currentSite = clusters[index]["ends"]
+                    # currentSite only has one neighbour (it is an ends of a cluster) NOTE: NOT TRUE CAN HAVE 3 NEIGHBOURS
+                    # previousSite = getLinkedNeighbours(currentSite, gitter)[0]
+                    previousSite = getLinkedNeighbours(currentSite, gitter)
+                    print(f"Previous site: {previousSite}")
+                    input(f"Current site: {currentSite}")
+                    simulateWormStep(K, Gx, currentSite, firstSite, gitter, previousSite[0])
             indexClusters(clusters, gitter)
             classifyClusters(clusters, gitter)
-        for row in visualizeIndex(gitter, N, M):
-            print(row)
-        input(" ")
 
     return gitter, Gx
 
