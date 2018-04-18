@@ -1,4 +1,5 @@
 from graphs import *
+from indexClusters import *
 from math import tanh, pow
 
 def isAccepted(K, site0, site1, gitter):
@@ -86,6 +87,32 @@ def addToCorr(firstSite, newSite, value, corr):
         # key has been hashed before, add value
         corr[key] += value
 
+def simulateWormStep(gitter, K, currentSite, previousSite, corrFunction):
+    """TODO: Docstring for simulationStep.
+
+    :gitter: TODO
+    :K: TODO
+    :currentSite: TODO
+    :previousSite: TODO
+    :returns: TODO
+    """
+
+    # Get potential next step (choose any neighbour exept previousSite)
+    newSite = getRandomNeighbour(site=currentSite, exceptSite=previousSite, graph=gitter)
+
+    if isAccepted(K, currentSite, newSite, gitter):
+        colorLinkBetween(currentSite, newSite, gitter)
+
+        previousSite = currentSite
+        currentSite = newSite
+        
+        # Update correlation function on the fly:
+        # add +1 to G(i-i0) for the open path from i0 to i
+        # addIfNotExists(sum([pow(firstSite[i] - newSite[i], 2) for i in range(2)]), 1, Gr)
+        addIfNotExists(firstSite[0] - newSite[0], 1, corrFunction)
+
+    return gitter, Gr, Gx
+
 def main(K, N, M, bc):
     """Simulate ising worm algorithm
 
@@ -96,12 +123,10 @@ def main(K, N, M, bc):
     :returns: dictionary - gitter
     """
 
-    gitterSize = (N, M)
-
-    gitter = buildGraph(N, M, bc)
-
     # Initialize the random number generator with current time as seed
     random.seed()
+
+    gitter = buildGraph(N, M, bc)
 
     # Initialize starting site as some random [i, j] within the gitter
     # Track the previous site to avoid that the current turns 180 degrees
@@ -109,19 +134,36 @@ def main(K, N, M, bc):
     currentSite = firstSite
     previousSite = None
 
-    # Correlation function for r
-    G = {}
+    # Correlation function for r and x
+    Gr = {}
     Gx = {}
 
-    # Number of iterations
-    # n = 50
+    # ===========
 
-    loop = False
+    # clusters = {}
+    # allLoop = False
+    # simulateWormStep()
+    # indexClusters()
+    # classifyClusters()
+    # while not allLoop:
+    #     # Check if all clusters are loops
+    #     if all(clusters[index]["end"] is None for index in clusters):
+    #         allLoop = True
+    #         continue
+
+    #     else:
+    #         for index in clusters:
+    #             if clusters[index]["end"] is not None:
+    #                 simulateWormStep(clusters[index]["end"])
+    #         indexClusters()
+    #         classifyClusters()
+        
+    # ==========
+
+    allLoop = False
     # Simulation
-    # while n > 0:
     print("First site:", firstSite)
-    while not loop:
-        # n -= 1
+    while not allLoop:
         newSite = getRandomNeighbour(site=currentSite, exceptSite=previousSite, graph=gitter)
 
         if isAccepted(K, currentSite, newSite, gitter):
@@ -132,17 +174,17 @@ def main(K, N, M, bc):
             
             # Update correlation function on the fly:
             # add +1 to G(i-i0) for the open path from i0 to i
-            addToCorr(firstSite, newSite, 1, G)
-            addXToCorr(firstSite, newSite, 1, Gx)
+            addIfNotExists(sum([pow(firstSite[i] - newSite[i], 2) for i in range(2)]), 1, Gr)
+            addIfNotExists(firstSite[0] - newSite[0], 1, Gx)
             if newSite != firstSite:
                 continue
             else:
                 # TODO: Update averages: add +1 to G(0), add current loop length to <L>
                 # corr[site][site] += 1
                 print("We found a loop")
-                loop = True
+                allLoop = True
 
-    return gitter, G, Gx
+    return gitter, Gr, Gx
 
 if __name__ == '__main__':
     J = 0.5
