@@ -109,13 +109,13 @@ def visualizeIndex(graph, N, M):
     return matrix
 
 def classifyClusters(clusters, graph):
-    """Find the cluster end and loops in graph in clusters
-    An end is a site that has an odd number of linked neighbours
+    """Find the cluster ends and loops in graph in clusters
+    An ends is a site that has an odd number of linked neighbours
     A loop is where every site in the cluster has an even number of linked neighbours
-    Finds endSite and modifies clusters as: {index: {'end': endSite, 'sites': listOfSites}, ...}
-    If no end has been found, it stays as None
+    Finds endSite and modifies clusters as: {index: {'ends': endSite, 'sites': listOfSites}, ...}
+    If no ends has been found, it stays as None
 
-    :clusters: dictionary - {index: {"end": None, "sites": listOfSites}, ...}
+    :clusters: dictionary - {index: {"ends": None, "sites": listOfSites}, ...}
     :graph: dictionary
     :returns: None
     """
@@ -135,17 +135,15 @@ def classifyClusters(clusters, graph):
                     checked[neighbour] += 1
 
         for site in checked:
-            # If we found an end (site with odd number of neighbours)
-            # NOTE: This only finds the first end,
-            # there must be a second one that we don't care about
+            # If we found an ends (site with odd number of neighbours)
+            # append it to the list of ends
             if checked[site] % 2 == 1:
-                clusters[index]["end"] = site
-                break
+                addIfNotExists("ends", site, clusters[index])
 
 def indexClusters(clusters, graph):
     """Loop through the graph and index the clusters,
     also adds the site where every new cluster is found to clusters
-    In the end it removes all deprecated sites in clusters (with indices that have been overwritten)
+    In the ends it removes all deprecated sites in clusters (with indices that have been overwritten)
 
     :clusters: dictionary
     :graph: dictionary
@@ -159,24 +157,19 @@ def indexClusters(clusters, graph):
         indexHasChanged = False
         for site in graph:
             neighbours = getLinkedNeighbours(site, graph)
-            # input(f"{site} has {neighbours} to go through.")
 
             # If there are any links
             if neighbours != []:
                 # Get a list of all the indices from the neighbours and the current site
                 clusterIndices = getIndex([site, *neighbours], graph)
-                # input(f"Got indices {clusterIndices} from sites {[site, *neighbours]}")
 
                 # If we have found a totally new cluster (all indices are 0)
                 if compareList(0, clusterIndices):
                     indexHasChanged = True
                     largestIndex += 1
-                    # print(f"Setting {largestIndex} on {[site, *neighbours]}")
-                    # print(f"Creating new entry into clusters: {largestIndex}: 'end': None, 'sites': {[site]}")
                     # Add a new cluster list to clusters
-                    addIfNotExists(largestIndex, {"end": None, "sites": [site]}, clusters)
+                    addIfNotExists(largestIndex, {"ends": [], "sites": [site]}, clusters)
                     setIndex(largestIndex, [site, *neighbours], graph)
-                    # print(f"Now clusters look like: {clusters}")
                     # Go to next in the for loop through sites
                     continue
 
@@ -190,15 +183,11 @@ def indexClusters(clusters, graph):
                 # but not all neighbours have the same index, so change them 
                 if not allHaveMinIndex:
                     indexHasChanged = True
-                    # print(f"Not all clusters have the smallest index {minClusterIndex}")
-                    # print(f"Setting {minClusterIndex} on {[site, *neighbours]}")
-                    # print(f"Adding site {site} to dict {clusters[minClusterIndex]}")
                     # Add a new cluster list to clusters
                     setIndex(minClusterIndex, [site, *neighbours], graph)
 
                 # Always add the site to the cluster dictionary
                 addIfNotExists("sites", site, clusters[minClusterIndex])
-                # print(f"Now clusters look like: {clusters}")
 
     # Remove deprecated sites from clusters
     removeDeprecated(clusters, graph)
@@ -206,24 +195,37 @@ def indexClusters(clusters, graph):
 if __name__ == '__main__':
     numRows = 3
     numCols = 4
-    clusterGraph = buildGraph(numRows, numCols, "dirichlet")
+
+    g1 = buildGraph(numRows, numCols, "dirichlet")
+    g2 = buildGraph(numRows, numCols, "dirichlet")
+
     # One cluster
-    colorLinkBetween([0, 0], [1, 0], clusterGraph)
-    colorLinkBetween([1, 0], [1, 1], clusterGraph)
-    colorLinkBetween([1, 1], [1, 2], clusterGraph)
-    colorLinkBetween([1, 2], [0, 2], clusterGraph)
-    colorLinkBetween([0, 2], [0, 3], clusterGraph)
+    colorLinkBetween([0, 0], [1, 0], g1)
+    colorLinkBetween([1, 0], [1, 1], g1)
+    colorLinkBetween([1, 1], [1, 2], g1)
+    colorLinkBetween([1, 2], [0, 2], g1)
+    colorLinkBetween([0, 2], [0, 3], g1)
 
     # Another cluster
-    colorLinkBetween([2, 0], [2, 1], clusterGraph)
-    colorLinkBetween([2, 1], [2, 2], clusterGraph)
+    colorLinkBetween([2, 0], [2, 1], g1)
+    colorLinkBetween([2, 1], [2, 2], g1)
+
+    # Another cluster
+    colorLinkBetween([0, 0], [0, 1], g2)
+    colorLinkBetween([0, 1], [1, 1], g2)
+    colorLinkBetween([1, 1], [1, 0], g2)
+    colorLinkBetween([1, 0], [0, 0], g2)
 
     clusters = {}
-    before = copy.deepcopy(clusterGraph)
-    indexClusters(clusters, clusterGraph)
-    after = clusterGraph
+    clusterWithLoop = {}
 
-    # index* is a matrix showing only the indices of each site
-    indexBefore = visualizeIndex(before, numRows, numCols)
-    indexAfter = visualizeIndex(after, numRows, numCols)
+    indexClusters(clusters, g1)
+    classifyClusters(clusters, g1)
+
+    indexClusters(clusterWithLoop, g2)
+    classifyClusters(clusterWithLoop, g2)
+
+    # matrix* is a matrix showing only the indices of each site
+    matrixg1 = visualizeIndex(g1, numRows, numCols)
+    matrixg2 = visualizeIndex(g2, numRows, numCols)
 
