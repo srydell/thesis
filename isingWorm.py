@@ -26,6 +26,21 @@ def isAccepted(K, site0, site1, gitter):
     else:
         return False
 
+def getLastTwoSites(clusterInfo, gitter):
+    """Gets the current and previous site by checking the state of the cluster ends
+    If one of the ends only has one neighbour, then that neighbour is the previousSite and the end is the currentSite.
+    If there are more neighbours, TODO
+
+    :clusterInfo: dictionary - {"ends": listOfEnds, sites: listOfSitesInCluster}
+    :gitter: dictionary
+    :returns: 2 1x2 matrix - Coordinates of the current and previous site
+    """
+
+    for end in clusterInfo["ends"]:
+        neighbours = getLinkedNeighbours(end, gitter)
+        if len(neighbours) == 1:
+            return end, neighbours.pop()
+
 def simulateWormStep(K, corrFunction, currentSite, firstSite, gitter, previousSite):
     """Moves worm head from currentSite to some new site if isAccepted.
     Chooses any neighbour from currentSite except previousSite to avoid moving 180 degrees.
@@ -69,9 +84,9 @@ def main(K, N, M, boundaryCondition):
     # Initialize starting site as some random [i, j] within the gitter
     firstSite = [random.randrange(0, N), random.randrange(0, M)]
     # Track the previous site to avoid that the current turns 180 degrees
-    previousSite = firstSite
+    previousSites = {1: firstSite}
     # Get some random neighbour to form the first link
-    currentSite = getRandomNeighbour(previousSite, None, gitter)
+    currentSite = getRandomNeighbour(firstSite, None, gitter)
 
     # Correlation function for r and x
     # Gr = {}
@@ -79,7 +94,7 @@ def main(K, N, M, boundaryCondition):
 
     clusters = {}
     allClustersAreLoops = False
-    colorLinkBetween(currentSite, previousSite, gitter)
+    colorLinkBetween(currentSite, firstSite, gitter)
 
     # Initialize clusters
     indexClusters(clusters, gitter)
@@ -93,10 +108,10 @@ def main(K, N, M, boundaryCondition):
         else:
             for index in clusters:
                 if clusters[index]["ends"] != []:
-                    currentSite = clusters[index]["ends"]
+                    wormHeads = clusters[index]["ends"]
+                    # currentSite = clusters[index]["ends"]
                     # currentSite only has one neighbour (it is an ends of a cluster) NOTE: NOT TRUE CAN HAVE 3 NEIGHBOURS
-                    # previousSite = getLinkedNeighbours(currentSite, gitter)[0]
-                    previousSite = getLinkedNeighbours(currentSite, gitter)
+                    currentSite, previousSite = getLastTwoSites(clusters[index], gitter)
                     print(f"Previous site: {previousSite}")
                     input(f"Current site: {currentSite}")
                     simulateWormStep(K, Gx, currentSite, firstSite, gitter, previousSite[0])
