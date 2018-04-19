@@ -140,6 +140,16 @@ def classifyClusters(clusters, graph):
             if checked[site] % 2 == 1:
                 addIfNotExists("ends", site, clusters[index])
 
+        # Lastly, if any ends are now part of a loop - remove them
+        endsToRemove = []
+        for site in clusters[index]["ends"]:
+            if len(getLinkedNeighbours(site, graph)) % 2 == 0:
+                endsToRemove.append(site)
+
+        # Remove the sites
+        for site in endsToRemove:
+            clusters[index]["ends"].remove(site)
+
 def indexClusters(clusters, graph):
     """Loop through the graph and index the clusters,
     also adds the site where every new cluster is found to clusters
@@ -189,6 +199,10 @@ def indexClusters(clusters, graph):
                 # Always add the site to the cluster dictionary
                 addIfNotExists("sites", site, clusters[minClusterIndex])
 
+            # If it has no linked neighbours it should always have index 0
+            else:
+                graph[site]["index"] = 0
+
     # Remove deprecated sites from clusters
     removeDeprecated(clusters, graph)
 
@@ -229,3 +243,24 @@ if __name__ == '__main__':
     matrixg1 = visualizeIndex(g1, numRows, numCols)
     matrixg2 = visualizeIndex(g2, numRows, numCols)
 
+    # Close the loop in g1
+    colorLinkBetween([0, 3], [1, 3], g1)
+    indexClusters(clusters, g1)
+    classifyClusters(clusters, g1)
+
+    colorLinkBetween([2, 3], [1, 3], g1)
+    indexClusters(clusters, g1)
+    classifyClusters(clusters, g1)
+
+    colorLinkBetween([2, 3], [2, 2], g1)
+    indexClusters(clusters, g1)
+    classifyClusters(clusters, g1)
+
+    colorLinkBetween([1, 0], [2, 0], g1)
+    indexClusters(clusters, g1)
+    classifyClusters(clusters, g1)
+
+    colorLinkBetween([1, 0], [0, 0], g1)
+    indexClusters(clusters, g1)
+    classifyClusters(clusters, g1)
+    matrixg1 = visualizeIndex(g1, numRows, numCols)
