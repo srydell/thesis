@@ -1,6 +1,7 @@
-from graphs import *
-from indexClusters import *
+import sys
 from math import tanh, pow
+from indexClusters import *
+from graphs import *
 
 def isAccepted(K, site0, site1, gitter):
     """Check if the link between site0 and site1 in gitter is accepted
@@ -25,26 +26,6 @@ def isAccepted(K, site0, site1, gitter):
         return True
     else:
         return False
-
-def getLastTwoSites(clusterInfo, gitter, index, startSites):
-    """Gets the current and previous site by checking the state of the cluster ends
-    If one of the ends only has one neighbour, then that neighbour is the previousSite and the end is the currentSite.
-    If there are more neighbours, TODO
-
-    :clusterInfo: dictionary - {"ends": listOfEnds, sites: listOfSitesInCluster}
-    :gitter: dictionary
-    :returns: 2 1x2 matrix - Coordinates of the current and previous site
-    """
-
-    # If we got a new cluster let one of the ends be the start site
-    if startSites.get(index) is None:
-        startSites[index] = clusters["ends"][0]
-
-    for end in clusterInfo["ends"]:
-        if end != startSites[index]:
-            neighbours = getLinkedNeighbours(end, gitter)
-            if len(neighbours) == 1:
-                return end, neighbours.pop()
 
 def updateCorrFunc(firstSite, nextSite, corrFunction):
     """Updates the correlation function
@@ -71,8 +52,8 @@ def updateLoopLengths(loopLengths, index, clusters):
     """
     loopLengths.append(len(clusters[index]["sites"]))
 
-def simulateWormStep(K, currentSite, gitter, previousSite):
-    """Moves worm head from currentSite to some new site if isAccepted.
+def simulateWorm(loopLengths, firstSite, K, clusters, currentSite, gitter, previousSite):
+    """Starts a new worm and moves it until a loop is formed
     Chooses any neighbour from currentSite except previousSite to avoid moving 180 degrees.
     Updates the correlation function corrFunction after each step.
 
@@ -82,16 +63,33 @@ def simulateWormStep(K, currentSite, gitter, previousSite):
     :previousSite: TODO
     :returns: TODO
     """
+    indexClusters(clusters, gitter)
+    classifyClusters(clusters, gitter)
 
-    # Get potential next step (choose any neighbour exept previousSite)
-    nextSite = getRandomNeighbour(site=currentSite, exceptSite=previousSite, graph=gitter)
+    loopFormed = False
+    while not loopFormed:
+        # Get potential next step (choose any neighbour exept previousSite)
+        nextSite = getRandomNeighbour(site=currentSite, exceptSite=previousSite, graph=gitter)
 
-    if isAccepted(K, currentSite, nextSite, gitter):
-        colorLinkBetween(currentSite, nextSite, gitter)
+        if isAccepted(K, currentSite, nextSite, gitter):
+            # Flip the weight between currentSite and nextSite
+            colorLinkBetween(currentSite, nextSite, gitter)
 
-        return nextSite
+            previousSite = currentSite
+            currentSite = nextSite
 
-    return currentSite
+            if nextSite == firstSite:
+                # Found a new loop
+                loopFormed = True
+                updateLoopLengths(loopLengths, gitter[tuple(firstSite)]["index"], clusters)
+
+        # NOTE: This should always runs, even when not accepted
+        updateCorrFunc(firstSite, nextSite, Gx)
+
+        # Update indexing
+        indexClusters(clusters, gitter)
+        # Update ends in clusters (classify clusters as loops and open clusters)
+        classifyClusters(clusters, gitter)
 
 def main(K, N, M, boundaryCondition):
     """Simulate ising worm algorithm
@@ -104,7 +102,10 @@ def main(K, N, M, boundaryCondition):
     """
 
     # Initialize the random number generator with current time as seed
-    random.seed()
+    seed = random.randrange(sys.maxsize)
+    # This seed produces a self-eating loop (resulting in clusters = {})
+    # seed = 5540102676881230539
+    random.seed(seed)
 
     gitter = buildGraph(N, M, boundaryCondition)
 
@@ -131,8 +132,8 @@ def main(K, N, M, boundaryCondition):
     indexClusters(clusters, gitter)
     classifyClusters(clusters, gitter)
 
-    allClustersAreLoops = False
-    while not allClustersAreLoops:
+    loopFormed = False
+    while not loopFormed:
         # Get potential next step (choose any neighbour exept previousSite)
         nextSite = getRandomNeighbour(site=currentSite, exceptSite=previousSite, graph=gitter)
 
@@ -143,10 +144,10 @@ def main(K, N, M, boundaryCondition):
             previousSite = currentSite
             currentSite = nextSite
 
-        if nextSite == firstSite:
-            # Found a new loop
-            allClustersAreLoops = True
-            updateLoopLengths(loopLengths, gitter[tuple(firstSite)]["index"], clusters)
+            if nextSite == firstSite:
+                # Found a new loop
+                loopFormed = True
+                updateLoopLengths(loopLengths, gitter[tuple(firstSite)]["index"], clusters)
 
         # NOTE: This should always runs, even when not accepted
         updateCorrFunc(firstSite, nextSite, Gx)
@@ -158,7 +159,7 @@ def main(K, N, M, boundaryCondition):
 
     averageLoopLength = [l/len(loopLengths) for l in loopLengths]
 
-    return gitter, Gx, clusters, averageLoopLength
+    return gitter, Gx, clusters, averageLoopLength, seed
 
 if __name__ == '__main__':
     J = 0.5
@@ -175,13 +176,10 @@ if __name__ == '__main__':
     boundaryCondition = "dirichlet"
 
     # Run the simulation
-    gitter, Gx, clusters, averageLoopLength = main(K, N, M, boundaryCondition) 
+    gitter, Gx, clusters, averageLoopLength, seed = main(K, N, M, boundaryCondition) 
     print(f"Found a loop: {clusters}")
-    if len(clusters[1]["ends"]) != 0:
-        site1 = clusters[1]["ends"][0]
-        site2 = clusters[1]["ends"][1]
-        print(f"First weird site: {site1} - {gitter[site1]}")
-        print(f"Second weird site: {site2} - {gitter[site2]}")
-    saveToFile = False
-    if saveToFile:
+    print(f"The seed was: {seed}")
+
+    SAVETOFILE = False
+    if SAVETOFILE:
         saveGraph(gitter)
