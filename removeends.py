@@ -134,24 +134,24 @@ def indexClusters(clusters, graph):
             # If there are any links
             if neighbours != []:
                 # Make each neighbour hashable
-                neighbours = [tuple(neighbour) for neighbour in neighbours]
-                print(f"On site {site}, will process: {[site, *neighbours]}")
+                localCluster = [list(site), *neighbours]
+                print(f"On site {site}, will process: {localCluster}")
 
                 # None of the sites in the local cluster have been indexed
-                if notIndexed([site, *neighbours], clusters):
+                if notIndexed(localCluster, clusters):
                     indexHasChanged = True
                     largestIndex += 1
                     # Add the sites to the new index
-                    print(f"Setting index {largestIndex} on {[site, *neighbours]}")
+                    print(f"Setting index {largestIndex} on {localCluster}")
                     print(f"Cluster before setting:\n{clusters}")
-                    clusters[largestIndex] = [site, *neighbours]
+                    clusters[largestIndex] = localCluster
                     input(f"Cluster after setting:\n{clusters}")
 
                     # Go to next site
                     continue
                     
                 # Get the smallest of them that is not 0
-                localClusterIndices, smallestIndex = getIndices([site, *neighbours], clusters)
+                localClusterIndices, smallestIndex = getIndices(localCluster, clusters)
 
                 allHaveMinIndex = all(index == smallestIndex for index in localClusterIndices)
                 print(f"The indices are: {localClusterIndices}")
@@ -162,9 +162,9 @@ def indexClusters(clusters, graph):
                     # Not all neighbours have the same index
                     indexHasChanged = True
 
-                    print(f"Move sites {[site, *neighbours]} to index {smallestIndex}")
+                    print(f"Move sites {localCluster} to index {smallestIndex}")
                     print(f"Cluster before moving:\n{clusters}")
-                    moveToIndex(smallestIndex, [site, *neighbours], clusters)
+                    moveToIndex(smallestIndex, localCluster, clusters)
                     input(f"Cluster after moving:\n{clusters}")
 
     # Remove deprecated sites from clusters
