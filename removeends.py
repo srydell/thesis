@@ -1,5 +1,6 @@
 from graphs import getLinkedNeighbours, buildGraph, colorLinkBetween
 import copy
+DEBUG=False
 
 def addIfNotExists(key, value, dictionary):
     """Adds the entry (key: value) to dictionary if not exists
@@ -24,16 +25,6 @@ def addIfNotExists(key, value, dictionary):
         if value not in dictionary[key]:
             dictionary[key].append(value)
 
-def compareList(value, cList):
-    """Checks if every entry in cList is equal to value
-
-    :value: Int
-    :cList: 1xn matrix - list to compare on the form [2, 1, ...]
-    :returns: Boolean
-    """
-
-    return all(listVal == value for listVal in cList)
-
 def removeDeprecated(clusters):
     """Goes through each index in clusters and check if it has any sites
 
@@ -50,32 +41,35 @@ def removeDeprecated(clusters):
     for index in emptyClusterIndices:
         clusters.pop(index)
 
-def getIndices(listOfSites, clusters):
-    """Gets a list of indices for each site in listOfSites
+def getIndex(sites, clusters):
+    """Gets a list of indices for each site in sites
+    If there is only one site, it returns an int
 
-    :listOfSites: TODO
+    :sites: TODO
     :clusters: TODO
     :returns: TODO
     """
 
+    onlyOneSite = all(type(entry) == int for entry in sites)
     indices = []
     smallestIndex = None
     for index in clusters:
-        for site in listOfSites:
-            if site in clusters[index]:
-                indices.append(index)
+        if onlyOneSite:
+            if sites in clusters[index]:
+                return index
+            else:
+                continue
 
-                # If it is the first index encountered
-                if smallestIndex is None:
-                    smallestIndex = index
-                elif index < smallestIndex:
-                    smallestIndex = index
+        else:
+            for site in sites:
+                if site in clusters[index]:
+                    indices.append(index)
 
-    numSitesNotIndexed = len(listOfSites) - len(indices)
+    # If could'nt find site
+    if onlyOneSite:
+        return None
 
-    # Pad indices with zeros for each site not indexed
-    indices += [0]*numSitesNotIndexed
-    return indices, smallestIndex
+    return indices
 
 def moveToIndex(newIndex, listOfSites, clusters):
     """Moves all sites in listOfSites from their previous index to newIndex
@@ -135,42 +129,67 @@ def indexClusters(clusters, graph):
             if neighbours != []:
                 # Make each neighbour hashable
                 localCluster = [list(site), *neighbours]
-                print(f"On site {site}, will process: {localCluster}")
+                if DEBUG:
+                    print(f"On site {site}, will process: {localCluster}")
 
                 # None of the sites in the local cluster have been indexed
                 if notIndexed(localCluster, clusters):
                     indexHasChanged = True
                     largestIndex += 1
                     # Add the sites to the new index
-                    print(f"Setting index {largestIndex} on {localCluster}")
-                    print(f"Cluster before setting:\n{clusters}")
+                    if DEBUG:
+                        print(f"Setting index {largestIndex} on {localCluster}")
+                        print(f"Cluster before setting:\n{clusters}")
                     clusters[largestIndex] = localCluster
-                    input(f"Cluster after setting:\n{clusters}")
+
+                    if DEBUG:
+                        input(f"Cluster after setting:\n{clusters}")
 
                     # Go to next site
                     continue
                     
+                # Only gets indices that are set in clusters
+                localClusterIndices = getIndex(localCluster, clusters)
                 # Get the smallest of them that is not 0
-                localClusterIndices, smallestIndex = getIndices(localCluster, clusters)
+                smallestIndex = min(localClusterIndices)
+                if DEBUG:
+                    print(f"Indices found: {localClusterIndices}")
+                    print(f"Smallest index: {smallestIndex}")
+
+                numSitesNotIndexed = len(localCluster) - len(localClusterIndices)
+
+                # Pad indices with zeros for each site not indexed
+                localClusterIndices += [0]*numSitesNotIndexed
 
                 allHaveMinIndex = all(index == smallestIndex for index in localClusterIndices)
-                print(f"The indices are: {localClusterIndices}")
-                print(f"The smallest index is: {smallestIndex}")
-                input(f"All have this index: {allHaveMinIndex}")
+                if DEBUG:
+                    print(f"The indices are: {localClusterIndices}")
+                    print(f"The smallest index is: {smallestIndex}")
+                    input(f"All have this index: {allHaveMinIndex}")
 
                 if not allHaveMinIndex:
                     # Not all neighbours have the same index
                     indexHasChanged = True
 
-                    print(f"Move sites {localCluster} to index {smallestIndex}")
-                    print(f"Cluster before moving:\n{clusters}")
+                    if DEBUG:
+                        print(f"Move sites {localCluster} to index {smallestIndex}")
+                        print(f"Cluster before moving:\n{clusters}")
                     moveToIndex(smallestIndex, localCluster, clusters)
-                    input(f"Cluster after moving:\n{clusters}")
+                    if DEBUG:
+                        input(f"Cluster after moving:\n{clusters}")
+            else:
+                # If it has no neighbours it should not exist in clusters.
+                # This can happen if it is overridden by itself or another cluster.
+                for index in clusters:
+                    if site in clusters[index]:
+                        clusters[index].remove(site)
 
     # Remove deprecated sites from clusters
-    print(f"Removing empty indices. Cluster is now:\n{clusters}")
+    if DEBUG:
+        print(f"Removing empty indices. Cluster is now:\n{clusters}")
     removeDeprecated(clusters)
-    print(f"Done. Cluster is now:\n{clusters}")
+    if DEBUG:
+        print(f"Done. Cluster is now:\n{clusters}")
 
 if __name__ == '__main__':
     numRows = 3
