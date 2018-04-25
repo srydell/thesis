@@ -24,6 +24,7 @@
 !plotGraph.py
 !hoshenKopelman.py
 !indexClusters.py
+!removeends.py
 
 # Directories
 !literature/

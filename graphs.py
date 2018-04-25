@@ -13,7 +13,6 @@ def buildGraph(N, M, bc="periodic"):
 
     graph = {}
     startingWeight = 0
-    startingIndex = 0
     supportedBC = ["periodic", "dirichlet"]
 
     # I sometimes have fat fingers
@@ -44,12 +43,11 @@ def buildGraph(N, M, bc="periodic"):
 
             # Initialize the site
             graph[(i, j)] = {}
-            graph[(i, j)]["index"] = startingIndex
             for neighbour in neighbours:
                 graph[(i, j)][tuple(neighbour)] = startingWeight
 
             # Should now look like:
-			# graph[(i, j)] = {"index": startingIndex, right: startingWeight, up: startingWeight, left: startingWeight, down: startingWeight}
+			# graph[(i, j)] = {right: startingWeight, up: startingWeight, left: startingWeight, down: startingWeight}
 
     return graph
 
@@ -112,9 +110,8 @@ def getLinkedNeighbours(site, graph):
     site = tuple(site)
     linkedNeighbours = []
     for neighbour in graph[site]:
-        if neighbour != "index":
-            if graph[site][neighbour] == 1:
-                linkedNeighbours.append(list(neighbour))
+        if graph[site][neighbour] == 1:
+            linkedNeighbours.append(list(neighbour))
 
     # linkedNeighbours is as [[x, y], [z, w], ...]
     return linkedNeighbours
@@ -134,8 +131,6 @@ def getRandomNeighbour(site, exceptSite, graph):
     # Get all the neighbours to site
     # neighbours is as [(i, j+1), ...]
     neighbours = list(graph[site].keys())
-    # Remove "index" value so that only the neighbours remain
-    neighbours.remove("index")
 
     if exceptSite is not None:
         neighbours.remove(tuple(exceptSite))
