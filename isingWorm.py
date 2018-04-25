@@ -83,6 +83,8 @@ def simulateWorm(corrFunction, K, gitter):
     clusters = {}
     indexClusters(clusters, gitter)
 
+    updateCorrFunc(firstSite, currentSite, corrFunction)
+
     loopFormed = False
     while not loopFormed:
         # Get potential next step (choose any neighbour exept previousSite)
@@ -119,7 +121,6 @@ def simulateWorm(corrFunction, K, gitter):
                     print(f"Loop lengths before updating: {loopLengths}")
 
                 loopLengths = updateLoopLengths(clusters)
-                print(f"After updating loopLengths: {loopLengths}")
 
                 if DEBUG:
                     print(f"Loop lengths after updating: {loopLengths}")
@@ -128,7 +129,9 @@ def simulateWorm(corrFunction, K, gitter):
 
         # NOTE: This should always runs, even when not accepted
         updateCorrFunc(firstSite, nextSite, corrFunction)
-    print(loopLengths)
+        plotCorr(corrFunction)
+
+    print(corrFunction)
     return loopLengths
 
 def main(K, N, M, boundaryCondition):
@@ -149,6 +152,9 @@ def main(K, N, M, boundaryCondition):
 
     # Multiple loops but only one gets indexed
     # seed = 595770392852380573
+
+    # Produces a nice gif. loopLengths = [4, 4, 12, 4]
+    seed = 615885798301355417
     random.seed(seed)
     print(f"The seed is: {seed}")
 
@@ -191,7 +197,8 @@ if __name__ == '__main__':
     # Run the simulation
     gitter, corrFunction, averageLoopLength, seed = main(K, N, M, boundaryCondition) 
     plt.show()
-    print(f"The seed was: {seed}")
+    if DEBUG:
+        print(f"The seed was: {seed}")
 
     SAVETOFILE = False
     if SAVETOFILE:
