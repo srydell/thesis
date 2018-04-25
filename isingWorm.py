@@ -1,7 +1,6 @@
 import sys
 from math import tanh, pow
-# from indexClusters import *
-from removeends import *
+from indexClusters import *
 from graphs import *
 
 def isAccepted(K, site0, site1, gitter):
@@ -104,7 +103,7 @@ def simulateWorm(corrFunction, loopLengths, K, clusters, gitter):
             # Update indexing
             print(f"Updating indexing...")
             indexClusters(clusters, gitter)
-            input(f"The cluster is now: {clusters}")
+            print(f"The cluster is now: {clusters}")
 
         # NOTE: This should always runs, even when not accepted
         updateCorrFunc(firstSite, nextSite, corrFunction)
@@ -123,7 +122,7 @@ def main(K, N, M, boundaryCondition):
     seed = random.randrange(sys.maxsize)
     # This seed produces a self-eating loop (resulting in clusters = {})
     # seed = 5540102676881230539
-    seed = 1592744071574553462
+    # seed = 1592744071574553462
     random.seed(seed)
 
     gitter = buildGraph(N, M, boundaryCondition)
@@ -158,11 +157,12 @@ if __name__ == '__main__':
     K = J/T
 
     # Number of rows in gitter
-    N = 4
+    N = 20
     # Number of columns in gitter
-    M = 4
+    M = 20
 
-    boundaryCondition = "dirichlet"
+    # boundaryCondition = "dirichlet"
+    boundaryCondition = "periodic"
 
     # Run the simulation
     gitter, corrFunction, clusters, averageLoopLength, seed = main(K, N, M, boundaryCondition) 
