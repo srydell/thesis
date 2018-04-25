@@ -1,31 +1,6 @@
 from graphs import getLinkedNeighbours, buildGraph, colorLinkBetween
 import copy
-
-def getIndex(listOfSites, graph):
-    """Get the "index" property in graph for each site in listOfSites
-
-    :listOfSites: 1xn matrix - On the form [[i, j], [i+1, j], ...]
-    :graph: dictionary
-    :returns: 1xn matrix - Indices on the form [1, 3, ...]
-    """
-
-    indices = []
-    for site in listOfSites:
-        indices.append(graph[tuple(site)]["index"])
-
-    return indices
-
-def setIndex(index, listOfSites, graph):
-    """Get the "index" property in graph for each site in listOfSites
-
-    :index: Int - The index that will be set
-    :listOfSites: 1xn matrix - On the form [[i, j], [i+1, j], ...]
-    :graph: dictionary
-    :returns: None
-    """
-    
-    for site in listOfSites:
-        graph[tuple(site)]["index"] = index
+DEBUG=False
 
 def addIfNotExists(key, value, dictionary):
     """Adds the entry (key: value) to dictionary if not exists
@@ -50,105 +25,87 @@ def addIfNotExists(key, value, dictionary):
         if value not in dictionary[key]:
             dictionary[key].append(value)
 
-def compareList(value, cList):
-    """Checks if every entry in cList is equal to value
-
-    :value: Int
-    :cList: 1xn matrix - list to compare on the form [2, 1, ...]
-    :returns: Boolean
-    """
-
-    return all(listVal == value for listVal in cList)
-
-def removeDeprecated(clusters, graph):
-    """Goes through each key in clusters and check if the site still has that index in the graph
+def removeDeprecated(clusters):
+    """Goes through each index in clusters and check if it has any sites
 
     :clusters: dictionary
-    :graph: dictionary
     :returns: None
     """
 
-    toBeRemoved = []
     emptyClusterIndices = []
-    # clusters is as: {index0: [site0, site1, ...], index1: ...}
     for index in clusters:
-        for site in clusters[index]["sites"]:
-            # If the index has changed (e.g. it was overwritten for something smaller)
-            if graph[site]["index"] != index:
-                toBeRemoved.append(site)
-
-        # No longer looping over the list so it's safe to remove the sites
-        for site in toBeRemoved:
-            clusters[index]["sites"].remove(site)
-
-        if clusters[index]["sites"] == []:
+        if clusters[index] == []:
             emptyClusterIndices.append(index)
-        # For the next cluster to be inspected
-        toBeRemoved = []
 
     # Cleanup empty clusters
     for index in emptyClusterIndices:
         clusters.pop(index)
 
-def visualizeIndex(graph, N, M):
-    """Creates a matrix to visualize the indices
+def getIndex(sites, clusters):
+    """Gets a list of indices for each site in sites
+    If there is only one site, it returns an int
 
-    :graph: dictionary
-    :N: numRows
-    :M: numCols
-    :returns: NxM matrix
+    :sites: TODO
+    :clusters: TODO
+    :returns: TODO
     """
 
-    matrix = []
-    for i in range(N):
-        row = []
-        for j in range(M):
-            row.append(graph[(i, j)]["index"])
-        matrix.append(row)
-
-    return matrix
-
-def classifyClusters(clusters, graph):
-    """Find the cluster ends and loops in graph in clusters
-    An ends is a site that has an odd number of linked neighbours
-    A loop is where every site in the cluster has an even number of linked neighbours
-    Finds endSite and modifies clusters as: {index: {'ends': endSite, 'sites': listOfSites}, ...}
-    If no ends has been found, it stays as None
-
-    :clusters: dictionary - {index: {"ends": None, "sites": listOfSites}, ...}
-    :graph: dictionary
-    :returns: None
-    """
-
+    onlyOneSite = all(type(entry) == int for entry in sites)
+    indices = []
+    smallestIndex = None
     for index in clusters:
-        # Will be {site0: numOfTimesFound, site1: ...}
-        checked = {}
-        for site in clusters[index]["sites"]:
-            neighbours = getLinkedNeighbours(site, graph)
-            for neighbour in neighbours:
-                neighbour = tuple(neighbour)
-                if checked.get(neighbour) is None:
-                    # If it has not been found before
-                    checked[neighbour] = 1
-                else:
-                    # It has been found before, add +1
-                    checked[neighbour] += 1
+        if onlyOneSite:
+            if sites in clusters[index]:
+                return index
+            else:
+                continue
 
-        for site in checked:
-            # If we found an ends (site with odd number of neighbours)
-            # append it to the list of ends
-            if checked[site] % 2 == 1:
-                addIfNotExists("ends", site, clusters[index])
+        else:
+            for site in sites:
+                if site in clusters[index]:
+                    indices.append(index)
 
-        # Lastly, if any ends are now part of a loop - remove them
-        endsToRemove = []
-        for site in clusters[index]["ends"]:
-            if len(getLinkedNeighbours(site, graph)) % 2 == 0:
-                endsToRemove.append(site)
+    # If could'nt find site
+    if onlyOneSite:
+        return None
 
-        # Remove the sites
-        for site in endsToRemove:
-            clusters[index]["ends"].remove(site)
+    return indices
+
+def moveToIndex(newIndex, listOfSites, clusters):
+    """Moves all sites in listOfSites from their previous index to newIndex
+
+    :newIndex: TODO
+    :listOfSites: TODO
+    :clusters: TODO
+    :returns: TODO
+    """
+
+    removeFromCluster = {}
+    for index in clusters:
+        for site in listOfSites:
+            if site in clusters[index]:
+                # If site in the wrong index
+                if index != newIndex:
+                    clusters[index].remove(site)
+
+            # Append to the new cluster
+            if index == newIndex:
+                if site not in clusters[index]:
+                    clusters[index].append(site)
+
+def notIndexed(listOfSites, clusters):
+    """Checks if any of the sites in listOfSites has an index clusters
+
+    :listOfSites: TODO
+    :clusters: TODO
+    :returns: TODO
+    """
+
+    for site in listOfSites:
+        for index in clusters:
+            if site in clusters[index]:
+                return False
+    return True
 
 def indexClusters(clusters, graph):
     """Loop through the graph and index the clusters,
@@ -170,61 +127,89 @@ def indexClusters(clusters, graph):
 
             # If there are any links
             if neighbours != []:
-                # Get a list of all the indices from the neighbours and the current site
-                clusterIndices = getIndex([site, *neighbours], graph)
+                # Make each neighbour hashable
+                localCluster = [list(site), *neighbours]
+                if DEBUG:
+                    print(f"On site {site}, will process: {localCluster}")
 
-                # If we have found a totally new cluster (all indices are 0)
-                if compareList(0, clusterIndices):
+                # None of the sites in the local cluster have been indexed
+                if notIndexed(localCluster, clusters):
                     indexHasChanged = True
                     largestIndex += 1
-                    # Add a new cluster list to clusters
-                    addIfNotExists(largestIndex, {"ends": [], "sites": [site]}, clusters)
-                    setIndex(largestIndex, [site, *neighbours], graph)
-                    # Go to next in the for loop through sites
+                    # Add the sites to the new index
+                    if DEBUG:
+                        print(f"Setting index {largestIndex} on {localCluster}")
+                        print(f"Cluster before setting:\n{clusters}")
+                    clusters[largestIndex] = localCluster
+
+                    if DEBUG:
+                        input(f"Cluster after setting:\n{clusters}")
+
+                    # Go to next site
                     continue
-
+                    
+                # Only gets indices that are set in clusters
+                localClusterIndices = getIndex(localCluster, clusters)
                 # Get the smallest of them that is not 0
-                minClusterIndex = min([index for index in clusterIndices if index != 0])
+                smallestIndex = min(localClusterIndices)
+                if DEBUG:
+                    print(f"Indices found: {localClusterIndices}")
+                    print(f"Smallest index: {smallestIndex}")
 
-                # allHaveMinIndex = True if all values in clusterIndices are minClusterIndex, False otherwise
-                allHaveMinIndex = compareList(minClusterIndex, clusterIndices)
+                numSitesNotIndexed = len(localCluster) - len(localClusterIndices)
 
-                # Here we know that minClusterIndex is not 0
-                # but not all neighbours have the same index, so change them 
+                # Pad indices with zeros for each site not indexed
+                localClusterIndices += [0]*numSitesNotIndexed
+
+                allHaveMinIndex = all(index == smallestIndex for index in localClusterIndices)
+                if DEBUG:
+                    print(f"The indices are: {localClusterIndices}")
+                    print(f"The smallest index is: {smallestIndex}")
+                    input(f"All have this index: {allHaveMinIndex}")
+
                 if not allHaveMinIndex:
+                    # Not all neighbours have the same index
                     indexHasChanged = True
-                    # Add a new cluster list to clusters
-                    setIndex(minClusterIndex, [site, *neighbours], graph)
 
-                # Always add the site to the cluster dictionary
-                addIfNotExists("sites", site, clusters[minClusterIndex])
-
-            # If it has no linked neighbours it should always have index 0
+                    if DEBUG:
+                        print(f"Move sites {localCluster} to index {smallestIndex}")
+                        print(f"Cluster before moving:\n{clusters}")
+                    moveToIndex(smallestIndex, localCluster, clusters)
+                    if DEBUG:
+                        input(f"Cluster after moving:\n{clusters}")
             else:
-                graph[site]["index"] = 0
+                # If it has no neighbours it should not exist in clusters.
+                # This can happen if it is overridden by itself or another cluster.
+                for index in clusters:
+                    if site in clusters[index]:
+                        clusters[index].remove(site)
 
     # Remove deprecated sites from clusters
-    removeDeprecated(clusters, graph)
+    if DEBUG:
+        print(f"Removing empty indices. Cluster is now:\n{clusters}")
+    removeDeprecated(clusters)
+    if DEBUG:
+        print(f"Done. Cluster is now:\n{clusters}")
 
 if __name__ == '__main__':
-    numRows = 3
-    numCols = 4
+    numRows = 30
+    numCols = 40
 
     g1 = buildGraph(numRows, numCols, "dirichlet")
     g2 = buildGraph(numRows, numCols, "dirichlet")
 
-    # One cluster
+    # One cluster for g1
     colorLinkBetween([0, 0], [1, 0], g1)
     colorLinkBetween([1, 0], [1, 1], g1)
     colorLinkBetween([1, 1], [1, 2], g1)
     colorLinkBetween([1, 2], [0, 2], g1)
     colorLinkBetween([0, 2], [0, 3], g1)
 
-    # Another cluster
+    # Another cluster for g1
     colorLinkBetween([2, 0], [2, 1], g1)
     colorLinkBetween([2, 1], [2, 2], g1)
 
-    # Another cluster
+    # Cluster for g2
     colorLinkBetween([0, 0], [0, 1], g2)
     colorLinkBetween([0, 1], [1, 1], g2)
     colorLinkBetween([1, 1], [1, 0], g2)
@@ -234,33 +219,21 @@ if __name__ == '__main__':
     clusterWithLoop = {}
 
     indexClusters(clusters, g1)
-    classifyClusters(clusters, g1)
 
-    indexClusters(clusterWithLoop, g2)
-    classifyClusters(clusterWithLoop, g2)
+    # indexClusters(clusterWithLoop, g2)
 
-    # matrix* is a matrix showing only the indices of each site
-    matrixg1 = visualizeIndex(g1, numRows, numCols)
-    matrixg2 = visualizeIndex(g2, numRows, numCols)
+    # # Close the loop in g1
+    # colorLinkBetween([0, 3], [1, 3], g1)
+    # indexClusters(clusters, g1)
 
-    # Close the loop in g1
-    colorLinkBetween([0, 3], [1, 3], g1)
-    indexClusters(clusters, g1)
-    classifyClusters(clusters, g1)
+    # colorLinkBetween([2, 3], [1, 3], g1)
+    # indexClusters(clusters, g1)
 
-    colorLinkBetween([2, 3], [1, 3], g1)
-    indexClusters(clusters, g1)
-    classifyClusters(clusters, g1)
+    # colorLinkBetween([2, 3], [2, 2], g1)
+    # indexClusters(clusters, g1)
 
-    colorLinkBetween([2, 3], [2, 2], g1)
-    indexClusters(clusters, g1)
-    classifyClusters(clusters, g1)
+    # colorLinkBetween([1, 0], [2, 0], g1)
+    # indexClusters(clusters, g1)
 
-    colorLinkBetween([1, 0], [2, 0], g1)
-    indexClusters(clusters, g1)
-    classifyClusters(clusters, g1)
-
-    colorLinkBetween([1, 0], [0, 0], g1)
-    indexClusters(clusters, g1)
-    classifyClusters(clusters, g1)
-    matrixg1 = visualizeIndex(g1, numRows, numCols)
+    # colorLinkBetween([1, 0], [0, 0], g1)
+    # indexClusters(clusters, g1)
