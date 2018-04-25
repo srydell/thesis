@@ -51,7 +51,7 @@ def buildGraph(N, M, bc="periodic"):
 
     return graph
 
-def colorLinkBetween(site0, site1, graph):
+def switchLinkBetween(site0, site1, graph):
     """Changes the link weight between site0 and site1
 
     :site0: 1x2 matrix

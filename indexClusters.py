@@ -1,4 +1,4 @@
-from graphs import getLinkedNeighbours, buildGraph, colorLinkBetween
+from graphs import getLinkedNeighbours, buildGraph, switchLinkBetween
 import copy
 DEBUG=False
 
@@ -199,21 +199,21 @@ if __name__ == '__main__':
     g2 = buildGraph(numRows, numCols, "dirichlet")
 
     # One cluster for g1
-    colorLinkBetween([0, 0], [1, 0], g1)
-    colorLinkBetween([1, 0], [1, 1], g1)
-    colorLinkBetween([1, 1], [1, 2], g1)
-    colorLinkBetween([1, 2], [0, 2], g1)
-    colorLinkBetween([0, 2], [0, 3], g1)
+    switchLinkBetween([0, 0], [1, 0], g1)
+    switchLinkBetween([1, 0], [1, 1], g1)
+    switchLinkBetween([1, 1], [1, 2], g1)
+    switchLinkBetween([1, 2], [0, 2], g1)
+    switchLinkBetween([0, 2], [0, 3], g1)
 
     # Another cluster for g1
-    colorLinkBetween([2, 0], [2, 1], g1)
-    colorLinkBetween([2, 1], [2, 2], g1)
+    switchLinkBetween([2, 0], [2, 1], g1)
+    switchLinkBetween([2, 1], [2, 2], g1)
 
     # Cluster for g2
-    colorLinkBetween([0, 0], [0, 1], g2)
-    colorLinkBetween([0, 1], [1, 1], g2)
-    colorLinkBetween([1, 1], [1, 0], g2)
-    colorLinkBetween([1, 0], [0, 0], g2)
+    switchLinkBetween([0, 0], [0, 1], g2)
+    switchLinkBetween([0, 1], [1, 1], g2)
+    switchLinkBetween([1, 1], [1, 0], g2)
+    switchLinkBetween([1, 0], [0, 0], g2)
 
     clusters = {}
     clusterWithLoop = {}
@@ -223,17 +223,17 @@ if __name__ == '__main__':
     # indexClusters(clusterWithLoop, g2)
 
     # # Close the loop in g1
-    # colorLinkBetween([0, 3], [1, 3], g1)
+    # switchLinkBetween([0, 3], [1, 3], g1)
     # indexClusters(clusters, g1)
 
-    # colorLinkBetween([2, 3], [1, 3], g1)
+    # switchLinkBetween([2, 3], [1, 3], g1)
     # indexClusters(clusters, g1)
 
-    # colorLinkBetween([2, 3], [2, 2], g1)
+    # switchLinkBetween([2, 3], [2, 2], g1)
     # indexClusters(clusters, g1)
 
-    # colorLinkBetween([1, 0], [2, 0], g1)
+    # switchLinkBetween([1, 0], [2, 0], g1)
     # indexClusters(clusters, g1)
 
-    # colorLinkBetween([1, 0], [0, 0], g1)
+    # switchLinkBetween([1, 0], [0, 0], g1)
     # indexClusters(clusters, g1)
