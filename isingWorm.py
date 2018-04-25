@@ -2,6 +2,7 @@ import sys
 from math import tanh, pow
 from indexClusters import *
 from graphs import *
+from plotGraph import *
 
 def isAccepted(K, site0, site1, gitter):
     """Check if the link between site0 and site1 in gitter is accepted
@@ -39,10 +40,7 @@ def updateCorrFunc(firstSite, nextSite, corrFunction):
     # add +1 to G(i-i0) for the open path from i0 to i
     addIfNotExists(firstSite[0] - nextSite[0], 1, corrFunction)
 
-    # For correlation function in r
-    # addIfNotExists(sum([pow(firstSite[i] - nextSite[i], 2) for i in range(2)]), 1, Gr)
-
-def updateLoopLengths(loopLengths, index, clusters):
+def updateLoopLengths(clusters):
     """Appends the number of sites in clusters with index to loopLengths
 
     :loopLengths: 1xn matrix - list of loop lengths
@@ -50,9 +48,12 @@ def updateLoopLengths(loopLengths, index, clusters):
     :clusters: dictionary - {index: listOfSitesInCluster, ...}
     :returns: None
     """
-    loopLengths.append(len(clusters[index]))
+    loopLengths = []
+    for index in clusters:
+        loopLengths.append(len(clusters[index]))
+    return loopLengths
 
-def simulateWorm(corrFunction, loopLengths, K, clusters, gitter):
+def simulateWorm(corrFunction, K, gitter):
     """Starts a new worm and moves it until a loop is formed
     Chooses any neighbour from currentSite except previousSite to avoid moving 180 degrees.
     Updates the correlation function corrFunction after each step.
@@ -65,16 +66,21 @@ def simulateWorm(corrFunction, loopLengths, K, clusters, gitter):
     """
     # Initialize starting site as some random [i, j] within the gitter
     firstSite = [random.randrange(0, N), random.randrange(0, M)]
-    print(f"First site: {firstSite}")
+
+    if DEBUG:
+        print(f"First site: {firstSite}")
 
     # Get some random neighbour to form the first link
     currentSite = getRandomNeighbour(firstSite, None, gitter)
-    colorLinkBetween(currentSite, firstSite, gitter)
-    print(f"Initial color link between {firstSite} and {currentSite}")
+    switchLinkBetween(currentSite, firstSite, gitter)
+
+    if DEBUG:
+        print(f"Initial color link between {firstSite} and {currentSite}")
 
     # Track the previous site to avoid that the current turns 180 degrees
     previousSite = firstSite
 
+    clusters = {}
     indexClusters(clusters, gitter)
 
     loopFormed = False
@@ -83,30 +89,47 @@ def simulateWorm(corrFunction, loopLengths, K, clusters, gitter):
         nextSite = getRandomNeighbour(site=currentSite, exceptSite=previousSite, graph=gitter)
 
         if isAccepted(K, currentSite, nextSite, gitter):
-            print(f"Accepted site {nextSite}")
-            print(f"Coloring from {currentSite} to {nextSite}")
+
+            if DEBUG:
+                print(f"Accepted site {nextSite}")
+                print(f"Coloring from {currentSite} to {nextSite}")
+
             # Flip the weight between currentSite and nextSite
-            colorLinkBetween(currentSite, nextSite, gitter)
+            switchLinkBetween(currentSite, nextSite, gitter)
 
             previousSite = currentSite
             currentSite = nextSite
 
+            if DEBUG:
+                print(f"Updating indexing...")
+
+            # Update indexing
+            clusters = {}
+            indexClusters(clusters, gitter)
+
+            if DEBUG:
+                print(f"The cluster is now: {clusters}")
+
             if nextSite == firstSite:
                 # Found a new loop
                 loopFormed = True
-                indexOfLoop = getIndex(firstSite, clusters)
-                print(f"Found a looop on index {indexOfLoop}")
-                print(f"Loop lengths before updating: {loopLengths}")
-                updateLoopLengths(loopLengths, indexOfLoop, clusters)
-                print(f"Loop lengths after updating: {loopLengths}")
 
-            # Update indexing
-            print(f"Updating indexing...")
-            indexClusters(clusters, gitter)
-            print(f"The cluster is now: {clusters}")
+                if DEBUG:
+                    print(f"Found a looop on index {indexOfLoop}")
+                    print(f"Loop lengths before updating: {loopLengths}")
+
+                loopLengths = updateLoopLengths(clusters)
+                print(f"After updating loopLengths: {loopLengths}")
+
+                if DEBUG:
+                    print(f"Loop lengths after updating: {loopLengths}")
+
+            plotGraph(clusters, gitter)
 
         # NOTE: This should always runs, even when not accepted
         updateCorrFunc(firstSite, nextSite, corrFunction)
+    print(loopLengths)
+    return loopLengths
 
 def main(K, N, M, boundaryCondition):
     """Simulate ising worm algorithm
@@ -120,34 +143,35 @@ def main(K, N, M, boundaryCondition):
 
     # Initialize the random number generator with current time as seed
     seed = random.randrange(sys.maxsize)
-    # This seed produces a self-eating loop (resulting in clusters = {})
+    # Self-eating loop (resulting in clusters = {})
     # seed = 5540102676881230539
     # seed = 1592744071574553462
+
+    # Multiple loops but only one gets indexed
+    # seed = 595770392852380573
     random.seed(seed)
+    print(f"The seed is: {seed}")
 
     gitter = buildGraph(N, M, boundaryCondition)
 
-    # Correlation function for r and x
-    # Gr = {}
+    # Correlation function for x
     corrFunction = {}
-
-    # Loop lengths
-    loopLengths = []
-
-    # Initialize clusters
-    clusters = {}
 
     for _ in range(2):
         # Move this worm until it forms a loop
-        simulateWorm(corrFunction, loopLengths, K, clusters, gitter)
+        loopLengths = simulateWorm(corrFunction, K, gitter)
 
-    # Update the average loop length
-    averageLoopLength = sum(loopLengths)/len(loopLengths)
+    if len(loopLengths) != 0:
+        # Update the average loop length
+        averageLoopLength = sum(loopLengths)/len(loopLengths)
+    else:
+        raise Exception(f"There were no loops. Loop lengths: {loopLengths}")
 
-    print(f"Loop lengths: {loopLengths}")
-    print(f"Loop averages: {averageLoopLength}")
+    if DEBUG:
+        print(f"Loop lengths: {loopLengths}")
+        print(f"Loop averages: {averageLoopLength}")
 
-    return gitter, corrFunction, clusters, averageLoopLength, seed
+    return gitter, corrFunction, averageLoopLength, seed
 
 if __name__ == '__main__':
     J = 0.5
@@ -157,16 +181,16 @@ if __name__ == '__main__':
     K = J/T
 
     # Number of rows in gitter
-    N = 20
+    N = 10
     # Number of columns in gitter
-    M = 20
+    M = 10
 
-    # boundaryCondition = "dirichlet"
-    boundaryCondition = "periodic"
+    boundaryCondition = "dirichlet"
+    # boundaryCondition = "periodic"
 
     # Run the simulation
-    gitter, corrFunction, clusters, averageLoopLength, seed = main(K, N, M, boundaryCondition) 
-    print(f"Found a loop: {clusters}")
+    gitter, corrFunction, averageLoopLength, seed = main(K, N, M, boundaryCondition) 
+    plt.show()
     print(f"The seed was: {seed}")
 
     SAVETOFILE = False
