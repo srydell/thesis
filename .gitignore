@@ -2,10 +2,13 @@
 /*
 
 # Ignore all files named .DS_Store, __pycache__ or ending with .log, .pyc
-**/.DS_Store
 **.log
 **.pyc
+**/.DS_Store
 **/__pycache__
+
+# Ignore data files
+data/*
 
 # Except these
 # !exampleFile.txt
@@ -14,20 +17,19 @@
 # --- Files ---
 # Meta
 !.gitignore
-!TODO.md
 !README.md
+!TODO.md
 
 # Python
-!zeroOneRoute.py
-!isingWorm.py
 !graphs.py
-!plotGraph.py
 !hoshenKopelman.py
 !indexClusters.py
-!removeends.py
+!isingWorm.py
+!plotGraph.py
+!utils.py
 
 # Directories
-!literature/
-!figures/
 !data/
+!figures/
+!literature/
 !test/

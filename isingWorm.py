@@ -151,7 +151,7 @@ def main(K, N, M, boundaryCondition):
     seed = random.randrange(sys.maxsize)
 
     # Self-eating loop (resulting in clusters = {})
-    # seed = 5540102676881230539
+    seed = 5540102676881230539
     # seed = 1592744071574553462
 
     # Multiple loops but only one gets indexed
