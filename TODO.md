@@ -17,6 +17,8 @@ data
 		\-- frame1
 	\-- graph
 		\-- frame1
+	\-- plot
+		\-- lastFrame.png
 ```
 
 ### graphs ###

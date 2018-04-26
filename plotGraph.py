@@ -5,13 +5,12 @@ import matplotlib.pyplot as plt
 PLOT_CONFIG_LOADED = False
 GRAPH_AXIS = None
 CORR_AXIS = None
-FIGURE = None
 
 def plotConfigs():
     """Sets the configs for plotting
     :returns: None
     """
-    global PLOT_CONFIG_LOADED, GRAPH_AXIS, CORR_AXIS, FIGURE
+    global PLOT_CONFIG_LOADED, GRAPH_AXIS, CORR_AXIS
 
     fig = plt.figure()
     ax1 = fig.add_subplot(3, 1, (1, 2))
@@ -26,7 +25,6 @@ def plotConfigs():
 
     fig.tight_layout()
 
-    FIGURE = fig
     GRAPH_AXIS = ax1
     CORR_AXIS = ax2
 

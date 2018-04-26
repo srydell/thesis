@@ -151,28 +151,6 @@ def isOnBorder(site, N, M):
     
     return -1 in site or N == site[0] or M == site[1]
 
-def saveGraph(graph, filename="graph"):
-    """Save graph to the filesystem
-
-    :graph: dictionary
-    :filename: String - Optional (default: graph)
-    :returns: None
-    """
-
-    with open(f"./data/{filename}.pickle", "wb") as f:
-        pickle.dump(graph, f, protocol=pickle.HIGHEST_PROTOCOL)
-
-def loadGraph(filename="graph"):
-    """Load graph from the filesystem
-
-    :filename: String - Optional (default: graph)
-    :returns: dictionary - The loaded graph
-    """
-
-    with open(f"./data/{filename}.pickle", "rb") as f:
-        graph = pickle.load(f)
-    return graph
-
 class unsupportedBoundaryCondition(Exception):
     """Unsupported boundary condition called."""
 
