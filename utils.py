@@ -15,7 +15,7 @@ def saveObject(obj, filename="obj"):
     with open(f"./{filename}.pickle", "wb") as f:
         pickle.dump(obj, f, protocol=pickle.HIGHEST_PROTOCOL)
 
-def loadGraph(filename="obj"):
+def loadObject(filename="obj"):
     """Load obj from the filesystem
 
     :filename: String - Optional (default: obj)
