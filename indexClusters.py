@@ -1,5 +1,4 @@
 from graphs import getLinkedNeighbours, buildGraph, switchLinkBetween
-import copy
 DEBUG=False
 
 def addIfNotExists(key, value, dictionary):
@@ -191,36 +190,88 @@ def indexClusters(clusters, graph):
     if DEBUG:
         print(f"Done. Cluster is now:\n{clusters}")
 
-if __name__ == '__main__':
-    numRows = 30
-    numCols = 40
+def testDataToMats(N, M, fileIndex):
+    """Get test data to mats. Write to file test_data_i.txt, where i is an integer.
+    x = [random values 0 and 1 in range(N*M)]
+    y = [random values 0 and 1 in range(N*M)]
+    Order clusters in number of sites in cluster
+    example:
+    clusters: 
+        1: 40
+        2: 37
+        3: 28
+        ...
+        
+    :N: Int - Number of rows
+    :M: Int - Number of columns
+    :returns: None
+    """
+    import random
+    import operator
 
-    g1 = buildGraph(numRows, numCols, "dirichlet")
-    g2 = buildGraph(numRows, numCols, "dirichlet")
+    # Link in +x direction
+    x = [random.randint(0, 1) for i in range(N*M)]
+    # Link in +y direction
+    y = [random.randint(0, 1) for j in range(N*M)]
 
-    # One cluster for g1
-    switchLinkBetween([0, 0], [1, 0], g1)
-    switchLinkBetween([1, 0], [1, 1], g1)
-    switchLinkBetween([1, 1], [1, 2], g1)
-    switchLinkBetween([1, 2], [0, 2], g1)
-    switchLinkBetween([0, 2], [0, 3], g1)
+    g = buildGraph(N, M, "periodic")
 
-    # Another cluster for g1
-    switchLinkBetween([2, 0], [2, 1], g1)
-    switchLinkBetween([2, 1], [2, 2], g1)
-
-    # Cluster for g2
-    switchLinkBetween([0, 0], [0, 1], g2)
-    switchLinkBetween([0, 1], [1, 1], g2)
-    switchLinkBetween([1, 1], [1, 0], g2)
-    switchLinkBetween([1, 0], [0, 0], g2)
-
+    for n, site in enumerate(g):
+        if x[n]:
+            switchLinkBetween(site, (site[0], (site[1]+1)%M), g)
+        if y[n]:
+            switchLinkBetween(site, ((site[0]+1)%N, site[1]), g)
     clusters = {}
-    clusterWithLoop = {}
+    indexClusters(clusters, g)
 
-    indexClusters(clusters, g1)
+    for index in clusters:
+        clusters[index] = len(clusters[index])
 
-    # indexClusters(clusterWithLoop, g2)
+    # [indexWithLargestValue, indexWithNextToLargestKey, ...]
+    sortedIndices = sorted(clusters, key=clusters.get, reverse=True)
+
+    with open(f"./dataToMats/index_cluster_data_{fileIndex}_size_{N}x{M}.txt", "w") as f:
+        f.write(f"x={x}\n")
+        f.write(f"y={y}\n")
+
+        f.write("\n")
+        for index in sortedIndices:
+            f.write(f"{index}: {clusters[index]}\n")
+
+if __name__ == '__main__':
+    numRows = 20
+    numCols = 20
+
+    # Test data to mats for checking indexClusters function
+    # for n in range(10):
+    #     testDataToMats(numRows, numCols, n)
+
+    # g1 = buildGraph(numRows, numCols, "dirichlet")
+    # g2 = buildGraph(numRows, numCols, "dirichlet")
+
+    # # One cluster for g1
+    # switchLinkBetween([0, 0], [1, 0], g1)
+    # switchLinkBetween([1, 0], [1, 1], g1)
+    # switchLinkBetween([1, 1], [1, 2], g1)
+    # switchLinkBetween([1, 2], [0, 2], g1)
+    # switchLinkBetween([0, 2], [0, 3], g1)
+
+    # # Another cluster for g1
+    # switchLinkBetween([2, 0], [2, 1], g1)
+    # switchLinkBetween([2, 1], [2, 2], g1)
+
+    # # Cluster for g2
+    # switchLinkBetween([0, 0], [0, 1], g2)
+    # switchLinkBetween([0, 1], [1, 1], g2)
+    # switchLinkBetween([1, 1], [1, 0], g2)
+    # switchLinkBetween([1, 0], [0, 0], g2)
+
+    # clusters = {}
+    # clusterWithLoop = {}
+
+    # indexClusters(clusters, g1)
+
+    # # indexClusters(clusterWithLoop, g2)
 
     # # Close the loop in g1
     # switchLinkBetween([0, 3], [1, 3], g1)

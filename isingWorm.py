@@ -53,17 +53,20 @@ def updateLoopLengths(clusters):
         loopLengths.append(len(clusters[index]))
     return loopLengths
 
-def simulateWorm(corrFunction, K, gitter):
+def simulateWorm(corrFunction, K, N, M, gitter):
     """Starts a new worm and moves it until a loop is formed
     Chooses any neighbour from currentSite except previousSite to avoid moving 180 degrees.
     Updates the correlation function corrFunction after each step.
 
-    :K: TODO
-    :currentSite: TODO
-    :gitter: TODO
-    :previousSite: TODO
-    :returns: TODO
+    :K: J/T
+    :M: Int - Number of columns
+    :N: Int - Number of rows
+    :currentSite: 1x2 matrix
+    :gitter: dictionary
+    :previousSite: 1x2 matrix
+    :returns: 1xn matrix - loop lengths
     """
+
     # Initialize starting site as some random [i, j] within the gitter
     firstSite = [random.randrange(0, N), random.randrange(0, M)]
 
@@ -125,13 +128,13 @@ def simulateWorm(corrFunction, K, gitter):
                 if DEBUG:
                     print(f"Loop lengths after updating: {loopLengths}")
 
+            # Update the correlation function when new site is accepted
+            updateCorrFunc(firstSite, nextSite, corrFunction)
+
+            # Plotting
             plotGraph(clusters, gitter)
+            plotCorr(corrFunction, M)
 
-        # NOTE: This should always runs, even when not accepted
-        updateCorrFunc(firstSite, nextSite, corrFunction)
-        plotCorr(corrFunction)
-
-    print(corrFunction)
     return loopLengths
 
 def main(K, N, M, boundaryCondition):
@@ -146,6 +149,7 @@ def main(K, N, M, boundaryCondition):
 
     # Initialize the random number generator with current time as seed
     seed = random.randrange(sys.maxsize)
+
     # Self-eating loop (resulting in clusters = {})
     # seed = 5540102676881230539
     # seed = 1592744071574553462
@@ -154,7 +158,8 @@ def main(K, N, M, boundaryCondition):
     # seed = 595770392852380573
 
     # Produces a nice gif. loopLengths = [4, 4, 12, 4]
-    seed = 615885798301355417
+    # seed = 615885798301355417
+
     random.seed(seed)
     print(f"The seed is: {seed}")
 
@@ -165,7 +170,7 @@ def main(K, N, M, boundaryCondition):
 
     for _ in range(2):
         # Move this worm until it forms a loop
-        loopLengths = simulateWorm(corrFunction, K, gitter)
+        loopLengths = simulateWorm(corrFunction, K, N, M, gitter)
 
     if len(loopLengths) != 0:
         # Update the average loop length
