@@ -7,6 +7,17 @@
 ### isingWorm ###
 
 * Write test code for isingWorm
+* Create data saving mechanism:
+```
+data
+\-- sizeXxsizeY_boundaryCondition
+	+-- clusters
+		\-- frame1
+	+-- correlation_function
+		\-- frame1
+	\-- graph
+		\-- frame1
+```
 
 ### graphs ###
 
