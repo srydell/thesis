@@ -1,4 +1,5 @@
 import pathlib
+import pickle
 
 def saveObject(obj, filename="obj"):
     """Save obj to the filesystem (relative to the script location)
