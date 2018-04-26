@@ -1,5 +1,5 @@
 import random
-from graphs import getLinkedNeighbours, loadGraph
+from graphs import getLinkedNeighbours
 import matplotlib.pyplot as plt
 
 PLOT_CONFIG_LOADED = False
@@ -99,8 +99,5 @@ if __name__ == '__main__':
     N = 300
     M = 300
     bc = "dirichlet"
-    # graph = loadGraph(f"{N}x{M}{bc}")
-    # plotGraph(graph, N, M, savePlot=False)
-
     # Do not close the graph after plotting
     # plt.show()

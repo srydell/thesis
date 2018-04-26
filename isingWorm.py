@@ -3,6 +3,7 @@ from math import tanh, pow
 from indexClusters import *
 from graphs import *
 from plotGraph import *
+from utils import *
 
 def isAccepted(K, site0, site1, gitter):
     """Check if the link between site0 and site1 in gitter is accepted
@@ -27,6 +28,25 @@ def isAccepted(K, site0, site1, gitter):
         return True
     else:
         return False
+
+def saveFrame(obj, typeOfObj, seed, N, M, boundaryCondition, numberOfFrames):
+    """ Saves obj to ./data/{N}x{M}_{boundaryCondition}/{seed}/{typeOfObj}/frameNumber.pickle
+
+    :obj: Something to save
+    :typeOfObj: String - One of ["gitter", "correlation_function", "clusters"]
+    :seed: Int
+    :N: Int - Number of rows
+    :M: Int - Number of columns
+    :boundaryCondition: String
+    :returns: None
+    """
+    if typeOfObj not in ["gitter", "correlation_function", "clusters"]:
+        raise Exception(f"Type of object to save in saveFrame not supported. Recieved {typeOfObj}.")
+
+    path = f"data/{N}x{M}_{boundaryCondition}/{seed}/{typeOfObj}/{numberOfFrames}"
+
+    # Save the next frame
+    saveObject(obj, path)
 
 def updateCorrFunc(firstSite, nextSite, corrFunction):
     """Updates the correlation function
@@ -53,7 +73,7 @@ def updateLoopLengths(clusters):
         loopLengths.append(len(clusters[index]))
     return loopLengths
 
-def simulateWorm(corrFunction, K, N, M, gitter):
+def simulateWorm(corrFunction, K, N, M, gitter, seed, numberOfFrames):
     """Starts a new worm and moves it until a loop is formed
     Chooses any neighbour from currentSite except previousSite to avoid moving 180 degrees.
     Updates the correlation function corrFunction after each step.
@@ -131,6 +151,13 @@ def simulateWorm(corrFunction, K, N, M, gitter):
             # Update the correlation function when new site is accepted
             updateCorrFunc(firstSite, nextSite, corrFunction)
 
+            if SAVEFRAMES:
+                # Save the frame
+                saveFrame(corrFunction, "gitter", seed, N, M, boundaryCondition, numberOfFrames)
+                saveFrame(corrFunction, "correlation_function", seed, N, M, boundaryCondition, numberOfFrames)
+                saveFrame(clusters, "clusters", seed, N, M, boundaryCondition, numberOfFrames)
+            numberOfFrames += 1
+
             # Plotting
             plotGraph(clusters, gitter)
             plotCorr(corrFunction, M)
@@ -168,9 +195,11 @@ def main(K, N, M, boundaryCondition):
     # Correlation function for x
     corrFunction = {}
 
+    # How many frames have been played
+    numberOfFrames = 0
     for _ in range(2):
         # Move this worm until it forms a loop
-        loopLengths = simulateWorm(corrFunction, K, N, M, gitter)
+        loopLengths = simulateWorm(corrFunction, K, N, M, gitter, seed, numberOfFrames)
 
     if len(loopLengths) != 0:
         # Update the average loop length
@@ -201,10 +230,7 @@ if __name__ == '__main__':
 
     # Run the simulation
     gitter, corrFunction, averageLoopLength, seed = main(K, N, M, boundaryCondition) 
+    # Keep the window open when done
     plt.show()
     if DEBUG:
         print(f"The seed was: {seed}")
-
-    SAVETOFILE = False
-    if SAVETOFILE:
-        saveGraph(gitter)

@@ -1,5 +1,4 @@
 import random
-import pickle
 
 def buildGraph(N, M, bc="periodic"):
     """Creates a graph in the form of a dictionary.
