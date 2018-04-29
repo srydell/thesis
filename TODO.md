@@ -7,6 +7,7 @@
 ### isingWorm ###
 
 * Write test code for isingWorm
+* Correlation function should only take absolute values. Otherwise it will be skewed for Dirichlet boundary contitions. This is because if the first site is chosen, for example, left of the middle, there will be more sites to the right, and the correlation function will have a bias in this direction.
 * Create data saving mechanism:
 ```
 data
