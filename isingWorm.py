@@ -1,5 +1,4 @@
 import sys
-SAVEFRAMES = False
 from math import tanh, pow
 from indexClusters import *
 from graphs import *
@@ -86,21 +85,22 @@ def simulateWorm(corrFunction, K, N, M, gitter, seed, numberOfFrames):
     :N: Int - Number of rows
     :currentSite: 1x2 matrix
     :gitter: dictionary
-    :previousSite: 1x2 matrix
+    :seed: Int
+    :numberOfFrames: Int - The number of frames that have been saved
     :returns: 1xn matrix - loop lengths
     """
 
     # Initialize starting site as some random [i, j] within the gitter
     firstSite = [random.randrange(0, N), random.randrange(0, M)]
 
-    if DEBUG:
+    if config["debug"]:
         print(f"First site: {firstSite}")
 
     # Get some random neighbour to form the first link
     currentSite = getRandomNeighbour(firstSite, None, gitter)
     switchLinkBetween(currentSite, firstSite, gitter)
 
-    if DEBUG:
+    if config["debug"]:
         print(f"Initial color link between {firstSite} and {currentSite}")
 
     # Track the previous site to avoid that the current turns 180 degrees
@@ -118,7 +118,7 @@ def simulateWorm(corrFunction, K, N, M, gitter, seed, numberOfFrames):
 
         if isAccepted(K, currentSite, nextSite, gitter):
 
-            if DEBUG:
+            if config["debug"]:
                 print(f"Accepted site {nextSite}")
                 print(f"Coloring from {currentSite} to {nextSite}")
 
@@ -128,33 +128,29 @@ def simulateWorm(corrFunction, K, N, M, gitter, seed, numberOfFrames):
             previousSite = currentSite
             currentSite = nextSite
 
-            if DEBUG:
+            if config["debug"]:
                 print(f"Updating indexing...")
 
             # Update indexing
             clusters = {}
             indexClusters(clusters, gitter)
 
-            if DEBUG:
+            if config["debug"]:
                 print(f"The cluster is now: {clusters}")
 
             if nextSite == firstSite:
                 # Found a new loop
                 loopFormed = True
 
-                if DEBUG:
-                    print(f"Found a looop on index {indexOfLoop}")
-                    print(f"Loop lengths before updating: {loopLengths}")
-
                 loopLengths = updateLoopLengths(clusters)
 
-                if DEBUG:
+                if config["debug"]:
                     print(f"Loop lengths after updating: {loopLengths}")
 
             # Update the correlation function when new site is accepted
             updateCorrFunc(firstSite, nextSite, corrFunction)
 
-            if SAVEFRAMES:
+            if config["save data"]:
                 # Save the frame
                 saveFrame(corrFunction, "gitter", seed, N, M, boundaryCondition, numberOfFrames)
                 saveFrame(corrFunction, "correlation_function", seed, N, M, boundaryCondition, numberOfFrames)
@@ -167,7 +163,7 @@ def simulateWorm(corrFunction, K, N, M, gitter, seed, numberOfFrames):
 
     return loopLengths
 
-def main(K, N, M, boundaryCondition):
+def main():
     """Simulate ising worm algorithm
 
     :K: Float - J/T
@@ -177,6 +173,19 @@ def main(K, N, M, boundaryCondition):
     :returns: dictionaries - gitter, correlation function
     """
 
+    J = 0.5
+    # Temperature
+    T = 1
+
+    K = J/T
+
+    # Number of rows in gitter
+    N = 10
+    # Number of columns in gitter
+    M = 10
+
+    boundaryCondition = "dirichlet"
+    # boundaryCondition = "periodic"
     # Initialize the random number generator with current time as seed
     seed = random.randrange(sys.maxsize)
 
@@ -192,6 +201,9 @@ def main(K, N, M, boundaryCondition):
 
     random.seed(seed)
     print(f"The seed is: {seed}")
+
+    # Load the config
+    print(config)
 
     gitter = buildGraph(N, M, boundaryCondition)
 
@@ -210,30 +222,20 @@ def main(K, N, M, boundaryCondition):
     else:
         raise Exception(f"There were no loops. Loop lengths: {loopLengths}")
 
-    if DEBUG:
+    if config["debug"]:
         print(f"Loop lengths: {loopLengths}")
         print(f"Loop averages: {averageLoopLength}")
 
     return gitter, corrFunction, averageLoopLength, seed
 
 if __name__ == '__main__':
-    J = 0.5
-    # Temperature
-    T = 1
-
-    K = J/T
-
-    # Number of rows in gitter
-    N = 10
-    # Number of columns in gitter
-    M = 10
-
-    boundaryCondition = "dirichlet"
-    # boundaryCondition = "periodic"
+    # Load the configs
+    config = loadConfigs("config.ini")
 
     # Run the simulation
-    gitter, corrFunction, averageLoopLength, seed = main(K, N, M, boundaryCondition) 
+    gitter, corrFunction, averageLoopLength, seed = main() 
     # Keep the window open when done
     plt.show()
-    if DEBUG:
+
+    if config["debug"]:
         print(f"The seed was: {seed}")
