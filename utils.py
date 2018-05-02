@@ -1,5 +1,7 @@
 import pathlib
 import pickle
+import configparser
+import inspect
 
 def addIfNotExists(key, value, dictionary):
     """Adds the entry (key: value) to dictionary if not exists
@@ -54,3 +56,60 @@ def loadObject(filename="obj"):
     else:
         raise Exception(f"Loaded file does not exist. Tried to load {filename}.pickle")
 
+def _createConfigs(configFile):
+    """Create config file, used to programmatically create the config file.
+    OBS: Writes all values to default.
+
+    :configFile: String - Filename and/or path to config file
+    :returns: None
+    """
+    config = configparser.ConfigParser()
+
+    config['isingWorm.py'] = {"Plotting" : True, "Save data" : False, "Testing" : False}
+
+    config['indexClusters.py'] = {"Testing" : False}
+
+    config['graphs.py'] = {"Testing" : False}
+
+    config['plotGraph.py'] = {"Testing" : False}
+
+    config['utils.py'] = {"Testing" : False}
+
+    with open(configFile, 'w') as c:
+        config.write(c)
+
+def loadConfigs(configFile):
+    """Load the config from configFile into a dictionary.
+    Only loads the config associated with the callers function name.
+
+    :configFile: String - Filename and/or path to config file
+    :returns: dictionary - Nicely formatted configs
+    """
+    config = configparser.ConfigParser()
+    config.read(configFile)
+
+    # Get the callers filename
+    # This is done so that files can only access their part of the configs
+    frame = inspect.stack()[1]
+    module = inspect.getmodule(frame[0])
+    callerFilename = module.__file__
+
+    if not callerFilename in config.sections():
+        raise Exception(f"{callerFilename} not in available configs: {config.sections()}")
+
+    outDict = {}
+    for section in config[callerFilename]:
+        # Format the dictionary more pythonic
+        if config[callerFilename][section] == "True":
+            outDict[section] = True
+        elif config[callerFilename][section] == "False":
+            outDict[section] = False
+        else:
+            outDict[section] = config[callerFilename][section]
+
+    return outDict
+
+if __name__ == '__main__':
+    _createConfigs('test.ini')
+    test = loadConfigs('test.ini')
+    print(test)
