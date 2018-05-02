@@ -1,29 +1,6 @@
 from graphs import getLinkedNeighbours, buildGraph, switchLinkBetween
 DEBUG=False
 
-def addIfNotExists(key, value, dictionary):
-    """Adds the entry (key: value) to dictionary if not exists
-    If it dictionary[key] exists and is a list, append value to it
-
-    :key: Something hashable
-    :value: Some value to be stored
-    :dictionary: dictionary
-    :returns: None
-    """
-
-    if dictionary.get(key) is None:
-        dictionary[key] = value
-        return
-
-    elif type(dictionary[key]) == int or type(dictionary[key]) == float:
-        dictionary[key] += value
-        return
-
-    elif type(dictionary[key]) == list:
-        # Only append if it is not already there
-        if value not in dictionary[key]:
-            dictionary[key].append(value)
-
 def removeDeprecated(clusters):
     """Goes through each index in clusters and check if it has any sites
 
