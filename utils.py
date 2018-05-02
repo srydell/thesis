@@ -42,7 +42,7 @@ def saveObject(obj, filename="obj"):
         pickle.dump(obj, f, protocol=pickle.HIGHEST_PROTOCOL)
 
 def loadObject(filename="obj"):
-    """Load obj from the filesystem
+    """Load obj from the filesystem (relative to the script location)
 
     :filename: String - Optional (default: obj)
     :returns: dictionary - The loaded obj
@@ -65,15 +65,15 @@ def _createConfigs(configFile):
     """
     config = configparser.ConfigParser()
 
-    config['isingWorm.py'] = {"Plotting" : True, "Save data" : False, "Testing" : False}
+    config['isingWorm.py'] = {"Plotting" : True, "Save data" : False, "Debug" : False}
 
-    config['indexClusters.py'] = {"Testing" : False}
+    config['indexClusters.py'] = {"Debug" : False}
 
-    config['graphs.py'] = {"Testing" : False}
+    config['graphs.py'] = {"Debug" : False}
 
-    config['plotGraph.py'] = {"Testing" : False}
+    config['plotGraph.py'] = {"Debug" : False}
 
-    config['utils.py'] = {"Testing" : False}
+    config['utils.py'] = {"Debug" : False}
 
     with open(configFile, 'w') as c:
         config.write(c)
