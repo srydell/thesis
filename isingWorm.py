@@ -1,4 +1,5 @@
 import sys
+SAVEFRAMES = False
 from math import tanh, pow
 from indexClusters import *
 from graphs import *
@@ -30,7 +31,7 @@ def isAccepted(K, site0, site1, gitter):
         return False
 
 def saveFrame(obj, typeOfObj, seed, N, M, boundaryCondition, numberOfFrames):
-    """ Saves obj to ./data/{N}x{M}_{boundaryCondition}/{seed}/{typeOfObj}/frameNumber.pickle
+    """ Save obj to ./data/{N}x{M}_{boundaryCondition}/{seed}/{typeOfObj}/frameNumber.pickle
 
     :obj: Something to save
     :typeOfObj: String - One of ["gitter", "correlation_function", "clusters"]
@@ -49,7 +50,7 @@ def saveFrame(obj, typeOfObj, seed, N, M, boundaryCondition, numberOfFrames):
     saveObject(obj, path)
 
 def updateCorrFunc(firstSite, nextSite, corrFunction):
-    """Updates the correlation function
+    """Update the correlation function
 
     :corrFunction: dictionary
     :nextSite: 1x2 matrix
@@ -61,7 +62,7 @@ def updateCorrFunc(firstSite, nextSite, corrFunction):
     addIfNotExists(firstSite[0] - nextSite[0], 1, corrFunction)
 
 def updateLoopLengths(clusters):
-    """Appends the number of sites in clusters with index to loopLengths
+    """Append the number of sites in clusters with index to loopLengths
 
     :loopLengths: 1xn matrix - list of loop lengths
     :index: Int - cluster index
@@ -74,7 +75,7 @@ def updateLoopLengths(clusters):
     return loopLengths
 
 def simulateWorm(corrFunction, K, N, M, gitter, seed, numberOfFrames):
-    """Starts a new worm and moves it until a loop is formed
+    """Start a new worm and moves it until a loop is formed
     Chooses any neighbour from currentSite except previousSite to avoid moving 180 degrees.
     Updates the correlation function corrFunction after each step.
 
