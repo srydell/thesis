@@ -46,9 +46,34 @@ def buildGraph(N, M, bc="periodic"):
                 graph[(i, j)][tuple(neighbour)] = startingWeight
 
             # Should now look like:
-			# graph[(i, j)] = {right: startingWeight, up: startingWeight, left: startingWeight, down: startingWeight}
+            # graph[(i, j)] = {right: startingWeight, up: startingWeight, left: startingWeight, down: startingWeight}
 
     return graph
+
+def recGraph(size, boundaryCondition, graph, index, loopNumber=0):
+    """Create graph recursively
+
+    :size: TODO
+    :boundaryCondition: TODO
+    :graph: TODO
+    :loopNumber: TODO
+    :returns: TODO
+    """
+
+    if type(loopNumber) != int:
+        Exception(f"Number of loops is not an int. Got: {loopNumber}")
+
+    # print(f"New: Index: {index}")
+    # input(f"New: Loop: {loopNumber}")
+    if loopNumber >= 0:
+        for x in range(size[loopNumber]):
+            index[x] = x
+            # print(f"Inside loop: Index: {index}")
+            # input(f"Inside loop: Loop: {loopNumber}")
+            recGraph(size, boundaryCondition, graph, index, loopNumber-1)
+    else:
+        print(f"apply bc. loop: {loopNumber}")
+        input(f"apply bc. index: {index}")
 
 def switchLinkBetween(site0, site1, graph):
     """Changes the link weight between site0 and site1
@@ -154,5 +179,12 @@ class unsupportedBoundaryCondition(Exception):
     """Unsupported boundary condition called."""
 
 if __name__ == '__main__':
-    graphDirichlet = buildGraph(3, 3, "dirichlet")
-    graphPeriodic = buildGraph(3, 3, "periodic")
+    # graphDirichlet = buildGraph(3, 3, "dirichlet")
+    # graphPeriodic = buildGraph(3, 3, "periodic")
+    g = {}
+    bc = "dirichlet"
+    size = [1, 2]
+    index = [0]*len(size)
+    numloop = len(size)-1
+    recGraph(size, g, bc, index, numloop)
+
