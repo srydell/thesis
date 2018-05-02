@@ -32,6 +32,7 @@ def isAccepted(K, site0, site1, gitter):
 
 def saveFrame(obj, typeOfObj, seed, N, M, boundaryCondition, numberOfFrames):
     """ Save obj to ./data/{N}x{M}_{boundaryCondition}/{seed}/{typeOfObj}/frameNumber.pickle
+    Wrapper around saveObject
 
     :obj: Something to save
     :typeOfObj: String - One of ["gitter", "correlation_function", "clusters"]
@@ -57,9 +58,10 @@ def updateCorrFunc(firstSite, nextSite, corrFunction):
     :startSite: 1x2 matrix
     :returns: None
     """
-    # Update correlation function on the fly:
     # add +1 to G(i-i0) for the open path from i0 to i
-    addIfNotExists(firstSite[0] - nextSite[0], 1, corrFunction)
+    # NOTE: This has to be the absolute value,
+    #       otherwise it will be skewed toward the side with the largest number of sites.
+    addIfNotExists(abs(firstSite[0] - nextSite[0]), 1, corrFunction)
 
 def updateLoopLengths(clusters):
     """Append the number of sites in clusters with index to loopLengths
@@ -179,13 +181,13 @@ def main(K, N, M, boundaryCondition):
     seed = random.randrange(sys.maxsize)
 
     # Self-eating loop (resulting in clusters = {})
-    seed = 5540102676881230539
+    # seed = 5540102676881230539
     # seed = 1592744071574553462
 
     # Multiple loops but only one gets indexed
-    # seed = 595770392852380573
+    seed = 595770392852380573
 
-    # Produces a nice gif. loopLengths = [4, 4, 12, 4]
+    # Produces a nice gif. loopLengths = [4, 4, 12, 4] for 10x10 graph
     # seed = 615885798301355417
 
     random.seed(seed)
