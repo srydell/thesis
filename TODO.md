@@ -4,6 +4,12 @@
 
 ### Questions for Mats ###
 
+### Paper ###
+
+* Create a directory for latex sources.
+* Read one of the given example papers.
+* Write up the overall section structure.
+
 ### isingWorm ###
 
 * Write test code for isingWorm
@@ -34,7 +40,13 @@ data
 
 * Write test code for plotGraph
 * plot graph (option for file or live)
+* Add functionality to plot from file.
+* Add functionality to choose boundary conditions (now only supports dirichlet).
 
 ### indexClusters ###
 
 * Some clusters seem to get the same index even though they are not part of the same cluster. This has showed up on some plots via the coloring (taken from the indices in clusters) being the same.
+
+### Hoshen Kopelman ###
+
+* If there is time, write the Hoshen Kopelman algorithm for indexing clusters.
