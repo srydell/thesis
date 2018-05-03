@@ -33,22 +33,23 @@ def isAccepted(K, site0, site1, gitter):
     else:
         return False
 
-def saveFrame(obj, typeOfObj, seed, N, M, boundaryCondition, numberOfFrames):
-    """ Save obj to ./data/{N}x{M}_{boundaryCondition}/{seed}/{typeOfObj}/frameNumber.pickle
+def saveFrame(obj, typeOfObj, seed, size, boundaryCondition, numberOfFrames):
+    """ Save obj to ./data/{NxMx...}_{boundaryCondition}/{seed}/{typeOfObj}/frameNumber.pickle
     Wrapper around saveObject
 
     :obj: Something to save
     :typeOfObj: String - One of ["gitter", "correlation_function", "clusters"]
     :seed: Int
-    :N: Int - Number of rows
-    :M: Int - Number of columns
+    :size: 1xn matrix - [N, M, ...]
     :boundaryCondition: String
     :returns: None
     """
     if typeOfObj not in ["gitter", "correlation_function", "clusters"]:
         raise Exception(f"Type of object to save in saveFrame not supported. Recieved {typeOfObj}.")
 
-    path = f"data/{N}x{M}_{boundaryCondition}/{seed}/{typeOfObj}/{numberOfFrames}"
+    # sizeSeparatedByX = NxMx...
+    sizeSeparatedByX = 'x'.join(str(s) for s in size)
+    path = f"data/{sizeSeparatedByX}_{boundaryCondition}/{seed}/{typeOfObj}/{numberOfFrames}"
 
     # Save the next frame
     saveObject(obj, path)
@@ -57,8 +58,8 @@ def updateCorrFunc(firstSite, nextSite, corrFunction):
     """Update the correlation function
 
     :corrFunction: dictionary
-    :nextSite: 1x2 matrix
-    :startSite: 1x2 matrix
+    :nextSite: 1xn matrix
+    :startSite: 1xn matrix
     :returns: None
     """
     # add +1 to G(i-i0) for the open path from i0 to i
@@ -79,14 +80,13 @@ def updateLoopLengths(clusters):
         loopLengths.append(len(clusters[index]))
     return loopLengths
 
-def simulateWorm(corrFunction, K, N, M, gitter, seed, numberOfFrames):
+def simulateWorm(corrFunction, K, size, gitter, seed, numberOfFrames):
     """Start a new worm and moves it until a loop is formed
     Chooses any neighbour from currentSite except previousSite to avoid moving 180 degrees.
     Updates the correlation function corrFunction after each step.
 
     :K: J/T
-    :M: Int - Number of columns
-    :N: Int - Number of rows
+    :size: 1xn matrix - [N, M, ...]
     :currentSite: 1x2 matrix
     :gitter: dictionary
     :seed: Int
@@ -94,8 +94,8 @@ def simulateWorm(corrFunction, K, N, M, gitter, seed, numberOfFrames):
     :returns: 1xn matrix - loop lengths
     """
 
-    # Initialize starting site as some random [i, j] within the gitter
-    firstSite = [random.randrange(0, N), random.randrange(0, M)]
+    # Initialize starting site as some random [i, j, ...] within the gitter
+    firstSite = [random.randrange(0, maxX) for maxX in size]
 
     if config.get("debug"):
         print(f"First site: {firstSite}")
@@ -156,40 +156,25 @@ def simulateWorm(corrFunction, K, N, M, gitter, seed, numberOfFrames):
 
             if config.get("save data"):
                 # Save the frame
-                saveFrame(corrFunction, "gitter", seed, N, M, boundaryCondition, numberOfFrames)
-                saveFrame(corrFunction, "correlation_function", seed, N, M, boundaryCondition, numberOfFrames)
-                saveFrame(clusters, "clusters", seed, N, M, boundaryCondition, numberOfFrames)
+                saveFrame(corrFunction, "gitter", seed, size, boundaryCondition, numberOfFrames)
+                saveFrame(corrFunction, "correlation_function", seed, size, boundaryCondition, numberOfFrames)
+                saveFrame(clusters, "clusters", seed, size, boundaryCondition, numberOfFrames)
             numberOfFrames += 1
 
             # Plotting
             plotGraph(clusters, gitter)
-            plotCorr(corrFunction, M)
+            # Correlation function is normalized
+            # by the number of sites in the x direction = size[0]
+            plotCorr(corrFunction, size[0])
 
     return loopLengths
 
 def main():
     """Simulate ising worm algorithm
 
-    :K: Float - J/T
-    :N: Int - Number of rows
-    :M: Int - Number of columns
-    :boundaryCondition: String - Supported: ["periodic", "dirichlet"]
-    :returns: dictionaries - gitter, correlation function
+    :returns: gitter, corrFunction, averageLoopLength, seed
     """
 
-    J = 0.5
-    # Temperature
-    T = 1
-
-    K = J/T
-
-    # Number of rows in gitter
-    N = 10
-    # Number of columns in gitter
-    M = 10
-
-    boundaryCondition = config.get("boundary condition")
-    # boundaryCondition = "periodic"
     # Initialize the random number generator with current time as seed
     seed = random.randrange(sys.maxsize)
 
@@ -209,7 +194,20 @@ def main():
     # Current the config
     print(config)
 
-    gitter = buildGraph([N, M], boundaryCondition)
+    J = 0.5
+    # Temperature
+    T = 1
+
+    K = J/T
+
+    # Number of rows in gitter
+    N = 10
+    # Number of columns in gitter
+    M = 10
+    size = [N, M]
+
+    boundaryCondition = config.get("boundary condition")
+    gitter = buildGraph(size, boundaryCondition)
 
     # Correlation function for x
     corrFunction = {}
@@ -218,7 +216,7 @@ def main():
     numberOfFrames = 0
     for _ in range(4):
         # Move this worm until it forms a loop
-        loopLengths = simulateWorm(corrFunction, K, N, M, gitter, seed, numberOfFrames)
+        loopLengths = simulateWorm(corrFunction, K, size, gitter, seed, numberOfFrames)
 
     if len(loopLengths) != 0:
         # Update the average loop length
