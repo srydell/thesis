@@ -1,3 +1,4 @@
+# Ensure that config can be referenced
 if "config" not in globals():
     config = {}
 
