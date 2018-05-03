@@ -3,7 +3,7 @@
 # n is what stops the recursion. It should always start at 0. This is then incremented until it size[n] is undefined.
 # index is [i, j, k, ...] the index of the current site that will be handled in the graph. index should start being [None]*len(size).
 # graph is a dictionary that should be {} at start. In each loop the site from index will be added to it.
-def loop_rec(size, n, index, graph):
+def recGraph(size, index, graph, n):
     if n <= len(size)-1:
         for x in range(size[n]):
             index[n] = x
@@ -14,13 +14,13 @@ def loop_rec(size, n, index, graph):
                 graph[tuple(index)] = 0
 
             print(f"Now on {index}")
-            loop_rec(size, n + 1, index, graph)
+            recGraph(size, index, graph, n + 1)
 
 # Example input
 size = [2, 3]
 index = [None]*len(size)
 graph = {}
-loop_rec(size, 0, index, graph)
+recGraph(size, index, graph, 0)
 
 print(graph)
 print(len(graph))
