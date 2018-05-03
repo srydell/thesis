@@ -73,7 +73,7 @@ def plotCorr(corr, norm):
     """Plot correlation function corr as a histogram
 
     :corr: dictionary - Correlation function
-    :norm: Int/Float - Normalization value (for x this is the number of columns)
+    :norm: Int/Float - Normalization value (the number of possible sites it can be on)
     :returns: None
     """
 
@@ -84,11 +84,7 @@ def plotCorr(corr, norm):
     width = 1.0
 
     # Normalize to g(i) = G(i) / G(0)
-    if corr.get(0) is not None:
-        corrValues = [val/norm for val in corr.values()]
-    else:
-        # No need to normalize, corr[0] = 1
-        corrValues = list(corr.values())
+    corrValues = [val/norm for val in corr.values()]
 
     CORR_AXIS.bar(corr.keys(), corrValues, width, color='g')
 
@@ -96,8 +92,6 @@ def plotCorr(corr, norm):
     plt.pause(0.01)
 
 if __name__ == '__main__':
-    N = 300
-    M = 300
-    bc = "dirichlet"
+    pass
     # Do not close the graph after plotting
     # plt.show()
