@@ -193,7 +193,7 @@ def main():
     # seed = 5540102676881230539
     # seed = 1592744071574553462
 
-    # Multiple loops but only one gets indexed
+    # 4 small clusters, ~ 20 frames
     seed = 595770392852380573
 
     # Produces a nice gif. loopLengths = [4, 4, 12, 4] for 10x10 graph
@@ -202,7 +202,7 @@ def main():
     random.seed(seed)
     print(f"The seed is: {seed}")
 
-    # Load the config
+    # Current the config
     print(config)
 
     gitter = buildGraph(N, M, boundaryCondition)
