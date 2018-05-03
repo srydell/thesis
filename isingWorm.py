@@ -1,3 +1,7 @@
+# Ensure that config can be referenced
+if "config" not in globals():
+    config = {}
+
 import sys
 from math import tanh, pow
 from indexClusters import *
@@ -93,14 +97,14 @@ def simulateWorm(corrFunction, K, N, M, gitter, seed, numberOfFrames):
     # Initialize starting site as some random [i, j] within the gitter
     firstSite = [random.randrange(0, N), random.randrange(0, M)]
 
-    if config["debug"]:
+    if config.get("debug"):
         print(f"First site: {firstSite}")
 
     # Get some random neighbour to form the first link
     currentSite = getRandomNeighbour(firstSite, None, gitter)
     switchLinkBetween(currentSite, firstSite, gitter)
 
-    if config["debug"]:
+    if config.get("debug"):
         print(f"Initial color link between {firstSite} and {currentSite}")
 
     # Track the previous site to avoid that the current turns 180 degrees
@@ -118,7 +122,7 @@ def simulateWorm(corrFunction, K, N, M, gitter, seed, numberOfFrames):
 
         if isAccepted(K, currentSite, nextSite, gitter):
 
-            if config["debug"]:
+            if config.get("debug"):
                 print(f"Accepted site {nextSite}")
                 print(f"Coloring from {currentSite} to {nextSite}")
 
@@ -128,14 +132,14 @@ def simulateWorm(corrFunction, K, N, M, gitter, seed, numberOfFrames):
             previousSite = currentSite
             currentSite = nextSite
 
-            if config["debug"]:
+            if config.get("debug"):
                 print(f"Updating indexing...")
 
             # Update indexing
             clusters = {}
             indexClusters(clusters, gitter)
 
-            if config["debug"]:
+            if config.get("debug"):
                 print(f"The cluster is now: {clusters}")
 
             if nextSite == firstSite:
@@ -144,13 +148,13 @@ def simulateWorm(corrFunction, K, N, M, gitter, seed, numberOfFrames):
 
                 loopLengths = updateLoopLengths(clusters)
 
-                if config["debug"]:
+                if config.get("debug"):
                     print(f"Loop lengths after updating: {loopLengths}")
 
             # Update the correlation function when new site is accepted
             updateCorrFunc(firstSite, nextSite, corrFunction)
 
-            if config["save data"]:
+            if config.get("save data"):
                 # Save the frame
                 saveFrame(corrFunction, "gitter", seed, N, M, boundaryCondition, numberOfFrames)
                 saveFrame(corrFunction, "correlation_function", seed, N, M, boundaryCondition, numberOfFrames)
@@ -205,14 +209,14 @@ def main():
     # Current the config
     print(config)
 
-    gitter = buildGraph(N, M, boundaryCondition)
+    gitter = buildGraph([N, M], boundaryCondition)
 
     # Correlation function for x
     corrFunction = {}
 
     # How many frames have been played
     numberOfFrames = 0
-    for _ in range(2):
+    for _ in range(4):
         # Move this worm until it forms a loop
         loopLengths = simulateWorm(corrFunction, K, N, M, gitter, seed, numberOfFrames)
 
@@ -222,7 +226,7 @@ def main():
     else:
         raise Exception(f"There were no loops. Loop lengths: {loopLengths}")
 
-    if config["debug"]:
+    if config.get("debug"):
         print(f"Loop lengths: {loopLengths}")
         print(f"Loop averages: {averageLoopLength}")
 
@@ -237,5 +241,5 @@ if __name__ == '__main__':
     # Keep the window open when done
     plt.show()
 
-    if config["debug"]:
+    if config.get("debug"):
         print(f"The seed was: {seed}")
