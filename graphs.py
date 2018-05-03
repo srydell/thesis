@@ -17,7 +17,7 @@ def buildGraph(N, M, bc="periodic"):
     # I sometimes have fat fingers
     if bc not in supportedBC:
         raise unsupportedBoundaryCondition
-    
+
     for i in range(N):
         for j in range(M):
             # Create an array of neighbours from (i, j) the graph
@@ -50,30 +50,71 @@ def buildGraph(N, M, bc="periodic"):
 
     return graph
 
-def recGraph(size, boundaryCondition, graph, index, loopNumber=0):
-    """Create graph recursively
+def applyBoundaryCondition(boundaryCondition, site, size, graph, startingWeight):
+    """Create a list of neighbours to site depending on boundaryCondition
 
-    :size: TODO
-    :boundaryCondition: TODO
-    :graph: TODO
-    :loopNumber: TODO
-    :returns: TODO
+    :boundaryCondition: String - in ["periodic", "dirichlet"]
+    :site: 1xn matrix - [i, j, ...] index of site to which neighbours should be calculated
+    :size: 1xn matrix - [N, M, ...] largest possible values in each dimension
+    :startingWeight: Int - The weight between site and each of its neighbours
+    :returns: dictionary of 1xm matrix of 1xn tuples - m = number of neighbours
     """
 
-    if type(loopNumber) != int:
-        Exception(f"Number of loops is not an int. Got: {loopNumber}")
+    neighbours = []
+    for i, x_i in enumerate(site):
+        if boundaryCondition == "periodic":
+            # x_i here is the value on the i'th index (dimension) in site
+            print(f"Handling {site} on {x_i}")
+            print(f"Size is {size}")
+            print(f"i is {i}")
+            neighbours.append(tuple(site[:i] + [(x_i + 1) % size[i]] + site[(i + 1):]))
+            neighbours.append(tuple(site[:i] + [(x_i - 1) % size[i]] + site[(i + 1):]))
+            input(neighbours)
+            print()
 
-    # print(f"New: Index: {index}")
-    # input(f"New: Loop: {loopNumber}")
-    if loopNumber >= 0:
-        for x in range(size[loopNumber]):
-            index[x] = x
-            # print(f"Inside loop: Index: {index}")
-            # input(f"Inside loop: Loop: {loopNumber}")
-            recGraph(size, boundaryCondition, graph, index, loopNumber-1)
-    else:
-        print(f"apply bc. loop: {loopNumber}")
-        input(f"apply bc. index: {index}")
+        elif boundaryCondition == "dirichlet":
+            # x_i here is the value on the i'th index (dimension) in site
+            print(f"Handling {site} on {x_i}")
+            print(f"Size is {size}")
+            print(f"i is {i}")
+            if not x_i+1 == size[i]:
+                # It is not on the max border so it's safe to add
+                neighbours.append(tuple(site[:i] + [(x_i + 1)] + site[(i + 1):]))
+            if not x_i-1 == -1:
+                # It is not on the bottom border so it's safe to add
+                neighbours.append(tuple(site[:i] + [(x_i - 1)] + site[(i + 1):]))
+
+            input(neighbours)
+            print()
+
+    # Initialize the site
+    outputDict = {}
+    for neighbour in neighbours:
+        outputDict[neighbour] = startingWeight
+    return outputDict
+
+def recGraph(size, siteIndex, graph, currentForLoop=0):
+    """Loop recursively and create graph
+
+    :size: [N, M, ...] where it should be interpreted as NxMx...
+    :siteIndex: 1xn matrix - Initially [None][i, j, k, ...] index of the current site  to be in the graph. siteIndex should start being [None]*len(size)
+    :graph: dictionary - Initially {}, in each for loop siteIndex will be added to it
+    :currentForLoop: Int - Initially 0. This is then incremented until it size[currentForLoop] is undefined.
+    :returns: None
+    """
+
+    # This is what stops the recursion
+    if currentForLoop <= len(size)-1:
+        for x_i in range(size[currentForLoop]):
+            siteIndex[currentForLoop] = x_i
+
+            if None not in siteIndex:
+                print(siteIndex)
+                # TODO: Add applyBoundaryCondition(size, siteIndex) here
+                graph[tuple(siteIndex)] = applyBoundaryCondition(boundaryCondition, siteIndex, size, graph)
+
+            print(f"Now on {siteIndex}")
+            recGraph(size, siteIndex, graph, currentForLoop + 1)
 
 def switchLinkBetween(site0, site1, graph):
     """Changes the link weight between site0 and site1
@@ -164,16 +205,17 @@ def getRandomNeighbour(site, exceptSite, graph):
     # Since neighbour will be changed a lot use a list
     return list(neighbour)
 
-def isOnBorder(site, N, M):
-    """True if one of [-1, N, M] can be found in site, False otherwise
+def isOnBorder(site, size):
+    """True if one of [-1 in site, size[0] == site[0], size[1] ==...] is true, False otherwise
 
-    :site: 1x2 matrix
-    :N: Int
-    :M: Int
+    :site: 1xn matrix
+    :size: 1xn matrix
     :returns: Boolean
     """
-    
-    return -1 in site or N == site[0] or M == site[1]
+    for i, x_i in enumerate(site):
+        if x_i == -1 or x_i == size[i]:
+            return True
+    return False
 
 class unsupportedBoundaryCondition(Exception):
     """Unsupported boundary condition called."""
@@ -181,10 +223,21 @@ class unsupportedBoundaryCondition(Exception):
 if __name__ == '__main__':
     # graphDirichlet = buildGraph(3, 3, "dirichlet")
     # graphPeriodic = buildGraph(3, 3, "periodic")
-    g = {}
-    bc = "dirichlet"
-    size = [1, 2]
-    index = [0]*len(size)
-    numloop = len(size)-1
-    recGraph(size, g, bc, index, numloop)
+
+    # site = [6, 5, 6, 0, 3]
+    # size = [9, 6, 7, 9, 4]
+    site = [0, 3]
+    size = [4, 4]
+    boundaryCondition = "periodic"
+    # boundaryCondition = "dirichlet"
+    graph = {}
+    startingWeight = 0
+    graph[tuple(site)] = applyBoundaryCondition(boundaryCondition, site, size, graph, startingWeight)
+    print(graph)
+    # g = {}
+    # bc = "dirichlet"
+    # size = [1, 2]
+    # index = [0]*len(size)
+    # numloop = len(size)-1
+    # recGraph(size, g, bc, index, numloop)
 
