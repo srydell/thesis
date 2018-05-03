@@ -23,7 +23,7 @@ def isAccepted(K, site0, site1, gitter):
     site0 = tuple(site0)
     site1 = tuple(site1)
 
-    linkWeight = getLinkWeight(site0, site1, gitter)
+    linkWeight = gitter[site0][site1]
 
     # Probability of being accepted
     p = pow(tanh(K), 1 - linkWeight)
