@@ -33,8 +33,6 @@ data
 * Write test code for graphs
 * Rewrite save graphs to saving SQL table. (Call each table NxMboundaryCondition and add a row for each data point)
 * Rewrite load graphs to load from SQL table
-* buildGraph should take a 1xn matrix of size and then use recursion to add the number of for loops
-* Make a separate function called applyBoundaryCondition that gets used in buildGraph.
 
 ### plotGraph ###
 
