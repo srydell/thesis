@@ -65,7 +65,7 @@ def _createConfigs(configFile):
     """
     config = configparser.ConfigParser()
 
-    config['isingWorm.py'] = {"Plotting" : True, "Save data" : False, "Debug" : False}
+    config['isingWorm.py'] = {"Plotting" : True, "Save data" : False, "Debug" : False, "Boundary condition": "dirichlet"}
 
     config['indexClusters.py'] = {"Debug" : False}
 
@@ -100,9 +100,9 @@ def loadConfigs(configFile):
     outDict = {}
     for section in config[callerFilename]:
         # Format the dictionary more pythonic
-        if config[callerFilename][section] == "True":
+        if config[callerFilename][section] in ["True", "true", "on"]:
             outDict[section] = True
-        elif config[callerFilename][section] == "False":
+        elif config[callerFilename][section] in ["False", "false", "off"]:
             outDict[section] = False
         else:
             outDict[section] = config[callerFilename][section]
@@ -110,6 +110,10 @@ def loadConfigs(configFile):
     return outDict
 
 if __name__ == '__main__':
-    _createConfigs('test.ini')
-    test = loadConfigs('test.ini')
-    print(test)
+
+    answer = input("Do you want to write defaults to config? [y/n] ")
+    if answer in ['y', 'Y']:
+        configFile = "config.ini"
+        print(f"Overwriting config file {configFile}")
+
+        _createConfigs(configFile)
