@@ -188,7 +188,7 @@ def main():
     # Number of columns in gitter
     M = 10
 
-    boundaryCondition = "dirichlet"
+    boundaryCondition = config.get("boundary condition")
     # boundaryCondition = "periodic"
     # Initialize the random number generator with current time as seed
     seed = random.randrange(sys.maxsize)
