@@ -140,21 +140,6 @@ def flipSiteWeight(site0, site1, graph):
 
     graph[site0][site1] = 1 if currentWeight == 0 else 0
 
-def getLinkWeight(site0, site1, graph):
-    """Link weight between site0 and site1 in graph
-
-    :site0: 1xn matrix [i, j, ...]
-    :site1: 1xn matrix [i, j, ...]
-    :graph: dictionary
-    :returns: Int - link weight
-    """
-    
-    # Convert sites to tuples (tuples can be used as hash values but not arrays)
-    site0 = tuple(site0)
-    site1 = tuple(site1)
-
-    return graph[site0][site1]
-
 def getLinkedNeighbours(site, graph):
     """All neighbours to site in graph with weight 1
     
