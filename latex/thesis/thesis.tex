@@ -1,0 +1,171 @@
+\documentclass[nocoverpage,swedish,g5paper]{thesis}
+%
+%   optional options to documentclass:
+%
+%   coverpage   : Create both cover, inside front and text.
+%                 Useful for web publishing.
+% 
+%   nocoverpage : Inner part of thesis only, do not create cover sheet.
+%                 Useful for printing.
+%   
+%   onlycoverpage : Only create cover page. Ignores all text.
+%                   Useful for printing.  
+%
+%   onlytext : Only print the text of the work. No cover and no inside front.
+%              Useful for proof-reading copies.
+%  
+%  g5paper, s5paper, a4paper : Choose paper format, 
+%
+%  9pt, 10pt, 11pt, 12pt : Choose typeface size.
+%
+%  draft, final : Draft marks errors with a black box in text.
+%
+%  openright, openany : openright makes chapters only open at
+%                       right hand pages.
+%
+%  * : Anything else is intepreted as the babel name of a
+%      foregin language which is applied to the 'foregincommand'.
+%
+%
+%  Default : s5paper,10pt,final,openright
+%
+%
+%
+%  required parameters
+%
+\title{Astrophysical and Collider Signatures of Extra Dimensions}
+\author{Henrik Melb\'eus}
+\date{January 2010}
+\shortdate{2010}
+\type{Licentiate Thesis}
+\department{Department of Theoretical Physics,\\School of Engineering Sciences}
+\address{SE-106 91 Stockholm, Sweden}
+\city{Stockholm}
+\country{Sweden}
+\publisher{Printed in Sweden by Universitetsservice US AB, Stockholm January 2010}
+\copyrightline{\copyright\ Henrik Melb\'eus, January 2010}
+\trita{FYS-2010:05}
+\isbn{978-91-7415-556-3}
+\issn{0280-316X}
+\isrn{KTH/FYS/-{}-10:05-{}-SE}
+\comment{Scientific thesis for the degree of Licentiate of Engineering (Lic Eng) in the subject area of Theoretical physics.\\ \\ \textbf{Cover illustration:} A Feynman diagram contributing to the three leptons and large missing energy signal, in a model where right-handed neutrinos propagate in an extra dimension. Taken from Ref.~[3].}
+%
+%  optional parameters
+%
+\cplogo{\includegraphics[height=2.5cm]{kthlogo.eps}}
+\innerlogo{\includegraphics[height=2.5cm]{kthlogo.eps}}
+%\subtitle{A carefully crafted subtitle for people not settling with the\\usual title, giving yet longer, funnier, and better smelling, title}
+\division{Theoretical Particle Physics}
+\centercomment{\centerline{Typeset in \LaTeX}}
+\foregincomment{Akademisk avhandling f\"or avl\"aggande av teknologie licentiatexamen (TeknL) inom
+\"amnesomr{\aa}det teoretisk fysik.}
+%\dedication{To Someone}
+
+\usepackage[dvips]{graphicx}
+\usepackage{amsmath,amsfonts,amssymb}
+\usepackage[latin1]{inputenc}
+\usepackage{url}
+\usepackage[square, comma, sort&compress]{natbib}
+
+\unitlength=1mm
+
+\def\slc#1{\setbox0=\hbox{$#1$}           % set a box for #1
+    \dimen0=\wd0                                 % and get its size
+    \setbox1=\hbox{/} \dimen1=\wd1               % get size of /
+    \ifdim\dimen0>\dimen1                        % #1 is bigger
+       \rlap{\hbox to \dimen0{\hfil/\hfil}}      % so center / in box
+       #1                                        % and print #1
+    \else                                        % / is bigger
+       \rlap{\hbox to \dimen1{\hfil$#1$\hfil}}   % so center #1
+       /                                         % and print /
+    \fi}
+
+\newcommand{\todo}[1]{(\textbf{TODO:} #1)}
+\newcommand{\ud}{\mathrm{d}}
+\newcommand{\dd}[2]{\frac{{\rm d}#1}{{\rm d}#2}}
+\newcommand{\citeb}[1]{[\citen{#1}]}
+\newcommand{\Ref}{[{\bf REF}]}
+\newcommand{\Fig}{[{\bf FIG}]}
+\newcommand{\chk}{[{\bf CHECK}]}
+\newcommand{\im}{\mathrm{i}}
+\newcommand{\Mpl}{M_{\rm Pl}}
+\newcommand{\Mpr}{\bar{M}_{\rm Pl}}
+\newcommand{\Ms}{M_*}
+\newcommand{\Msr}{\bar{M}_*}
+\newcommand{\ie}{{\it i.e.}}
+\newcommand{\eg}{{\it e.g.}}
+\newcommand{\hc}{{\rm h.c.}}
+
+\begin{document}
+
+%\def\@cite#1{[#1]}
+
+\begin{abstract}
+In recent years, there has been a large interest in the subject of extra dimensions in particle physics. In particular, a number of models have been suggested which provide solutions to some of the problems with the current Standard Model of particle physics, and which could be tested in the next generation of high-energy experiments. Among the most important of these models are the large extra dimensions model by Arkani-Hamed, Dimopoulos, and Dvali, the universal extra dimensions model, and models allowing right-handed neutrinos to propagate in the extra dimensions. In this thesis, we study phenomenological aspects of these three models, or simple modifications of them.
+
+The Arkani-Hamed--Dimopoulos--Dvali model attempts to solve the gauge hierarchy problem through a volume suppression of Newton's gravitational constant, lowering the fundamental Planck scale down to the electroweak scale. However, this solution is unsatisfactory in the sense that it introduces a new scale through the radius of the extra dimensions, which is unnaturally large compared to the electroweak scale. It has been suggested that a similar model, with a hyperbolic internal space, could provide a more satisfactory solution to the problem, and we consider the hadron collider phenomenology of such a model.
+
+One of the main features of the universal extra dimensions model is the existence of a potential dark matter candidate, the lightest Kaluza--Klein particle. In the so-called minimal universal extra dimensions model, the identity of this particle is well defined, but in more general models, it could change. We consider the indirect neutrino detection signals for a number of different such dark matter candidates, in a five- as well as a six-dimensional model.
+
+Finally, right-handed neutrinos propagating in extra dimensions could provide an alternative scenario to the seesaw mechanism for generating small masses for the left-handed neutrinos. Since extra-dimensional models are non-renormalizable, the Kaluza--Klein tower is expected to be cut off at some high-energy scale. We study a model where a Majorana neutrino at this cutoff scale is responsible for the generation of the light neutrino masses, while the lower modes of the tower could possibly be observed in the Large Hadron Collider. We investigate the bounds on the model from non-unitarity effects, as well as collider signatures of the model.
+\\\noindent \strut \\
+{\bf Key words}: Extra dimensional quantum field theories, universal extra dimensions, Kaluza--Klein dark matter, Arkani-Hamed--Dimopoulos--Dvali model, hierarchy problem, neutrino mass, seesaw mechanism, Large Hadron Collider phenomenology.
+\end{abstract}
+
+%\begin{otherlanguage}{swedish}
+%\begin{foreginabstract}
+%\todo{Skriv ett abstract p{\aa} svenska.}
+%\\\noindent \strut \\
+%{\bf Nyckelord}: Extradimensionella kvantf{\"a}ltteorier, universella extra dimensioner, ADD-modeller, Kaluza--Klein-m\"ork materia, neutrinomassor, LHC-fenomenologi
+%\end{foreginabstract}
+%\end{otherlanguage}
+
+\begin{preface}
+\input{preface}
+\end{preface}
+
+\tableofcontents
+
+% This separates the introduction from the main part of the thesis.
+\mainmatter
+
+\part{Introduction and background material}
+
+\chapter{Introduction}
+\input{chapter1}
+
+\chapter{Physics in extra dimensions}\label{ch:ExtraDimensions}
+\input{chapter2}
+
+\chapter{Dark matter}\label{ch:DarkMatter}
+\input{chapter3}
+
+\chapter{Neutrino physics}\label{ch:NeutrinoPhysics}
+\input{chapter4}
+
+\chapter{Collider signatures of extra dimensions}\label{ch:ColliderPhenomenology}
+\input{chapter5}
+
+\chapter{Summary and conclusions}\label{ch:Summary}
+\input{chapter6}
+
+% This starts the appendices.
+%\appendix
+
+%\chapter{Appendix about something}
+%\input{appendix}
+
+\addcontentsline{toc}{chapter}{Bibliography}
+\bibliographystyle{thesis_bib_style}
+\bibliography{references}
+
+\part{Scientific papers}
+
+\input{prepapers}
+
+\end{document}
+
+
+
+
+
