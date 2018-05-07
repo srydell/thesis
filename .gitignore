@@ -17,24 +17,12 @@ data/*
 # --- Files ---
 # Meta
 !.gitignore
-!Makefile
 !README.md
 !TODO.md
-!recGraph.py
-!Makefile
-
-# Python
-!graphs.py
-!testGraph.py
-!hoshenKopelman.py
-!indexClusters.py
-!isingWorm.py
-!plotGraph.py
-!utils.py
 
 # Directories
+!cpp/
 !data/
-!figures/
+!latex/
 !literature/
-!test/
-!latex
+!python/
