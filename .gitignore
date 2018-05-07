@@ -20,6 +20,7 @@ data/*
 !README.md
 !TODO.md
 !recGraph.py
+!Makefile
 
 # Python
 !graphs.py
