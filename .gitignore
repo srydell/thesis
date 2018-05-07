@@ -17,6 +17,7 @@ data/*
 # --- Files ---
 # Meta
 !.gitignore
+!Makefile
 !README.md
 !TODO.md
 
