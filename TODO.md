@@ -6,9 +6,10 @@
 
 ### Paper ###
 
-* Create a directory for latex sources.
 * Read one of the given example papers.
-* Write up the overall section structure.
+* Add information about [Hausdorff dimension](https://en.wikipedia.org/wiki/Hausdorff_dimension)
+* Add information about [Raster scan](https://en.wikipedia.org/wiki/Raster_scan)
+* Add information about [worm algorithm](./literature/worm_algorithm_lecturenotes.pdf)
 
 ### isingWorm ###
 
