@@ -14,37 +14,25 @@
 
 * Write test code for isingWorm
 * The correlation function does not seem to go down like r^(-1/4). Check if this is because I am using too small values.
-* Create data saving mechanism:
-```
-data
-\-- sizeXxsizeY_boundaryCondition
-	+-- clusters
-		\-- frame1
-	+-- correlation_function
-		\-- frame1
-	\-- graph
-		\-- frame1
-	\-- plot
-		\-- lastFrame.png
-```
 
 ### graphs ###
 
 * Write test code for graphs
 * Rewrite save graphs to saving SQL table. (Call each table NxMboundaryCondition and add a row for each data point)
 * Rewrite load graphs to load from SQL table
-* buildGraph should take a 1xn matrix of size and then use recursion to add the number of for loops
-* Make a separate function called applyBoundaryCondition that gets used in buildGraph.
 
 ### plotGraph ###
 
 * Write test code for plotGraph
+* plotGraph can now only use 2D. Let it take size as an input at depending on if it is len(size) 2 or 3 it uses different plotting techniques.
+* Add so it plots loop lengths or perhaps energy.
 * Make it so that plotGraph does not reuse colors as much. Make a temporary array of colors to pop from and reset it every run.
 * Add functionality to plot from file.
 * Add functionality to choose boundary conditions (now only supports dirichlet).
 
 ### indexClusters ###
 
+* Test to make sure that indexClusters works for n dimensions.
 * Some clusters seem to get the same index even though they are not part of the same cluster. This has showed up on some plots via the coloring (taken from the indices in clusters) being the same. Might be a problem with how the coloring is chosen.
 
 ### Hoshen Kopelman ###

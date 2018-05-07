@@ -1,5 +1,8 @@
+# Ensure that config can be referenced
+if "config" not in globals():
+    config = {}
+
 from graphs import getLinkedNeighbours, buildGraph, switchLinkBetween
-DEBUG=False
 
 def removeDeprecated(clusters):
     """Goes through each index in clusters and check if it has any sites
@@ -105,7 +108,7 @@ def indexClusters(clusters, graph):
             if neighbours != []:
                 # Make each neighbour hashable
                 localCluster = [list(site), *neighbours]
-                if DEBUG:
+                if config.get("debug"):
                     print(f"On site {site}, will process: {localCluster}")
 
                 # None of the sites in the local cluster have been indexed
@@ -113,12 +116,12 @@ def indexClusters(clusters, graph):
                     indexHasChanged = True
                     largestIndex += 1
                     # Add the sites to the new index
-                    if DEBUG:
+                    if config.get("debug"):
                         print(f"Setting index {largestIndex} on {localCluster}")
                         print(f"Cluster before setting:\n{clusters}")
                     clusters[largestIndex] = localCluster
 
-                    if DEBUG:
+                    if config.get("debug"):
                         input(f"Cluster after setting:\n{clusters}")
 
                     # Go to next site
@@ -128,7 +131,7 @@ def indexClusters(clusters, graph):
                 localClusterIndices = getIndex(localCluster, clusters)
                 # Get the smallest of them that is not 0
                 smallestIndex = min(localClusterIndices)
-                if DEBUG:
+                if config.get("debug"):
                     print(f"Indices found: {localClusterIndices}")
                     print(f"Smallest index: {smallestIndex}")
 
@@ -138,7 +141,7 @@ def indexClusters(clusters, graph):
                 localClusterIndices += [0]*numSitesNotIndexed
 
                 allHaveMinIndex = all(index == smallestIndex for index in localClusterIndices)
-                if DEBUG:
+                if config.get("debug"):
                     print(f"The indices are: {localClusterIndices}")
                     print(f"The smallest index is: {smallestIndex}")
                     input(f"All have this index: {allHaveMinIndex}")
@@ -147,11 +150,11 @@ def indexClusters(clusters, graph):
                     # Not all neighbours have the same index
                     indexHasChanged = True
 
-                    if DEBUG:
+                    if config.get("debug"):
                         print(f"Move sites {localCluster} to index {smallestIndex}")
                         print(f"Cluster before moving:\n{clusters}")
                     moveToIndex(smallestIndex, localCluster, clusters)
-                    if DEBUG:
+                    if config.get("debug"):
                         input(f"Cluster after moving:\n{clusters}")
             else:
                 # If it has no neighbours it should not exist in clusters.
@@ -161,10 +164,10 @@ def indexClusters(clusters, graph):
                         clusters[index].remove(site)
 
     # Remove deprecated sites from clusters
-    if DEBUG:
+    if config.get("debug"):
         print(f"Removing empty indices. Cluster is now:\n{clusters}")
     removeDeprecated(clusters)
-    if DEBUG:
+    if config.get("debug"):
         print(f"Done. Cluster is now:\n{clusters}")
 
 def testDataToMats(N, M, fileIndex):
@@ -222,46 +225,3 @@ if __name__ == '__main__':
     # Test data to mats for checking indexClusters function
     # for n in range(10):
     #     testDataToMats(numRows, numCols, n)
-
-    # g1 = buildGraph(numRows, numCols, "dirichlet")
-    # g2 = buildGraph(numRows, numCols, "dirichlet")
-
-    # # One cluster for g1
-    # switchLinkBetween([0, 0], [1, 0], g1)
-    # switchLinkBetween([1, 0], [1, 1], g1)
-    # switchLinkBetween([1, 1], [1, 2], g1)
-    # switchLinkBetween([1, 2], [0, 2], g1)
-    # switchLinkBetween([0, 2], [0, 3], g1)
-
-    # # Another cluster for g1
-    # switchLinkBetween([2, 0], [2, 1], g1)
-    # switchLinkBetween([2, 1], [2, 2], g1)
-
-    # # Cluster for g2
-    # switchLinkBetween([0, 0], [0, 1], g2)
-    # switchLinkBetween([0, 1], [1, 1], g2)
-    # switchLinkBetween([1, 1], [1, 0], g2)
-    # switchLinkBetween([1, 0], [0, 0], g2)
-
-    # clusters = {}
-    # clusterWithLoop = {}
-
-    # indexClusters(clusters, g1)
-
-    # # indexClusters(clusterWithLoop, g2)
-
-    # # Close the loop in g1
-    # switchLinkBetween([0, 3], [1, 3], g1)
-    # indexClusters(clusters, g1)
-
-    # switchLinkBetween([2, 3], [1, 3], g1)
-    # indexClusters(clusters, g1)
-
-    # switchLinkBetween([2, 3], [2, 2], g1)
-    # indexClusters(clusters, g1)
-
-    # switchLinkBetween([1, 0], [2, 0], g1)
-    # indexClusters(clusters, g1)
-
-    # switchLinkBetween([1, 0], [0, 0], g1)
-    # indexClusters(clusters, g1)

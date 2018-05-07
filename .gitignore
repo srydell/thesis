@@ -20,9 +20,12 @@ data/*
 !Makefile
 !README.md
 !TODO.md
+!recGraph.py
+!Makefile
 
 # Python
 !graphs.py
+!testGraph.py
 !hoshenKopelman.py
 !indexClusters.py
 !isingWorm.py
@@ -34,3 +37,4 @@ data/*
 !figures/
 !literature/
 !test/
+!latex

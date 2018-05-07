@@ -1,7 +1,7 @@
 # -*- MakeFile -*-
 #
 # Example MakeFile 
-# Copyright 2017 Simon Rydell, all rights reserved 
+# Copyright 2018 Simon Rydell, all rights reserved 
 #
 #  --- Syntax ---
 #  target: dependencies
