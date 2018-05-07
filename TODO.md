@@ -11,6 +11,12 @@
 * Add information about [Raster scan](https://en.wikipedia.org/wiki/Raster_scan)
 * Add information about [worm algorithm](./literature/worm_algorithm_lecturenotes.pdf)
 
+### Tips from Emil ###
+
+* 'Flatten' out the graph by putting into a vector where the index of each site is (i * N + j) (this is always unique for 2D)
+* Append the state configuration to the data to avoid keeping two files. (std::copy)
+* Only use indexClusters when there is a valid state (When the worm has looped fully). This should avoid many many indexClusters run.
+
 ### isingWorm.py ###
 
 * Write test code for isingWorm
