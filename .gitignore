@@ -3,6 +3,7 @@
 
 # Ignore all files named .DS_Store, __pycache__ or ending with .log, .pyc
 **.log
+**.out
 **.pyc
 **/.DS_Store
 **/__pycache__
