@@ -135,9 +135,13 @@ def simulateWorm(corrFunction, K, size, gitter, seed, numberOfFrames):
             if config.get("debug"):
                 print(f"Updating indexing...")
 
-            # Update indexing
-            clusters = {}
-            indexClusters(clusters, gitter)
+            if config.get("plotting"):
+                # Update indexing
+                # By updating the cluster every frame,
+                # we can use the indices to put nice colors on the plot
+                # pass
+                clusters = {}
+                indexClusters(clusters, gitter)
 
             if config.get("debug"):
                 print(f"The cluster is now: {clusters}")
@@ -145,6 +149,9 @@ def simulateWorm(corrFunction, K, size, gitter, seed, numberOfFrames):
             if nextSite == firstSite:
                 # Found a new loop
                 loopFormed = True
+                # Update indexing
+                clusters = {}
+                indexClusters(clusters, gitter)
 
                 loopLengths = updateLoopLengths(clusters)
 
@@ -161,11 +168,12 @@ def simulateWorm(corrFunction, K, size, gitter, seed, numberOfFrames):
                 saveFrame(clusters, "clusters", seed, size, boundaryCondition, numberOfFrames)
             numberOfFrames += 1
 
-            # Plotting
-            plotGraph(clusters, gitter)
-            # Correlation function is normalized
-            # by the number of sites in the x direction = size[0]
-            plotCorr(corrFunction, size[0])
+            if config.get("plotting"):
+                # Plotting
+                plotGraph(clusters, gitter)
+                # Correlation function is normalized
+                # by the number of sites in the x direction = size[0]
+                plotCorr(corrFunction, size[0])
 
     return loopLengths
 
@@ -189,10 +197,10 @@ def main():
     # seed = 615885798301355417
 
     random.seed(seed)
-    print(f"The seed is: {seed}")
+    # print(f"The seed is: {seed}")
 
     # Current the config
-    print(config)
+    # print(config)
 
     J = 0.5
     # Temperature
@@ -201,9 +209,9 @@ def main():
     K = J/T
 
     # Number of rows in gitter
-    N = 10
+    N = 20
     # Number of columns in gitter
-    M = 10
+    M = 20
     size = [N, M]
 
     boundaryCondition = config.get("boundary condition")
