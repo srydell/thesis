@@ -2,108 +2,118 @@
 #include <map>
 #include <set>
 #include <string>
+#include <sstream>
 #include <unordered_map>
 
+/**
+* @brief: brief
+*
+* @param: std::string hello
+*       : std::string site
+*       : std::unordered_map< std::string
+*       : std::unordered_map<std::string
+*       : int> >
+*       : int i
+*       : int j
+*
+* @return: void
+*/
+// void applyBoundaryCondition(std::unordered_map<std::string, std::unordered_map<std::string, int> > graph, int i, int j, int L)
+// {
+// 	// Assume periodic boundary condition
+
+// 	// Initialize unordered_map called neighbours
+// 	std::unordered_map<std::string, int> neighbours;
+
+// 	int rightI = i;
+// 	int rightJ = (j + 1)%L;
+// 	// right = (i, (j+1)%M)
+// 	// up = ((i-1)%N, j)
+// 	// left = (i, (j-1)%M)
+// 	// down = ((i+1)%N, j)
+// 	// neighbours = [right, up, left, down]
+
+// 	// Create each neighbour
+
+// 	// Add them to neighbours 
+
+// 	// Return the neighbours
+// }
+
 int main(){
-	/* std::map<std::string, int> wordMap; */
-
-	/* // Insert Few elements in map */
-	/* wordMap.insert({ "First", 1 }); */
-	/* wordMap.insert({ "Second", 2 }); */
-	/* wordMap.insert({ "Third", 3 }); */
-
-	/* // Overwrite value of an element */
-	/* wordMap["Third"] = 8; */
-
-	/* // Iterate over the map and display elements */
-	/* for (std::pair<std::string, int> element : wordMap) */
-	/* 	std::cout << element.first << " :: " << element.second << std::endl; */
-
-	/* // Graph with (i, j) : int */
-	/* std::map<std::set<int>, int> mockGraph; */
-	/* std::set<int> site; */
-	/* site.insert(1); */
-	/* site.insert(3); */
-
-	/* mockGraph.insert({ site, 2 }); */
-
-	/* for (std::pair<std::set<int>, int> element : mockGraph){ */
-	/* 	/1* Get the x/y data *1/ */
-	/* 	int x = *element.first.begin(); */
-	/* 	int y = *element.first.end(); */
-	/* 	std::cout << '(' << x << ", " << y << ')' << " : " << element.second << std::endl; */
-	/* 	std::set<int>::iterator siteIndex; */
-	/* 	for (siteIndex=element.first.begin(); siteIndex!=element.first.end(); ++siteIndex) { */
-	/* 		std::cout << *siteIndex << " : " << element.second << std::endl; */
-	/* 	} */
-	/* } */
-
-	/* // Graph with {(i, j) : {(i+1, j) : 0, ...}, ...} */
-	/* typedef std::unordered_map<std::set<int>, int> map1; */
-	/* typedef std::unordered_map<std::set<int>, map1> map2; */
-	/* map2 unordered_graph; */
-
 	// This is what I will use. Use a StringStream to turn ints into strings to then be used as keys.
-	std::unordered_map<std::string, std::unordered_map<std::string, int>> vertices;
+	std::unordered_map< std::string, std::unordered_map<std::string, int> > graph;
 
-	std::map<std::set<int>, std::map<std::set<int>, int>> graph;
-	std::set<int> testSite;
-	testSite.insert(1);
-	testSite.insert(3);
+	// Weight of each site initally
+	int startingWeight = 0;
 
-	/* Mockup of an iteration over site */
-	std::set<int>::iterator it;
-	for (it=testSite.begin(); it!=testSite.end(); ++it) {
-		std::cout << ' ' << *it;
-	}
-	std::cout << '\n';
+	// Size
+	int L = 10;
 
+	// std::string testSite = "1,2";
+	// std::unordered_map<std::string, int> testNeighbours;
+	// std::string n1 = "2,2";
+	// std::string n2 = "1,3";
+	// std::string n3 = "1,1";
+	// std::string n4 = "0,2";
+	// testNeighbours.insert({ n1, startingWeight });
+	// testNeighbours.insert({ n2, startingWeight });
+	// testNeighbours.insert({ n3, startingWeight });
+	// testNeighbours.insert({ n4, startingWeight });
 
-	std::set<int> testNeighbour1;
-	testNeighbour1.insert(2);
-	testNeighbour1.insert(3);
+	// graph.insert({ testSite, testNeighbours });
 
-	std::set<int> testNeighbour2;
-	testNeighbour2.insert(1);
-	testNeighbour2.insert(2);
+	// Iterate Over the unordered_map and display elements
+	// for (std::pair<std::string, int> element : testNeighbours)
+		// std::cout << element.first << " :: " << element.second << std::endl;
 
-	/* starting weight for every member */
-	int startingValue = 0;
+	// Initialize the string stream
+	std::stringstream ss;
+	// Initialize the current site
+	std::string site, neighbour;
+	std::unordered_map<std::string, int> neighbours;
+	// What will separate the neighbours in the string stream
+	char delimiter = '|';
+	for (int i = 0; i < L; ++i) {
+		for (int j = 0; j < L; ++j) {
+			// Clear so it can be used in this loop
+			site.clear();
+			ss.str(std::string());
 
-	std::map<std::set<int>, int> neighbours;
+			// Create "i,j"
+			ss << i << ',' << j;
 
-	/* Populate the neighbours map */
-	neighbours.insert({ testNeighbour1, startingValue });
-	neighbours.insert({ testNeighbour2, startingValue });
+			// Write it to the site
+			site = ss.str();
 
-	graph.insert({ testSite, neighbours });
+			ss.str(std::string());
+			// Create the neighbours
+			ss << i << ',' << (j+1)%L << '|';
+			ss << i << ',' << (j-1)%L << '|';
+			ss << (i+1)%L << ',' << j << '|';
+			ss << (i-1)%L << ',' << j << '|';
 
-	for (std::pair<std::set<int>, std::map<std::set<int>, int>> element : graph){
-		/* {    (1, 3) :  {     (2, 3)  :  0, ...}, ...} */
-		/* map< set<int>, map< set<int>, int > > */
-		/* Get the x/y data */
-		int x = *element.first.begin();
-		int y = *element.first.end();
-		std::cout << "The current site is:" << std::endl;
-		std::cout << '(' << x << ", " << y << ')' << std::endl;
+			// Put i,j from ss into neighbours up until delimiter
+			std::getline(ss, neighbour, delimiter);
+			std::cout << "Current site: " << site << std::endl;
+			// std::cout << "This is the neighbour string: " << neighbour << std::endl;
+			// Put i,j from ss into neighbours up until delimiter
+			std::getline(ss, neighbour, delimiter);
+			std::cout << "This is the neighbour2 string: " << neighbour << std::endl;
+			// Put i,j from ss into neighbours up until delimiter
+			std::getline(ss, neighbour, delimiter);
+			std::cout << "This is the neighbour3 string: " << neighbour << std::endl;
+			// Put i,j from ss into neighbours up until delimiter
+			std::getline(ss, neighbour, delimiter);
+			std::cout << "This is the neighbour4 string: " << neighbour << std::endl;
+			// right = (i, (j+1)%M)
+			// up = ((i-1)%N, j)
+			// left = (i, (j-1)%M)
+			// down = ((i+1)%N, j)
+			// neighbours = [right, up, left, down]
 
-		/* Iterate over the current site indices */
-		std::cout << "Iterating over the current site indices." << std::endl;
-		std::set<int>::iterator siteIndex;
-		for (siteIndex=element.first.begin(); siteIndex!=element.first.end(); ++siteIndex) {
-			std::cout << "Site index: " << *siteIndex << std::endl;
+			// std::cout << site << std::endl;
+			// applyBoundaryCondition(graph, i, j, L);
 		}
-
-		/* Iterate over the neighbours */
-		std::cout << "Iterating over the neighbours." << std::endl;
-		for (std::pair<std::set<int>, int> neighbourData : element.second){
-			std::cout << "(";
-			std::set<int>::iterator siteIndex;
-			for (siteIndex = neighbourData.first.begin(); siteIndex!=neighbourData.first.end(); ++siteIndex) {
-				std::cout << ' ' << *siteIndex;
-			}
-			std::cout << " )" << std::endl;
-		}
 	}
-
 }
