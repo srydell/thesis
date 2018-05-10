@@ -2,12 +2,17 @@
 
 if [[ "$1" == build ]]; then
 	cd ./build || exit
+	# Build the makefiles
 	cmake ../
-	make
-	./IsingWorm
+	# Run if make succeeds
+	if make; then
+		./IsingWorm ;
+	fi
 	exit
 fi
 
 cd ./build || exit
-make
-./IsingWorm
+# Run if make succeeds
+if make; then
+	./IsingWorm ;
+fi

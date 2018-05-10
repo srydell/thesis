@@ -45,7 +45,7 @@ int main(){
 	std::unordered_map< std::string, std::unordered_map<std::string, int> > graph;
 
 	// Weight of each site initally
-	int startingWeight = 0;
+	// int startingWeight = 0;
 
 	// Size
 	int L = 10;
