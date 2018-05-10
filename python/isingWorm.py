@@ -209,9 +209,9 @@ def main():
     K = J/T
 
     # Number of rows in gitter
-    N = 20
+    N = 10
     # Number of columns in gitter
-    M = 20
+    M = 10
     size = [N, M]
 
     boundaryCondition = config.get("boundary condition")

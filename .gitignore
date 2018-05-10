@@ -11,6 +11,8 @@
 
 # Ignore data files
 data/*
+cpp/build/*
+cpp/Tutorial/*
 
 # Except these
 # !exampleFile.txt
@@ -24,7 +26,6 @@ data/*
 
 # Directories
 !cpp/
-!data/
 !latex/
 !literature/
 !python/
