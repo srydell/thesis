@@ -4,41 +4,64 @@
 #include <string>
 #include <sstream>
 #include <unordered_map>
+#include <vector>
 
 /**
 * @brief: brief
 *
-* @param: std::string hello
-*       : std::string site
-*       : std::unordered_map< std::string
-*       : std::unordered_map<std::string
-*       : int> >
+* @param: std::unordered_map<std::string, int>& graph
 *       : int i
-*       : int j
+*       : const std::string& s
 *
 * @return: void
 */
-// void applyBoundaryCondition(std::unordered_map<std::string, std::unordered_map<std::string, int> > graph, int i, int j, int L)
-// {
-// 	// Assume periodic boundary condition
+void addSite(std::unordered_map<std::string, int>& graph, const std::string& s, int i)
+{
+	graph.insert({s, i});
+}
 
-// 	// Initialize unordered_map called neighbours
-// 	std::unordered_map<std::string, int> neighbours;
+/**
+* @brief: Parses string and adds the neighbouring sites to graph according to periodic boundary conditions
+*
+* @param: std::unordered_map<std::string, int>& neighbours
+*       : const std::string& s
+*       : int length
+*
+* @return: void
+*/
+void applyBoundaryCondition(std::unordered_map<std::string, int>& neighbours, const std::string& s, int length)
+{
+	// This stream will provide the dimensions of the site
+	std::istringstream iss(s);
+	std::vector<int> site;
+	std::string token;
+	// Put every comma separated value into site
+	while (std::getline(iss, token, ',')) {
+		if (!token.empty())
+			// Convert the string to an int and put it into the vector
+			site.push_back(std::stoi(token));
+	}
 
-// 	int rightI = i;
-// 	int rightJ = (j + 1)%L;
-// 	// right = (i, (j+1)%M)
-// 	// up = ((i-1)%N, j)
-// 	// left = (i, (j-1)%M)
-// 	// down = ((i+1)%N, j)
-// 	// neighbours = [right, up, left, down]
-
-// 	// Create each neighbour
-
-// 	// Add them to neighbours 
-
-// 	// Return the neighbours
-// }
+	std::stringstream ss;
+	// Create the neighbours
+	char delimiter = '|';
+	for (int index : site) {
+		// Check if i/j+1 is on the border
+		ss << i << ',' << (j+1)%L << delimiter;
+		ss << (i+1)%L << ',' << j << delimiter;
+		// Check if i/j-1 is on the border
+		if ((j-1) == -1) {
+			ss << i << ',' << L-1 << delimiter;
+		} else {
+			ss << i << ',' << j-1 << delimiter;
+		}
+		if ((i-1) == -1) {
+			ss << L-1 << ',' << j << delimiter;
+		} else {
+			ss << i-1 << ',' << j << delimiter;
+		}
+	}
+}
 
 int main(){
 	// This is what I will use. Use a StringStream to turn ints into strings to then be used as keys.
@@ -49,23 +72,6 @@ int main(){
 
 	// Size
 	int L = 10;
-
-	// std::string testSite = "1,2";
-	// std::unordered_map<std::string, int> testNeighbours;
-	// std::string n1 = "2,2";
-	// std::string n2 = "1,3";
-	// std::string n3 = "1,1";
-	// std::string n4 = "0,2";
-	// testNeighbours.insert({ n1, startingWeight });
-	// testNeighbours.insert({ n2, startingWeight });
-	// testNeighbours.insert({ n3, startingWeight });
-	// testNeighbours.insert({ n4, startingWeight });
-
-	// graph.insert({ testSite, testNeighbours });
-
-	// Iterate Over the unordered_map and display elements
-	// for (std::pair<std::string, int> element : testNeighbours)
-		// std::cout << element.first << " :: " << element.second << std::endl;
 
 	// Initialize the string stream
 	std::stringstream ss;
@@ -111,20 +117,16 @@ int main(){
 
 			// Put i,j from ss into neighbours up until delimiter
 			std::getline(ss, neighbour, delimiter);
-			std::cout << "Current site: " << site << std::endl;
-			std::cout << "This is the neighbour string: " << neighbour << std::endl;
+			addSite(neighbours, neighbour, startingWeight);
+			// neighbours.insert({ neighbour, startingWeight });
+			// Put i,j from ss into neighbours up until delimiter
+			std::getline(ss, neighbour, delimiter);
 			neighbours.insert({ neighbour, startingWeight });
 			// Put i,j from ss into neighbours up until delimiter
 			std::getline(ss, neighbour, delimiter);
-			std::cout << "This is the neighbour2 string: " << neighbour << std::endl;
 			neighbours.insert({ neighbour, startingWeight });
 			// Put i,j from ss into neighbours up until delimiter
 			std::getline(ss, neighbour, delimiter);
-			std::cout << "This is the neighbour3 string: " << neighbour << std::endl;
-			neighbours.insert({ neighbour, startingWeight });
-			// Put i,j from ss into neighbours up until delimiter
-			std::getline(ss, neighbour, delimiter);
-			std::cout << "This is the neighbour4 string: " << neighbour << std::endl;
 			neighbours.insert({ neighbour, startingWeight });
 
 			graph.insert({ site, neighbours });
@@ -133,6 +135,12 @@ int main(){
 			site.clear();
 			ss.str(std::string());
 			neighbours.clear();
+		}
+	}
+
+	for (std::pair<std::string, std::unordered_map<std::string, int>> siteInfo : graph) {
+		for (std::pair<std::string, int> neighbourInfo : siteInfo.second) {
+			std::cout << "Site " << siteInfo.first << " has neighbours: " << neighbourInfo.first << " with weight " << neighbourInfo.second << std::endl;
 		}
 	}
 }
