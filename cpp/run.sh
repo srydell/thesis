@@ -14,5 +14,5 @@ fi
 cd ./build || exit
 # Run if make succeeds
 if make; then
-	./IsingWorm ;
+	./IsingWorm;
 fi
