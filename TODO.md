@@ -10,6 +10,7 @@
 * Add information about [Hausdorff dimension](https://en.wikipedia.org/wiki/Hausdorff_dimension)
 * Add information about [Raster scan](https://en.wikipedia.org/wiki/Raster_scan)
 * Add information about [worm algorithm](./literature/worm_algorithm_lecturenotes.pdf)
+* Maybe add information about how the length of the loops are calculated, count each linked neighbour in a cluster and then divide by 2
 
 ### Tips from Emil ###
 
