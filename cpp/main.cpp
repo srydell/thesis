@@ -58,50 +58,63 @@ void applyBoundaryCondition(std::unordered_map<std::string, int>& neighbours, co
 			neighbourBuilder << site[i] << ',';
 			i++;
 		}
+		// Here i should be the same as currentIndex
+		neighbourBuilder << (site[currentIndex] + 1)%length;
+		
+
 		// Here we handle the index where we should apply the boundary condition
 		// On the last one we should have a delimiter to signify that we have looped through the whole site
-		if (currentIndex == (site.size() - 1)) {
-			neighbourBuilder << (site[currentIndex] + 1)%length;
-			// Last index of the site, should not have ',' at the end
-			if ((dimension - 1) == -1) {
-				std::cout << "dimension - 1 is negative: " << dimension - 1 << std::endl;
-				std::cout << "So adding: " << length - 1 << ',' << std::endl;
-				neighbourBuilder << length - 1 << ',';
-			} else {
-				std::cout << "dimension - 1 is not negative: " << dimension - 1 << std::endl;
-				std::cout << "So adding: " << (site[currentIndex] - 1)%length << std::endl;
-				neighbourBuilder << (site[currentIndex] - 1)%length;
-			}
-		} else {
-			// It is not the last index
-			std::cout << "Adding: " << (site[currentIndex] + 1)%length << ',' << std::endl;
-			neighbourBuilder << (site[currentIndex] + 1)%length << ',';
-			// If we are at the bottom of that dimension
-			if ((dimension - 1) == -1) {
-				// Periodic boundary condition so we wrap around to the "top"
-				neighbourBuilder << length - 1 << ',';
-			} else {
-				// dimension - 1 is within the graph
-				neighbourBuilder << dimension - 1 << ',';
-			}
-			// Handle the indices after index
-			while (i < site.size()) {
-				if (i == (site.size() - 1)) {
-					neighbourBuilder << i;
-				} else {
-					neighbourBuilder << i << ',';
-				}
-				i++;
-			}
-		}
-		// We have checked all indices
-		// so we can safely add the neighbour
-		std::cout << "Adding neighbour: " << neighbourBuilder.str() << std::endl;
-		neighbours.insert( {neighbourBuilder.str(), startingWeight} );
-		// Clear the neighbourBuilder stream for the next neighbour
-		neighbourBuilder.str(std::string());
-		// Keep track of which index we are on
-		currentIndex++;
+		// if (currentIndex == (site.size() - 1)) {
+		// 	neighbourBuilder << (site[currentIndex] + 1)%length;
+		// 	// Last index of the site, should not have ',' at the end
+		// 	if ((dimension - 1) == -1) {
+		// 		std::cout << "dimension - 1 is negative: " << dimension - 1 << std::endl;
+		// 		std::cout << "So adding: " << length - 1 << ',' << std::endl;
+		// 		neighbourBuilder << length - 1 << ',';
+		// 	} else {
+		// 		std::cout << "dimension - 1 is not negative: " << dimension - 1 << std::endl;
+		// 		std::cout << "So adding: " << (site[currentIndex] - 1)%length << std::endl;
+		// 		neighbourBuilder << (site[currentIndex] - 1)%length;
+		// 	}
+		// } else {
+		// 	// It is not the last index
+		// 	std::cout << "Adding: " << (site[currentIndex] + 1)%length << ',' << std::endl;
+		// 	neighbourBuilder << (site[currentIndex] + 1)%length << ',';
+		// 	// If we are at the bottom of that dimension
+		// 	if ((dimension - 1) == -1) {
+		// 		// Periodic boundary condition so we wrap around to the "top"
+		// 		std::cout << "dimension - 1 is negative: " << dimension - 1 << std::endl;
+		// 		std::cout << "So adding: " << length - 1 << ',' << std::endl;
+		// 		neighbourBuilder << length - 1 << ',';
+		// 	} else {
+		// 		std::cout << "dimension - 1 is not negative: " << dimension - 1 << std::endl;
+		// 		std::cout << "So adding: " << dimension - 1 << ',' << std::endl;
+		// 		// dimension - 1 is within the graph
+		// 		if (currentIndex == site.size()) {
+		// 			neighbourBuilder << dimension - 1;
+		// 		} else {
+		// 			neighbourBuilder << dimension - 1 << ',';
+		// 		}
+		// 	}
+		// 	// Handle the indices after index
+		// 	i = currentIndex + 1;
+		// 	while (i < site.size()) {
+		// 		if (i == (site.size() - 1)) {
+		// 			neighbourBuilder << i;
+		// 		} else {
+		// 			neighbourBuilder << i << ',';
+		// 		}
+		// 		i++;
+		// 	}
+		// }
+		// // We have checked all indices
+		// // so we can safely add the neighbour
+		// std::cout << "Adding neighbour: " << neighbourBuilder.str() << std::endl;
+		// neighbours.insert( {neighbourBuilder.str(), startingWeight} );
+		// // Clear the neighbourBuilder stream for the next neighbour
+		// neighbourBuilder.str(std::string());
+		// // Keep track of which index we are on
+		// currentIndex++;
 	}
 }
 

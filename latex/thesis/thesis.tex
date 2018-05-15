@@ -101,15 +101,55 @@
 %\def\@cite#1{[#1]}
 
 \begin{abstract}
-In recent years, there has been a large interest in the subject of extra dimensions in particle physics. In particular, a number of models have been suggested which provide solutions to some of the problems with the current Standard Model of particle physics, and which could be tested in the next generation of high-energy experiments. Among the most important of these models are the large extra dimensions model by Arkani-Hamed, Dimopoulos, and Dvali, the universal extra dimensions model, and models allowing right-handed neutrinos to propagate in the extra dimensions. In this thesis, we study phenomenological aspects of these three models, or simple modifications of them.
 
-The Arkani-Hamed--Dimopoulos--Dvali model attempts to solve the gauge hierarchy problem through a volume suppression of Newton's gravitational constant, lowering the fundamental Planck scale down to the electroweak scale. However, this solution is unsatisfactory in the sense that it introduces a new scale through the radius of the extra dimensions, which is unnaturally large compared to the electroweak scale. It has been suggested that a similar model, with a hyperbolic internal space, could provide a more satisfactory solution to the problem, and we consider the hadron collider phenomenology of such a model.
+2.3 The Metropolis Monte Carlo method
+The principle of importance sampling in statistical physics as suggested by
+Metropolis et al. [83] is as follows. In Fig. 2.1 we generated numbers $x$ and from a uniform distribution. In the evaluation of something like (2.1), we could instead imagine generating the configurations $ \mu \equiv  \{ \theta_i \}^N_{i=1}$ not uniformly, but in such a way that the number of hits and misses are roughly equal. The estimated expectation value after $M$ generated configurations $\mu_n$ can be written
+\begin{equation}
+	\langle O \rangle = \frac{\sum^{M}_{n = 1} O_{\mu_n} e^{ \beta H \mu_n}}{\sum^{M}_{n = 1} e^{ \beta H \mu_n}}
+\end{equation}
 
-One of the main features of the universal extra dimensions model is the existence of a potential dark matter candidate, the lightest Kaluza--Klein particle. In the so-called minimal universal extra dimensions model, the identity of this particle is well defined, but in more general models, it could change. We consider the indirect neutrino detection signals for a number of different such dark matter candidates, in a five- as well as a six-dimensional model.
+for states $\mu_n$ generated with uniform probability.
+If we instead were to draw configurations with probabilities according to their Boltzmann weights, the estimator is simply an unweighted arithmetic
+average
 
-Finally, right-handed neutrinos propagating in extra dimensions could provide an alternative scenario to the seesaw mechanism for generating small masses for the left-handed neutrinos. Since extra-dimensional models are non-renormalizable, the Kaluza--Klein tower is expected to be cut off at some high-energy scale. We study a model where a Majorana neutrino at this cutoff scale is responsible for the generation of the light neutrino masses, while the lower modes of the tower could possibly be observed in the Large Hadron Collider. We investigate the bounds on the model from non-unitarity effects, as well as collider signatures of the model.
-\\\noindent \strut \\
-{\bf Key words}: Extra dimensional quantum field theories, universal extra dimensions, Kaluza--Klein dark matter, Arkani-Hamed--Dimopoulos--Dvali model, hierarchy problem, neutrino mass, seesaw mechanism, Large Hadron Collider phenomenology.
+\begin{equation}
+	\langle O \rangle \approx \sum^{M}_{n = 1} O_{\mu_n}
+\end{equation}
+
+for states $\mu_n$ generated with probability $e^{-\beta \mu_n}$
+
+The remaining question is then how one generates configurations with probability according to their Boltzmann weights.
+In practice, the importance sampling discussed above is obtained with a Markov chain through the Metropolis method [83]. Metropolis Monte Carlo works by proposing a new configuration $j$ from an old configuration $i$ with a proposal distribution $g(i \to j)$, which is accepted with a specified probability $A(i \to j) = min(1, e^{-\beta \Delta E})$ where  $\Delta E = E_j - E_i$. Consider the time evolution of the probability of being in state $i$,
+
+\begin{equation}
+	\frac{\mathrm d p_i}{\mathrm d t} =\sum_j [ p_j P(j \to i) - p_i P(i \to j)]
+\end{equation}
+ 
+where $P(i \to j)$ is the probability of transitioning from $i$ to $j$. The first and second terms on the right-hand side correspond to the rate of transitioning into and out of the state i respectively. In equilibrium the time derivative is zero and (2.5) is fulfilled if (but not only if)
+
+\begin{equation}
+	p_jP(j \to i) = p_iP(i \to j)
+\end{equation}
+
+The condition of (2.6) is called detailed balance and is a sufficient but not necessary condition for Metropolis Monte Carlo given that states are generated ergodically, see [84, 88]. Ergodicity means that each state is reachable from every other state in a finite time, however a non-ergodic calculation may still yield useful information within an ergodic class [84].
+In a simulation, the probability of transitioning from i to j is the product of the proposal and acceptance probabilities, that is $P(i \to j) = g(i \to j)A(i \to j)$ which after insertion into the balance equation (2.6) gives
+
+\begin{equation}
+	\frac{p_i}{p_j} \frac{g(j \to i)\min(1,e^{- \beta (E_i-E_j)} )}{g(i \to j)\min(1,e^{-\beta(E_j-E_i) } )} = \frac{e^{-\beta E_i}}{e^{-\beta E_j}} 
+\end{equation}
+
+assuming that the proposal distribution is symmetric. The Metropolis Monte Carlo method thus generates a chain of configurations where each configuration appears with a probability proportional to its Boltzmann weight.
+The estimation of thermal averages can thus be done via arithmetic averaging of the form (2.4) by starting with some initial configuration $\mu_0$ and generating a chain $\mu_1,. . . , \mu_M$ via the Metropolis scheme.
+2.5 Phase transitions: definition and classification
+
+The thermodynamical bulk free-energy density $f = \beta-1 \ln(Z)/V$ depends on the coupling parameters of the Hamiltonian, and thermodynamic functions are calculated via differentiation of the free energy. Such thermo-ynamic functions may exhibit discontinuities at certain sets of coupling parameters, for which the free energy is not analytic. Such sets can be taken as definitions of phase boundaries which separate phases (i.e. regions of analyticity). The crossing of a phase boundary is then understood as a phase transition. It should be noted that the definition in terms of analytic free-energy is not completely general, considering the BKT-transition. For further details of mathematical aspects of phase transitions, we refer to [94] and for a more physical discussion to [95].
+
+By the Ehrenfest classification [96] phase transitions are classified by the order of the derivative of the free energy which has a discontinuity at the critical point. If a first order derivative (e.g. entropy, internal energy) is discontinuous, then the phase transition is of first order. If a second order derivative (e.g. heat capacity) is discontinuous, the phase transition is of second order, and so on.
+
+The Ehrenfest classification is however discouraged [95, 98], for example there may be divergences rather than dis- continuities in thermodynamic functions (as for the 2D Ising model without external field, where the heat capacity diverges logarithmically at $T_c$).
+The modern classification of phase transitions is binary where a phase transition is either 'first-order' (there is a latent heat for a temperature-driven transition) or ‘continuous’ (no latent heat) [98, 95].
+
 \end{abstract}
 
 %\begin{otherlanguage}{swedish}
@@ -164,8 +204,3 @@ Finally, right-handed neutrinos propagating in extra dimensions could provide an
 \input{prepapers}
 
 \end{document}
-
-
-
-
-

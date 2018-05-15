@@ -20,6 +20,7 @@
 ### isingWorm.py ###
 
 * Write test code for isingWorm
+* The length of a worm should be all the neighbours divided by two (because of double counting)
 * The correlation function does not seem to go down like r^(-1/4). Check if this is because I am using too small values.
 
 ### graphs.py ###
