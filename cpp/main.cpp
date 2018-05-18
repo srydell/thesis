@@ -60,6 +60,8 @@ void applyBoundaryCondition(std::unordered_map<std::string, int>& neighbours, co
 		}
 		// Here i should be the same as currentIndex
 		neighbourBuilder << (site[currentIndex] + 1)%length;
+		neighbourBuilder << (site[currentIndex] - 1)%length;
+		std::cout << "Added " << 
 		
 
 		// Here we handle the index where we should apply the boundary condition
