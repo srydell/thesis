@@ -150,6 +150,26 @@ By the Ehrenfest classification [96] phase transitions are classified by the ord
 The Ehrenfest classification is however discouraged [95, 98], for example there may be divergences rather than dis- continuities in thermodynamic functions (as for the 2D Ising model without external field, where the heat capacity diverges logarithmically at $T_c$).
 The modern classification of phase transitions is binary where a phase transition is either 'first-order' (there is a latent heat for a temperature-driven transition) or ‘continuous’ (no latent heat) [98, 95].
 
+5. Partition function
+A problem of statistical mechanics is to calculate the partition function, that is calculating the trace of $e^{-\beta H}$, a task most straightforwardly written as
+
+\begin{align}
+		Z = &\sum \langle \alpha_n | e^{-\beta H} | \alpha_n \rangle \\
+		= & \sum e^{-\beta E_i}
+\end{align}
+
+where the $| \alpha_n \rangle$ is a complete orthonormal set and $E_i$ the energy eigenvalues of $H$. In this form, it is necessary to determine the eigenvalues $E_i$ of the Hamiltonian operator, and then carry out the sum over all corresponding weights $e^{-\beta E_i}$, as Feynman put it [132] a “hopelessly difficult” calculation. Instead we reformulate the problem in terms of imaginary time path integrals [132, 69, 133].
+
+Imaginary-time path integral reformulation of the partition function
+First, we outline the reformulation of (5.5) in terms of path integrals, with the Bose-Hubbard model (5.2) in mind. Following the derivation in [69], first denote the statistical operator
+It then follows that
+
+\begin{align}
+	\rho(\beta) &= e^{-\beta H} \\
+	\partial \rho &= -H \rho
+\end{align}
+
+
 \end{abstract}
 
 %\begin{otherlanguage}{swedish}
