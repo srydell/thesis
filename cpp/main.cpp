@@ -3,6 +3,7 @@
 #include <string>
 #include <vector>
 #include <unordered_map>
+#include <cmath>
 
 class Site
 {
@@ -78,21 +79,31 @@ void Site::addNeighbours(int rootIndex, int length, std::unordered_map<int, bool
 		neighbours.insert({x + length*(length-1), startingWeight});
 	}
 
-	std::cout << "x is : " << x << "\n";
-	std::cout << "y is : " << y << "\n";
-	std::cout << "\n";
-	for (std::pair<int, bool> element : neighbours) {
-		std::cout << element.first << " : " << element.second << std::endl;
-	}
+	// std::cout << "x is : " << x << "\n";
+	// std::cout << "y is : " << y << "\n";
+	// std::cout << "\n";
+	// for (std::pair<int, bool> element : neighbours) {
+	// 	std::cout << element.first << " : " << element.second << std::endl;
+	// }
+
 }
 
 int main(){
-	std::vector<Site> gitter;
 	// Length of one side of the lattice
-	int length = 4;
+	int length = 800;
+	// 2D, 3D, ...
+	int dimension = 2;
+	// Initialize the vector with a reserve of length^dimension
+	std::vector<Site> gitter;
+	// gitter.reserve(length^dimension);
 
-	for (int i = 0; i < 16; ++i) {
-		std::cout << "index is : " << i << "\n";
-		Site test(i, length);
+	// for (int i = 0; i < 16; ++i) {
+	// 	std::cout << "index is : " << i << "\n";
+	// 	Site test(i, length);
+	// }
+
+	for (int index = 0; index < std::pow(length,dimension); ++index) {
+		gitter.push_back(Site(index, length));
 	}
+	std::cout << gitter.size() << "\n";
 }

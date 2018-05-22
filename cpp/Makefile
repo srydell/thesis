@@ -4,5 +4,6 @@
 # May 2018
 #
 
+.PHONY: all
 all:
 	./run.sh
