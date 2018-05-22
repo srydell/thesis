@@ -1,7 +1,3 @@
-#include <iostream>
-#include <set>
-#include <string>
-#include <vector>
 #include <unordered_map>
 #include <cmath>
 
@@ -30,13 +26,15 @@ Site::Site(int index, int length)
 
 void Site::addNeighbours(int rootIndex, int length, std::unordered_map<int, bool> neighbours) {
 	// --- 3D ---
-	// x + y * L + z * L^2 = N
-	// x = N - y * L - z * L^2
+	// x + y * L + z * L * L = N
+	//
+	// x = N - y * L - z * L * L
 	// y = N // L - z * L
-	// z = N // L^2
+	// z = N // (L * L)
 	//
 	// --- 2D ---
 	// x + y * L = N
+	//
 	// x = N - y * L
 	// y = N // L
 	//
@@ -85,25 +83,4 @@ void Site::addNeighbours(int rootIndex, int length, std::unordered_map<int, bool
 	// for (std::pair<int, bool> element : neighbours) {
 	// 	std::cout << element.first << " : " << element.second << std::endl;
 	// }
-
-}
-
-int main(){
-	// Length of one side of the lattice
-	int length = 800;
-	// 2D, 3D, ...
-	int dimension = 2;
-	// Initialize the vector with a reserve of length^dimension
-	std::vector<Site> gitter;
-	// gitter.reserve(length^dimension);
-
-	// for (int i = 0; i < 16; ++i) {
-	// 	std::cout << "index is : " << i << "\n";
-	// 	Site test(i, length);
-	// }
-
-	for (int index = 0; index < std::pow(length,dimension); ++index) {
-		gitter.push_back(Site(index, length));
-	}
-	std::cout << gitter.size() << "\n";
 }
