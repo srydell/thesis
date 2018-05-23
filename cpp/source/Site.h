@@ -7,15 +7,15 @@ class Site
 {
 public:
 	// Constructor/destructor
-	Site (int index, int length);
+	Site (unsigned index, unsigned length);
 
 	// Fields
-	std::unordered_map<int, bool> neighbours;
+	std::unordered_map<unsigned, bool> neighbours;
 private:
-	int rootIndex;
+	unsigned rootIndex;
 
 	// Functions
-	void addNeighbours(int rootIndex, int length, std::unordered_map<int, bool> neighbours);
+	void addNeighbours(unsigned rootIndex, unsigned length);
 };
 
 #endif

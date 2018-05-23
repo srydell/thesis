@@ -8,8 +8,10 @@ class Graph
 {
 public:
 	// Constructor
-	Graph (int length, int dimension);
+	Graph (const unsigned length, const unsigned dimension);
 
+	// Functions
+	void switchLinkBetween(const unsigned site0, const unsigned site1);
 private:
 	// Fields
 	std::vector<Site> graph;

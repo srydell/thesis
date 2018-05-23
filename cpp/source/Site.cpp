@@ -1,30 +1,31 @@
 #include <unordered_map>
 #include <cmath>
+#include <iostream>
 
 class Site
 {
 public:
 	// Constructor
-	Site (int index, int length);
+	Site (unsigned index, unsigned length);
 
 	// Fields
-	std::unordered_map<int, bool> neighbours;
+	std::unordered_map<unsigned, bool> neighbours;
 private:
-	int rootIndex;
+	unsigned rootIndex;
 
 	// Functions
-	void addNeighbours(int rootIndex, int length, std::unordered_map<int, bool> neighbours);
+	void addNeighbours(unsigned rootIndex, unsigned length);
 };
 
 // Constructor of Site
-Site::Site(int index, int length)
-{
+Site::Site(unsigned index, unsigned length) {
 	// The index of this site
 	rootIndex = index;
-	addNeighbours(rootIndex, length, neighbours);
+	// Populate the neighbours unordered_map
+	addNeighbours(rootIndex, length);
 }
 
-void Site::addNeighbours(int rootIndex, int length, std::unordered_map<int, bool> neighbours) {
+void Site::addNeighbours(unsigned rootIndex, unsigned length) {
 	// --- 3D ---
 	// x + y * L + z * L * L = N
 	//
@@ -41,9 +42,9 @@ void Site::addNeighbours(int rootIndex, int length, std::unordered_map<int, bool
 	// Assume 2D
 	// Get the indices
 	// Important that the division is a floor (//) here.
-	// Since both rootIndex and length are ints / is a floor operation
-	int y = rootIndex/length;
-	int x = rootIndex - length*y;
+	// Since both rootIndex and length are unsigned / is a floor operation
+	unsigned y = rootIndex/length;
+	unsigned x = rootIndex - length*y;
 	bool startingWeight = 0;
 
 	// Find the neighbours with periodic boundary conditions
@@ -54,8 +55,8 @@ void Site::addNeighbours(int rootIndex, int length, std::unordered_map<int, bool
 		// x is on the 'top' border, so set it to zero
 		neighbours.insert({0 + length*y, startingWeight});
 	}
-	// Check x - 1
-	if ((x-1)>=0){
+	// Check x - 1 < 0
+	if (x != 0){
 		neighbours.insert({x-1 + length*y, startingWeight});
 	} else {
 		// x is on the 'bottom' border, so set it to length-1
@@ -69,8 +70,8 @@ void Site::addNeighbours(int rootIndex, int length, std::unordered_map<int, bool
 		// y is on the 'top' border, so set it to zero
 		neighbours.insert({x + 0, startingWeight});
 	}
-	// Check y - 1
-	if ((y-1)>=0){
+	// Check y - 1 < 0
+	if (y != 0){
 		neighbours.insert({x + length*(y-1), startingWeight});
 	} else {
 		// y is on the 'bottom' border, so set it to length-1
@@ -80,7 +81,8 @@ void Site::addNeighbours(int rootIndex, int length, std::unordered_map<int, bool
 	// std::cout << "x is : " << x << "\n";
 	// std::cout << "y is : " << y << "\n";
 	// std::cout << "\n";
-	// for (std::pair<int, bool> element : neighbours) {
+	// for (std::pair<unsigned, bool> element : neighbours) {
 	// 	std::cout << element.first << " : " << element.second << std::endl;
 	// }
+
 }
