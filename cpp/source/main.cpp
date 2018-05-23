@@ -9,9 +9,23 @@ int main(){
 	const int dimension = 2;
 	Graph g(dimension, length);
 
+	// Simulation
 	try {
-		g.switchLinkBetween(9, 10);
-		g.switchLinkBetween(9, 10);
+
+		g.SwitchLinkBetween(9, 10);
+		g.SwitchLinkBetween(9, 13);
+		std::vector<unsigned> neighbours;
+		neighbours = g.GetLinkedNeighbours(9);
+		for (unsigned test : neighbours) {
+			std::cout << test << "\n";
+		}
+
+		g.SwitchLinkBetween(9, 13);
+		neighbours = g.GetLinkedNeighbours(9);
+		for (unsigned test : neighbours) {
+			std::cout << test << "\n";
+		}
+
 	} catch(std::string error) {
 		std::cout << error << std::endl;
 	}
