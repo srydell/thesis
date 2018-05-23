@@ -11,7 +11,8 @@ public:
 	Graph (unsigned dimension, unsigned length);
 
 	// Functions
-	void switchLinkBetween(unsigned site0, unsigned site1);
+	void SwitchLinkBetween(unsigned site0, unsigned site1);
+	std::vector<unsigned> GetLinkedNeighbours(unsigned site);
 private:
 	// Fields
 	std::vector<Site> graph;
@@ -30,7 +31,7 @@ Graph::Graph(const unsigned dimension, const unsigned length) {
 	std::cout << graph.size() << "\n";
 }
 
-void Graph::switchLinkBetween(const unsigned site0, const unsigned site1) {
+void Graph::SwitchLinkBetween(const unsigned site0, const unsigned site1) {
 	// Check if sites are in graph
 	if (((site0 > 0) && site0 < graph.size()) && ((site1 > 0) && site1 < graph.size())) {
 
@@ -52,7 +53,7 @@ void Graph::switchLinkBetween(const unsigned site0, const unsigned site1) {
 		} else {
 			// Error handling for siteX and siteY not neighbours
 			std::stringstream ss;
-			ss << "Call to Graph::switchLinkBetween failed since "
+			ss << "Call to Graph::SwitchLinkBetween failed since "
 				<< site0 << " and " << site1 << " are not in neighbours." << "\n";
 			throw ss.str();
 		}
@@ -60,8 +61,30 @@ void Graph::switchLinkBetween(const unsigned site0, const unsigned site1) {
 	} else {
 		// Error handling for site not in graph
 		std::stringstream ss;
-		ss << "Call to Graph::switchLinkBetween failed since "
+		ss << "Call to Graph::SwitchLinkBetween failed since "
 			<< site0 << " and/or " << site1 << " are not in graph." << "\n";
+		throw ss.str();
+	}
+}
+
+std::vector<unsigned> Graph::GetLinkedNeighbours(const unsigned site) {
+	// Check if site is in graph
+	if ((site > 0) && (site < graph.size())) {
+		std::vector<unsigned> linked_neighbours;
+		// Add the site index if the link value is not 0
+		for (auto index_and_value : graph[site].neighbours) {
+			if (index_and_value.second != 0) {
+				std::cout << "Adding value " << index_and_value.first << "\n";
+				linked_neighbours.push_back(index_and_value.first);
+			}
+		}
+		return linked_neighbours;
+
+	} else {
+		// Error handling for site not in graph
+		std::stringstream ss;
+		ss << "Call to Graph::GetLinkedNeighbours failed since "
+			<< site << " is not in graph." << "\n";
 		throw ss.str();
 	}
 }
