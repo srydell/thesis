@@ -1,18 +1,19 @@
 #!/usr/bin/env bash
 
+cd ./build || exit
+
 if [[ "$1" == build ]]; then
-	cd ./build || exit
 	# Build the makefiles
 	cmake ../
-	# Run if make succeeds
-	if make; then
+	
+	# Run if build succeeds
+	if cmake --build .; then
 		time ./IsingWorm ;
 	fi
 	exit
 fi
 
-cd ./build || exit
-# Run if make succeeds
-if make; then
+# Run if build succeeds
+if cmake --build .; then
 	time ./IsingWorm;
 fi

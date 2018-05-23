@@ -6,4 +6,4 @@
 
 .PHONY: all
 all:
-	./run.sh
+	@./run.sh
