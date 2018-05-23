@@ -4,7 +4,7 @@
 class Site
 {
 public:
-	// Constructor/destructor
+	// Constructor
 	Site (int index, int length);
 
 	// Fields
@@ -16,7 +16,7 @@ private:
 	void addNeighbours(int rootIndex, int length, std::unordered_map<int, bool> neighbours);
 };
 
-// constructor of Site
+// Constructor of Site
 Site::Site(int index, int length)
 {
 	// The index of this site
