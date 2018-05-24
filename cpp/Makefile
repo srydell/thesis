@@ -4,6 +4,9 @@
 # May 2018
 #
 
-.PHONY: all
+.PHONY: all, build
 all:
 	@./run.sh
+
+build:
+	@./run.sh build

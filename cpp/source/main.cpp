@@ -20,6 +20,7 @@ int main(){
 	const int dimension = 2;
 	Graph g(dimension, length);
 
+	// g.PrintGraph();
 	// Simulation
 	try {
 		std::vector<unsigned> neighbours;
@@ -30,18 +31,12 @@ int main(){
 		g.SwitchLinkBetween(9, 13);
 		neighbours = g.GetLinkedNeighbours(9);
 
-		std::cout << "Switch 9 and 13" << "\n";
-		g.SwitchLinkBetween(9, 13);
-		neighbours = g.GetLinkedNeighbours(9);
+		std::unordered_map<unsigned, std::vector<unsigned>> clusters;
+		g.IndexClusters(clusters);
 
-		// for (unsigned test : neighbours) {
-		// 	std::cout << test << "\n";
-		// }
-
-		unsigned rNeighbour = g.GetRandomNeighbour(9, 10, dist(rng));
-		std::cout << rNeighbour << "\n";
-		unsigned notNeighbour = g.GetRandomNeighbour(9, 11, dist(rng));
-		std::cout << notNeighbour << "\n";
+		// std::cout << "Switch 9 and 13" << "\n";
+		// g.SwitchLinkBetween(9, 13);
+		// neighbours = g.GetLinkedNeighbours(9);
 
 	} catch(std::string error) {
 		std::cout << error << std::endl;

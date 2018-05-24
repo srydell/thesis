@@ -11,11 +11,12 @@ public:
 
 	// Fields
 	std::unordered_map<unsigned, bool> neighbours;
+	unsigned GetIndex();
 private:
-	unsigned rootIndex;
+	unsigned mRootIndex;
 
 	// Functions
-	void addNeighbours(unsigned rootIndex, unsigned length);
+	void AddNeighbours(unsigned mRootIndex, unsigned length);
 };
 
 #endif

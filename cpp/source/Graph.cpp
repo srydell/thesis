@@ -13,6 +13,8 @@ public:
 	void SwitchLinkBetween(unsigned site0, unsigned site1);
 	unsigned GetRandomNeighbour(unsigned site, unsigned exceptSite, const double randNumber);
 	std::vector<unsigned> GetLinkedNeighbours(unsigned site);
+	void IndexClusters(std::unordered_map<unsigned, std::vector<unsigned>> &clusters);
+	void PrintGraph();
 private:
 	// Fields
 	std::vector<Site> mGraph;
@@ -35,7 +37,6 @@ Graph::Graph(unsigned dimension, unsigned length) {
 	for (unsigned index = 0; index < std::pow(length,dimension); ++index) {
 		mGraph.push_back(Site(index, length));
 	}
-	// std::cout << mGraph.size() << "\n";
 }
 
 /**
@@ -59,11 +60,6 @@ void Graph::SwitchLinkBetween(unsigned site0, unsigned site1) {
 		// auto end0 = mGraph[site0].neighbours.end();
 		// auto end1 = mGraph[site1].neighbours.end();
 
-		std::cout << "Before the addition: "  << "\n";
-		for (auto e : mGraph[site0].neighbours) {
-			std::cout << e.first << " : " << e.second << "\n";
-		}
-
 		// auto link1 = mGraph[site1].neighbours.find(site0);
 		if (AreNeighbours(site0, site1)) {
 			// Get the link weights
@@ -73,11 +69,6 @@ void Graph::SwitchLinkBetween(unsigned site0, unsigned site1) {
 			// Switch the links
 			mGraph[site0].neighbours[site1] = link0 ? 0 : 1;
 			mGraph[site1].neighbours[site0] = link1 ? 0 : 1;
-
-		std::cout << "After the addition: "  << "\n";
-		for (auto e : mGraph[site0].neighbours) {
-			std::cout << e.first << " : " << e.second << "\n";
-		}
 
 		} else {
 			// Error handling for siteX and siteY not neighbours
@@ -105,12 +96,11 @@ void Graph::SwitchLinkBetween(unsigned site0, unsigned site1) {
 */
 std::vector<unsigned> Graph::GetLinkedNeighbours(unsigned site) {
 	// Check if site is in mGraph
-	if ((site > 0) && (site < mGraph.size())) {
+	if (IsInGraph(site)) {
 		std::vector<unsigned> linked_neighbours;
 		// Add the site index if the link value is not 0
 		for (auto index_and_value : mGraph[site].neighbours) {
 			if (index_and_value.second != 0) {
-				// std::cout << "Adding value " << index_and_value.first << "\n";
 				linked_neighbours.push_back(index_and_value.first);
 			}
 		}
@@ -136,7 +126,6 @@ std::vector<unsigned> Graph::GetLinkedNeighbours(unsigned site) {
 */
 unsigned Graph::GetRandomNeighbour(unsigned site, unsigned exceptSite, const double randNumber) {
 	// Check if site is in mGraph
-	// if ((site > 0) && (site < mGraph.size())) {
 	if (IsInGraph(site)) {
 	
 		// Check that exceptSite is in mGraph[site].neighbours
@@ -147,17 +136,10 @@ unsigned Graph::GetRandomNeighbour(unsigned site, unsigned exceptSite, const dou
 			// Will be added to probToChooseSite until a site is chosen or we run out of sites to choose from
 			double probIncreasePerSite = probToChooseSite;
 
-			std::cout << "Input site is: " << site << "\n";
-			std::cout << "Input exceptSite is: " << exceptSite << "\n";
-			std::cout << "Input random number is: " << randNumber << "\n";
-
 			// Add the site index if it is not exceptSite
 			for (auto index_and_value : mGraph[site].neighbours) {
 				// Make sure we do not return exceptSite
 				if (index_and_value.first != exceptSite) {
-
-					std::cout << "probToChooseSite is: " << probToChooseSite << "\n";
-					std::cout << "Handling site: " << index_and_value.first << "\n";
 
 					// Check if we should choose this site
 					if (randNumber < probToChooseSite) {
@@ -224,8 +206,28 @@ bool Graph::AreNeighbours(unsigned site0, unsigned site1) {
 * @return: bool
 */
 bool Graph::IsInGraph(unsigned site) {
-	if ((site > 0) && (site < mGraph.size()))
+	if (site < mGraph.size())
 		return 1;
 	else
 		return 0;
+}
+
+/**
+* @brief: Pretty print the contents of mGraph for debugging
+*
+* @param: 
+*
+* @return: void
+*/
+void Graph::PrintGraph() {
+	std::stringstream ss;
+	ss << "\nSite : { (n0, link0) (n0, link0)... }\n";
+	for (Site site : mGraph) {
+		ss << site.GetIndex() << " : { ";
+		for (auto neighbour : site.neighbours) {
+			ss << "(" << neighbour.first << ", " << neighbour.second << ") ";
+		}
+		ss << "}\n";
+	}
+	std::cout << ss.str();
 }
