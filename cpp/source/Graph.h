@@ -8,16 +8,18 @@ class Graph
 {
 public:
 	// Constructor
-	Graph (const unsigned length, const unsigned dimension);
+	Graph (unsigned length, unsigned dimension);
 
 	// Functions
-	void SwitchLinkBetween(const unsigned site0, const unsigned site1);
+	void SwitchLinkBetween(unsigned site0, unsigned site1);
+	unsigned GetRandomNeighbour(unsigned site, unsigned exceptSite, const double randNumber);
 	std::vector<unsigned> GetLinkedNeighbours(unsigned site);
 private:
 	// Fields
-	std::vector<Site> graph;
+	std::vector<Site> mGraph;
 
 	// Functions
+	bool HasNeighbour(unsigned site, unsigned neighbour);
 };
 
 #endif
