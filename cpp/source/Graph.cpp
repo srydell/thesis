@@ -18,7 +18,8 @@ private:
 	std::vector<Site> mGraph;
 
 	// Functions
-	bool HasNeighbour(unsigned site, unsigned neighbour);
+	bool AreNeighbours(unsigned site0, unsigned site1);
+	bool IsInGraph(unsigned site);
 };
 
 /**
@@ -47,23 +48,37 @@ Graph::Graph(unsigned dimension, unsigned length) {
 */
 void Graph::SwitchLinkBetween(unsigned site0, unsigned site1) {
 	// Check if sites are in mGraph
-	if (((site0 > 0) && site0 < mGraph.size()) && ((site1 > 0) && site1 < mGraph.size())) {
+	if (IsInGraph(site0) && IsInGraph(site1)) {
 
 		// Check if siteX is a neighbour to siteY
 		// Will be:
 		//     pair<unsigned, bool> - If found
 		//     neighbours.end()     - If not found
-		auto link0 = mGraph[site0].neighbours.find(site1);
-		auto link1 = mGraph[site1].neighbours.find(site0);
 
 		// Get the ends of the list to check links against
-		auto end0 = mGraph[site0].neighbours.end();
-		auto end1 = mGraph[site1].neighbours.end();
+		// auto end0 = mGraph[site0].neighbours.end();
+		// auto end1 = mGraph[site1].neighbours.end();
+
+		std::cout << "Before the addition: "  << "\n";
+		for (auto e : mGraph[site0].neighbours) {
+			std::cout << e.first << " : " << e.second << "\n";
+		}
 
 		// auto link1 = mGraph[site1].neighbours.find(site0);
-		if ((link0 != end0) && (link1 != end1)) {
-			mGraph[site0].neighbours[site1] = link0->second ? 0 : 1;
-			mGraph[site1].neighbours[site0] = link1->second ? 0 : 1;
+		if (AreNeighbours(site0, site1)) {
+			// Get the link weights
+			auto link0 = mGraph[site0].neighbours[site1];
+			auto link1 = mGraph[site1].neighbours[site0];
+
+			// Switch the links
+			mGraph[site0].neighbours[site1] = link0 ? 0 : 1;
+			mGraph[site1].neighbours[site0] = link1 ? 0 : 1;
+
+		std::cout << "After the addition: "  << "\n";
+		for (auto e : mGraph[site0].neighbours) {
+			std::cout << e.first << " : " << e.second << "\n";
+		}
+
 		} else {
 			// Error handling for siteX and siteY not neighbours
 			std::stringstream ss;
@@ -121,12 +136,11 @@ std::vector<unsigned> Graph::GetLinkedNeighbours(unsigned site) {
 */
 unsigned Graph::GetRandomNeighbour(unsigned site, unsigned exceptSite, const double randNumber) {
 	// Check if site is in mGraph
-	if ((site > 0) && (site < mGraph.size())) {
-		// Check that exceptSite is in mGraph[site].neighbours
-		auto linkToExceptSite = mGraph[site].neighbours.find(exceptSite);
-		auto endOfNeighbours = mGraph[site].neighbours.end();
+	// if ((site > 0) && (site < mGraph.size())) {
+	if (IsInGraph(site)) {
 	
-		if ((linkToExceptSite != endOfNeighbours)) {
+		// Check that exceptSite is in mGraph[site].neighbours
+		if (AreNeighbours(site, exceptSite)) {
 			// If randNumber is less than probToChooseSite, the corresponding site is chosen
 			// size - 1 since we have some exceptSite that can not be chosen
 			double probToChooseSite = 1.0 / (mGraph[site].neighbours.size() - 1);
@@ -187,14 +201,31 @@ unsigned Graph::GetRandomNeighbour(unsigned site, unsigned exceptSite, const dou
 *
 * @return: bool
 */
-bool Graph::HasNeighbour(unsigned site, unsigned neighbour)
-{
-	// Check that exceptSite is in mGraph[site].neighbours
-	auto linkToNeighbour = mGraph[site].neighbours.find(neighbour);
-	auto endOfNeighbours = mGraph[site].neighbours.end();
+bool Graph::AreNeighbours(unsigned site0, unsigned site1) {
+	// Try to find siteX in neighbours of siteY
+	auto link0To1 = mGraph[site0].neighbours.find(site1);
+	auto link1To0 = mGraph[site1].neighbours.find(site0);
 
-	if (linkToNeighbour != endOfNeighbours) {
+	// Find the ends to check agains
+	auto endOf0 = mGraph[site0].neighbours.end();
+	auto endOf1 = mGraph[site1].neighbours.end();
+
+	if ((link0To1 != endOf0) && (link1To0 != endOf1)) {
 		return 1;
 	}
 	return 0;
+}
+
+/**
+* @brief: Check if site can be found in mGraph
+*
+* @param: unsigned site
+*
+* @return: bool
+*/
+bool Graph::IsInGraph(unsigned site) {
+	if ((site > 0) && (site < mGraph.size()))
+		return 1;
+	else
+		return 0;
 }
