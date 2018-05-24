@@ -10,22 +10,31 @@ public:
 
 	// Fields
 	std::unordered_map<unsigned, bool> neighbours;
+	unsigned GetIndex();
 private:
-	unsigned rootIndex;
+	unsigned mRootIndex;
 
 	// Functions
-	void addNeighbours(unsigned rootIndex, unsigned length);
+	void AddNeighbours(unsigned mRootIndex, unsigned length);
 };
 
 // Constructor of Site
 Site::Site(unsigned index, unsigned length) {
 	// The index of this site
-	rootIndex = index;
+	mRootIndex = index;
 	// Populate the neighbours unordered_map
-	addNeighbours(rootIndex, length);
+	AddNeighbours(mRootIndex, length);
 }
 
-void Site::addNeighbours(unsigned rootIndex, unsigned length) {
+/**
+* @brief: Create the neighbours to site according to periodic boundary conditions
+*
+* @param: unsigned mRootIndex
+*       : unsigned length
+*
+* @return: void
+*/
+void Site::AddNeighbours(unsigned mRootIndex, unsigned length) {
 	// --- 3D ---
 	// x + y * L + z * L * L = N
 	//
@@ -42,9 +51,9 @@ void Site::addNeighbours(unsigned rootIndex, unsigned length) {
 	// Assume 2D
 	// Get the indices
 	// Important that the division is a floor (//) here.
-	// Since both rootIndex and length are unsigned / is a floor operation
-	unsigned y = rootIndex/length;
-	unsigned x = rootIndex - length*y;
+	// Since both mRootIndex and length are unsigned / is a floor operation
+	unsigned y = mRootIndex/length;
+	unsigned x = mRootIndex - length*y;
 	bool startingWeight = 0;
 
 	// Find the neighbours with periodic boundary conditions
@@ -85,4 +94,15 @@ void Site::addNeighbours(unsigned rootIndex, unsigned length) {
 	// 	std::cout << element.first << " : " << element.second << std::endl;
 	// }
 
+}
+
+/**
+* @brief: Return the index of the site
+*
+* @param: 
+*
+* @return: unsigned
+*/
+unsigned Site::GetIndex() {
+	return mRootIndex;
 }

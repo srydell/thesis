@@ -3,6 +3,8 @@
 
 # Ignore all files named .DS_Store, __pycache__ or ending with .log, .pyc
 **.log
+**.zip
+**.txt
 **.out
 **.o
 **.pyc
@@ -11,6 +13,7 @@
 
 # Ignore data files
 data/*
+python/dataToMats/.
 cpp/build/*
 cpp/Tutorial/*
 
