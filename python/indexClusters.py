@@ -232,7 +232,13 @@ def testDataToMats(N, M, fileIndex, newData, writeData):
     print(clusters)
 
     for index in clusters:
-        clusters[index] = len(clusters[index])
+        currentLength = 0
+        for site in clusters[index]:
+            # Get all links from each site in that cluster
+            currentLength += len(getLinkedNeighbours(site, g))
+        # We are no longer interested in each individual site
+        # Have to divide by 2 to avoid double counting
+        clusters[index] = currentLength/2
 
     # [indexWithLargestValue, indexWithNextToLargestKey, ...]
     sortedIndices = sorted(clusters, key=clusters.get, reverse=True)
@@ -245,12 +251,48 @@ def testDataToMats(N, M, fileIndex, newData, writeData):
             f.write("\n")
             for index in sortedIndices:
                 f.write(f"{index}: {clusters[index]}\n")
+    else:
+        print(f"x={x}\n")
+        print(f"y={y}\n")
+
+        print("\n")
+        for index in sortedIndices:
+            print(f"{index}: {clusters[index]}\n")
 
 if __name__ == '__main__':
     indexClustersConfig = loadConfigs("config.ini")
-    numRows = 4
-    numCols = 4
+    numRows = 10
+    numCols = 10
 
     # Test data to mats for checking indexClusters function
-    for n in range(1):
-        testDataToMats(numRows, numCols, n, newData=False, writeData=False)
+    for n in range(5):
+        testDataToMats(numRows, numCols, n, newData=True, writeData=False)
+
+    print("hello")
+    TEST = False
+    if TEST:
+        g = buildGraph([4, 4], "periodic")
+
+        switchLinkBetween((0, 1), (1, 1), g)
+        switchLinkBetween((1, 2), (1, 1), g)
+        switchLinkBetween((1, 2), (0, 2), g)
+        switchLinkBetween((0, 1), (0, 2), g)
+        switchLinkBetween((1, 2), (2, 2), g)
+        switchLinkBetween((2, 3), (2, 2), g)
+        switchLinkBetween((2, 3), (1, 3), g)
+        switchLinkBetween((1, 2), (1, 3), g)
+
+        clusters = {}
+        indexClusters(clusters, g)
+        print(clusters)
+        print(len(clusters[1]))
+
+        loopLengths = []
+        for index in clusters:
+            currentLength = 0
+            for site in clusters[index]:
+                # Get all links from each site in that cluster
+                currentLength += len(getLinkedNeighbours(site, g))
+            # Have to divide by 2 to avoid double counting
+            loopLengths.append(currentLength/2)
+        print(loopLengths)
