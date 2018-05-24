@@ -4,15 +4,15 @@
 #include <sstream>
 #include <vector>
 
-class Graph
-{
+class Graph {
 public:
 	// Constructor
 	Graph (unsigned dimension, unsigned length);
 
 	// Functions
 	void SwitchLinkBetween(unsigned site0, unsigned site1);
-	std::vector<unsigned> GetLinkedNeighbours(unsigned site);
+	unsigned GetRandomNeighbour(const unsigned site, const unsigned exceptSite, const double randNumber);
+	std::vector<unsigned> GetLinkedNeighbours(const unsigned site);
 private:
 	// Fields
 	std::vector<Site> graph;
@@ -28,7 +28,7 @@ Graph::Graph(const unsigned dimension, const unsigned length) {
 	for (unsigned index = 0; index < std::pow(length,dimension); ++index) {
 		graph.push_back(Site(index, length));
 	}
-	std::cout << graph.size() << "\n";
+	// std::cout << graph.size() << "\n";
 }
 
 void Graph::SwitchLinkBetween(const unsigned site0, const unsigned site1) {
@@ -74,7 +74,7 @@ std::vector<unsigned> Graph::GetLinkedNeighbours(const unsigned site) {
 		// Add the site index if the link value is not 0
 		for (auto index_and_value : graph[site].neighbours) {
 			if (index_and_value.second != 0) {
-				std::cout << "Adding value " << index_and_value.first << "\n";
+				// std::cout << "Adding value " << index_and_value.first << "\n";
 				linked_neighbours.push_back(index_and_value.first);
 			}
 		}
@@ -84,6 +84,52 @@ std::vector<unsigned> Graph::GetLinkedNeighbours(const unsigned site) {
 		// Error handling for site not in graph
 		std::stringstream ss;
 		ss << "Call to Graph::GetLinkedNeighbours failed since "
+			<< site << " is not in graph." << "\n";
+		throw ss.str();
+	}
+}
+
+unsigned Graph::GetRandomNeighbour(const unsigned site, const unsigned exceptSite, const double randNumber) {
+	// Check if site is in graph
+	if ((site > 0) && (site < graph.size())) {
+		// If randNumber is less than probToChooseSite, the corresponding site is chosen
+		// size - 1 since we have some exceptSite that can not be chosen
+		double probToChooseSite = 1.0 / (graph[site].neighbours.size() - 1);
+		// Will be added to probToChooseSite until a site is chosen or we run out of sites to choose from
+		double probIncreasePerSite = probToChooseSite;
+
+		// std::cout << "Input random number is: " << randNumber << "\n";
+
+		// Add the site index if it is not exceptSite
+		for (auto index_and_value : graph[site].neighbours) {
+			// Make sure we do not return exceptSite
+			if (index_and_value.first != exceptSite) {
+
+				// std::cout << "probToChooseSite is: " << probToChooseSite << "\n";
+				// std::cout << "Handling site: " << index_and_value.first << "\n";
+
+				// Check if we should choose this site
+				if (randNumber < probToChooseSite) {
+					return index_and_value.first;
+				// Else we go to next site
+				} else {
+					probToChooseSite += probIncreasePerSite;
+				}
+			}
+		}
+
+		// Error handling for Deafult: Unknown error
+		// Something went wrong. Should have returned some site.
+		std::stringstream ss;
+		ss << "Call to Graph::GetRandomNeighbour failed somehow.\n"
+			<< "Input was: "
+			<< "Site: " << site << ", exceptSite: " << exceptSite << ", randNumber: " << randNumber << "\n"
+			<< "probToChooseSite: " << probToChooseSite << "\n";
+		throw ss.str();
+	} else {
+		// Error handling for site not in graph
+		std::stringstream ss;
+		ss << "Call to Graph::GetRandomNeighbour failed since "
 			<< site << " is not in graph." << "\n";
 		throw ss.str();
 	}
