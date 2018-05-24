@@ -19,7 +19,8 @@ private:
 	std::vector<Site> mGraph;
 
 	// Functions
-	bool HasNeighbour(unsigned site, unsigned neighbour);
+	bool AreNeighbours(unsigned site0, unsigned site1);
+	bool IsInGraph(unsigned site);
 };
 
 #endif
