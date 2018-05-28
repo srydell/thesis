@@ -2,6 +2,7 @@
 #include <iostream>
 #include <unordered_map>
 #include <vector>
+#include <algorithm>
 
 /**
 * @brief: Loop through and index every connected site in graph. Add them to clusters as site : [neighbour0, neighbour1,...]
@@ -44,10 +45,11 @@ void Graph::IndexClusters(std::unordered_map<unsigned, std::vector<unsigned>> &c
 
 				}
 
-				std::vector<unsigned> indices;
-				FindIndices(clusters, local_cluster, indices);
 				// Add the local cluster to clusters
 				clusters.insert({largestIndex, local_cluster});
+
+				std::vector<unsigned> indices;
+				FindIndices(clusters, local_cluster, indices);
 				largestIndex++;
 
 			}
@@ -69,9 +71,30 @@ void Graph::FindIndices(std::unordered_map<unsigned, std::vector<unsigned>> &clu
 	std::cout << "Cluster size is : " << clusters.size() << "\n";
 	std::cout << "Local cluster size is : " << local_cluster.size() << "\n";
 	std::cout << "Indices size is : " << indices.size() << "\n";
+
+	// Loop over all index : [site0, site1, ...] in clusters
 	for (auto index_and_sites : clusters) {
+		// Loop over all sites for that index in clusters
 		for (unsigned site : index_and_sites.second) {
-			std::cout << "Found site in clusters : " << site << "\n";
+
+			std::cout << "Site in index_and_sites is : " << site << "\n";
+			if (IsInVector(site, local_cluster)) {
+				std::cout << "Site is in local_cluster! " << site << "\n";
+				indices.push_back(site);
+			}
 		}
 	}
+	std::cout << "\n";
+}
+
+/**
+* @brief: Returns 1 if item can be found in vector_to_search
+*
+* @param: std::vector<unsigned> vector_to_search
+*       : unsigned item
+*
+* @return: bool
+*/
+bool Graph::IsInVector(unsigned item, std::vector<unsigned> &vector_to_search) {
+	return std::find(vector_to_search.begin(), vector_to_search.end(), item) != vector_to_search.end();
 }
