@@ -13,7 +13,6 @@
 
 # Ignore data files
 data/*
-python/dataToMats/.
 cpp/build/*
 cpp/Tutorial/*
 
@@ -26,9 +25,18 @@ cpp/Tutorial/*
 !.gitignore
 !README.md
 !TODO.md
+!requirements.txt
 
 # Directories
 !cpp/
 !latex/
 !literature/
-!python/
+
+# # Python source
+# !config.ini
+# !graphs.py
+# !hoshenKopelman.py
+# !indexClusters.py
+# !isingWorm.py
+# !plotGraph.py
+# !utils.py

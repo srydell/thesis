@@ -25,11 +25,9 @@ int main(){
 	try {
 		std::vector<unsigned> neighbours;
 
-		std::cout << "Switch 9 and 10" << "\n";
 		g.SwitchLinkBetween(9, 10);
-		std::cout << "Switch 9 and 13" << "\n";
 		g.SwitchLinkBetween(9, 13);
-		neighbours = g.GetLinkedNeighbours(9);
+		g.GetLinkedNeighbours(9, neighbours);
 
 		std::unordered_map<unsigned, std::vector<unsigned>> clusters;
 		g.IndexClusters(clusters);
