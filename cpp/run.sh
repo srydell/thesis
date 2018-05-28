@@ -14,13 +14,10 @@ if [[ "$1" == build ]]; then
 	cmake ../
 
 	# Regenerate the doxygen documentation
-	# In build/doxygen
-	cd doxygen || exit
-	doxygen ../doxygen.conf &> /dev/null
-
-	# Go back to build
 	cd ../ || exit
-	
+	doxygen &> /dev/null
+	cd ./build || exit
+
 	# Run the code
 	cmakeRunProject
 	exit
