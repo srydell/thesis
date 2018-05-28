@@ -14,6 +14,7 @@ public:
 	unsigned GetRandomNeighbour(unsigned site, unsigned exceptSite, const double randNumber);
 	void GetLinkedNeighbours(unsigned site, std::vector<unsigned> &linked_neighbours);
 	void IndexClusters(std::unordered_map<unsigned, std::vector<unsigned>> &clusters);
+	void FindIndices(std::unordered_map<unsigned, std::vector<unsigned>> &clusters, std::vector<unsigned> &local_cluster, std::vector<unsigned> &indices);
 	void PrintGraph();
 private:
 	// Fields
