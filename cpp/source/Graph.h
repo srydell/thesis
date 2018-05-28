@@ -24,6 +24,7 @@ private:
 	// Functions
 	bool AreNeighbours(unsigned site0, unsigned site1);
 	bool IsInGraph(unsigned site);
+	bool IsInVector(unsigned item, std::vector<unsigned> &vector_to_search);
 };
 
 #endif
