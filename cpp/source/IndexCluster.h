@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <vector>
 
-void IndexClusters(Graph graph, const std::unordered_map<unsigned, std::vector<unsigned>> &clusters);
+void IndexClusters(const std::unordered_map<unsigned, std::vector<unsigned>> &clusters);
+void FindIndices(std::unordered_map<unsigned, std::vector<unsigned>> &clusters, std::vector<unsigned> &local_cluster, std::vector<unsigned> &indices);
 
 #endif

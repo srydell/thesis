@@ -42,11 +42,36 @@ void Graph::IndexClusters(std::unordered_map<unsigned, std::vector<unsigned>> &c
 					// Add the all the neighbours to site
 					local_cluster.push_back(neighbour);
 
-					// Add the local cluster to clusters
-					clusters.insert({largestIndex, local_cluster});
-					largestIndex++;
 				}
+
+				std::vector<unsigned> indices;
+				FindIndices(clusters, local_cluster, indices);
+				// Add the local cluster to clusters
+				clusters.insert({largestIndex, local_cluster});
+				largestIndex++;
+
 			}
+		}
+	}
+}
+
+/**
+* @brief: Loop over the sites in local_cluster and populate indices if the site can be found under some index in clusters
+*
+* @param: std::unordered_map<unsigned, std::vector<unsigned>> &clusters
+*       : std::vector<unsigned> &local_cluster
+*       : std::vector<unsigned> &indices
+*
+* @return: void
+*/
+void Graph::FindIndices(std::unordered_map<unsigned, std::vector<unsigned>> &clusters, std::vector<unsigned> &local_cluster, std::vector<unsigned> &indices) {
+
+	std::cout << "Cluster size is : " << clusters.size() << "\n";
+	std::cout << "Local cluster size is : " << local_cluster.size() << "\n";
+	std::cout << "Indices size is : " << indices.size() << "\n";
+	for (auto index_and_sites : clusters) {
+		for (unsigned site : index_and_sites.second) {
+			std::cout << "Found site in clusters : " << site << "\n";
 		}
 	}
 }
