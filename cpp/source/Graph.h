@@ -13,7 +13,7 @@ public:
 	// Functions
 	void SwitchLinkBetween(unsigned site0, unsigned site1);
 	unsigned GetRandomNeighbour(unsigned site, unsigned exceptSite, const double randNumber);
-	std::vector<unsigned> GetLinkedNeighbours(unsigned site);
+	void GetLinkedNeighbours(unsigned site, std::vector<unsigned> &linked_neighbours);
 	void IndexClusters(std::unordered_map<unsigned, std::vector<unsigned>> &clusters);
 	void PrintGraph();
 private:
