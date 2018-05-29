@@ -24,6 +24,9 @@ private:
 	bool AreNeighbours(unsigned site0, unsigned site1);
 	bool IsInGraph(unsigned site);
 	bool IsInVector(std::vector<unsigned> vector_to_search, unsigned item);
+	bool AllHaveIndex(unsigned index, std::vector<unsigned> &indices_to_search);
+	void MoveToIndex(unsigned smallest_index, std::vector<unsigned> &local_cluster, std::unordered_map<unsigned, std::vector<unsigned>> &clusters);
+	void PrintClusters(std::unordered_map<unsigned, std::vector<unsigned>> &to_print);
 };
 
 /**
