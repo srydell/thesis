@@ -2,8 +2,7 @@
 #include <cmath>
 #include <iostream>
 
-class Site
-{
+class Site {
 public:
 	// Constructor
 	Site (unsigned index, unsigned length);
@@ -15,7 +14,7 @@ private:
 	unsigned mRootIndex;
 
 	// Functions
-	void AddNeighbours(unsigned mRootIndex, unsigned length);
+	void AddNeighbours(unsigned length);
 };
 
 // Constructor of Site
@@ -23,7 +22,7 @@ Site::Site(unsigned index, unsigned length) {
 	// The index of this site
 	mRootIndex = index;
 	// Populate the neighbours unordered_map
-	AddNeighbours(mRootIndex, length);
+	AddNeighbours(length);
 }
 
 /**
@@ -34,7 +33,7 @@ Site::Site(unsigned index, unsigned length) {
 *
 * @return: void
 */
-void Site::AddNeighbours(unsigned mRootIndex, unsigned length) {
+void Site::AddNeighbours(unsigned length) {
 	// --- 3D ---
 	// x + y * L + z * L * L = N
 	//

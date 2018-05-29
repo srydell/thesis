@@ -3,8 +3,7 @@
 
 #include <unordered_map>
 
-class Site
-{
+class Site {
 public:
 	// Constructor/destructor
 	Site (unsigned index, unsigned length);
@@ -16,7 +15,7 @@ private:
 	unsigned mRootIndex;
 
 	// Functions
-	void AddNeighbours(unsigned mRootIndex, unsigned length);
+	void AddNeighbours(unsigned length);
 };
 
 #endif
