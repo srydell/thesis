@@ -14,6 +14,7 @@
 # Ignore data files
 data/*
 python/dataToMats/*
+python/venv/*
 cpp/build/*
 cpp/build/latex/*
 cpp/build/html/*
