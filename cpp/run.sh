@@ -4,7 +4,8 @@ cd ./build || exit
 
 function cmakeRunProject {
 	# Run if build succeeds
-	if cmake --build .; then
+	# if cmake --build .; then
+	if make --no-print-directory; then
 		time ./IsingWorm ;
 	fi
 }
