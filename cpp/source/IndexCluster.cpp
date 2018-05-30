@@ -189,55 +189,35 @@ void Graph::MoveToIndex(unsigned smallest_index, std::vector<unsigned> &local_cl
 			clusters[smallest_index].push_back(site_in_local_cluster);
 		}
 	}
+	std::cout << "Added the sites in local_cluster to smallest_index. Clusters is now: " << "\n";
+	PrintClusters(clusters);
 
 	// Loop through and record any sites from cluster indices that are not smallest_index
 	std::unordered_map<unsigned, std::vector<unsigned>> indices_and_sites_to_remove;
 	for (auto index_and_sites : clusters) {
-		for (unsigned site : index_and_sites.second) {
 
-			std::cout << "Handling site: " << site << "\n";
-
-			// TODO: FIND THE BUG
-			// if site in local_cluster AND it is not under the smallest_index
-			if (IsInVector(site, local_cluster) && (smallest_index != index_and_sites.first)) {
-				// Here we know that the site is under the wrong index
-
-				std::cout << "Site " << site << " is in the wrong index. It has: " << index_and_sites.first
-					<< ". And should have: " << smallest_index << "\n";
-
-				// Check if the index of the site that should be removed
-				// exists as a key in indices_and_sites_to_remove
-				auto iterator = indices_and_sites_to_remove.find(index_and_sites.first);
-				if (iterator != indices_and_sites_to_remove.end()) {
-					// Create a vector of indices to remove
-					std::vector<unsigned> sites_to_remove;
-					sites_to_remove.push_back(site);
-
-					// Add this vector together with the index as a key to indices_and_sites_to_remove
-					indices_and_sites_to_remove.insert( {index_and_sites.first, sites_to_remove} );
-
-					std::cout << "Added site " << site << " under a new index " << 
-						index_and_sites.first << " to be removed" << "\n";
-
-				} else {
-					// Add site so it can be removed later
-					indices_and_sites_to_remove[index_and_sites.first].push_back(site);
-
-					std::cout << "Added site " << site << " under an old index " << 
-						index_and_sites.first << " to be removed" << "\n";
-
+		// If it is not the smallest index we want to look for the sites in local_cluster so we can remove them
+		if (index_and_sites.first != smallest_index) {
+			for (unsigned local_site : local_cluster) {
+				auto begin = index_and_sites.second.begin();
+				auto end = index_and_sites.second.end();
+				// Check if local_site is in this index
+				// If it is, it should be removed
+				if (std::find(begin, end, local_site) != end) {
+					std::cout << "Found site: " << local_site << " that should be removed" << "\n";
+					indices_and_sites_to_remove[index_and_sites.first].push_back(local_site);
+					std::cout << "So now indices_and_sites_to_remove is as:" << "\n";
+					PrintClusters(indices_and_sites_to_remove);
 				}
-
-			} else {
-				std::cout << "Site " << site << " is in the right index. It has: " << index_and_sites.first
-					<< ". And should have: " << smallest_index << "\n";
 			}
 		}
+
 	}
 
 	// Now actually remove the sites
 	for (auto index_and_sites : indices_and_sites_to_remove) {
 		for (unsigned site : index_and_sites.second) {
+			std::cout << "Want to delete site: " << site << "\n";
 			auto start = clusters[index_and_sites.first].begin();
 			auto end = clusters[index_and_sites.first].end();
 			// Search through and remove site from that cluster index
