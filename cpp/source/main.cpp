@@ -1,19 +1,8 @@
 #include "Graph.h"
 #include <iostream>
-#include <random>
 #include <string>
 
 int main(){
-	// Type of random number distribution
-	std::uniform_real_distribution<double> dist(0.0, 1.0);  //(min, max)
-
-	//Mersenne Twister: Good quality random number generator
-	std::mt19937 rng; 
-	//Initialize with non-deterministic seeds
-	rng.seed(std::random_device{}());
-
-    // std::cout << dist(rng) << std::endl;
-
 	// Length of one side of the lattice
 	int length = 4;
 	// 2D, 3D, ...

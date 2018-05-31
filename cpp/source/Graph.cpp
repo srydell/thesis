@@ -1,6 +1,7 @@
 #include "Site.h"
 #include <cmath>
 #include <iostream>
+#include <random>
 #include <sstream>
 #include <vector>
 
@@ -16,9 +17,17 @@ public:
 	void IndexClusters(std::unordered_map<unsigned, std::vector<unsigned>> &clusters);
 	void FindIndices(std::unordered_map<unsigned, std::vector<unsigned>> &clusters, std::vector<unsigned> &local_cluster, std::vector<unsigned> &indices);
 	void PrintGraph();
+	long double GetRandomNum();
 private:
 	// Fields
 	std::vector<Site> mGraph;
+	// Related to random numbers
+	//Initialize with non-deterministic seeds
+	unsigned long mSeed;
+	//Mersenne Twister: Good quality random number generator
+	std::mt19937 mRng; 
+	// Type of random number distribution
+	std::uniform_real_distribution<double> mUniformDist{std::uniform_real_distribution<double>(0.0, 1.0)};
 
 	// Functions
 	bool AreNeighbours(unsigned site0, unsigned site1);
@@ -42,6 +51,16 @@ Graph::Graph(unsigned dimension, unsigned length) {
 	for (unsigned index = 0; index < std::pow(length,dimension); ++index) {
 		mGraph.push_back(Site(index, length));
 	}
+
+	int nulltime = time(NULL);
+	// MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+	// srand((unsigned)nulltime* (rank+1));
+	srand((unsigned)nulltime);
+	unsigned long mSeed = rand();
+	mRng.seed(mSeed);
+
+	// How to get a random number
+    // std::cout << mUniformDist(mRng) << std::endl;
 }
 
 /**
@@ -233,4 +252,15 @@ void Graph::PrintGraph() {
 		ss << "}\n";
 	}
 	std::cout << ss.str();
+}
+
+/**
+* @brief: Return a random number generated from Mersienne T
+*
+* @param: 
+*
+* @return: unsigned long
+*/
+long double Graph::GetRandomNum(){
+	return mUniformDist(mRng);
 }

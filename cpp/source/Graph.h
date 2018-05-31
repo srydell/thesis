@@ -3,6 +3,7 @@
 
 #include "Site.h"
 #include <vector>
+#include <random>
 
 class Graph {
 public:
@@ -16,9 +17,17 @@ public:
 	void IndexClusters(std::unordered_map<unsigned, std::vector<unsigned>> &clusters);
 	void FindIndices(std::unordered_map<unsigned, std::vector<unsigned>> &clusters, std::vector<unsigned> &local_cluster, std::vector<unsigned> &indices);
 	void PrintGraph();
+	long double GetRandomNum();
 private:
 	// Fields
 	std::vector<Site> mGraph;
+	// Related to random numbers
+	//Initialize with non-deterministic seeds
+	unsigned long mSeed;
+	//Mersenne Twister: Good quality random number generator
+	std::mt19937 mRng; 
+	// Type of random number distribution
+	std::uniform_real_distribution<double> mUniformDist{std::uniform_real_distribution<double>(0.0, 1.0)};
 
 	// Functions
 	bool AreNeighbours(unsigned site0, unsigned site1);
