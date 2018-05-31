@@ -1,8 +1,6 @@
 #ifndef INDEXCLUSTER_H
 #define INDEXCLUSTER_H
 
-#include "Graph.h"
-#include <iostream>
 #include <unordered_map>
 #include <vector>
 
