@@ -29,6 +29,7 @@ cpp/Tutorial/*
 !.gitignore
 !README.md
 !TODO.md
+!.projections.json
 
 # Directories
 !cpp/
