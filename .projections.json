@@ -1,0 +1,9 @@
+{
+    "cpp/source/*.cpp": {
+        "alternate": "cpp/source/{}.h"
+    },
+    "cpp/source/*.h": {
+        "alternate": "cpp/source/{}.cpp",
+	"skeleton": "header"
+    }
+}
