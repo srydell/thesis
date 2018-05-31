@@ -1,42 +1,10 @@
 #include "Site.h"
+#include "Graph.h"
 #include <cmath>
 #include <iostream>
 #include <random>
 #include <sstream>
 #include <vector>
-
-class Graph {
-public:
-	// Constructor
-	Graph (unsigned dimension, unsigned length);
-
-	// Functions
-	void SwitchLinkBetween(unsigned site0, unsigned site1);
-	unsigned GetRandomNeighbour(unsigned site, unsigned exceptSite, const double randNumber);
-	void GetLinkedNeighbours(unsigned site, std::vector<unsigned> &linked_neighbours);
-	void IndexClusters(std::unordered_map<unsigned, std::vector<unsigned>> &clusters);
-	void FindIndices(std::unordered_map<unsigned, std::vector<unsigned>> &clusters, std::vector<unsigned> &local_cluster, std::vector<unsigned> &indices);
-	void PrintGraph();
-	long double GetRandomNum();
-private:
-	// Fields
-	std::vector<Site> mGraph;
-	// Related to random numbers
-	//Initialize with non-deterministic seeds
-	unsigned long mSeed;
-	//Mersenne Twister: Good quality random number generator
-	std::mt19937 mRng; 
-	// Type of random number distribution
-	std::uniform_real_distribution<double> mUniformDist{std::uniform_real_distribution<double>(0.0, 1.0)};
-
-	// Functions
-	bool AreNeighbours(unsigned site0, unsigned site1);
-	bool IsInGraph(unsigned site);
-	bool IsInVector(std::vector<unsigned> vector_to_search, unsigned item);
-	bool AllHaveIndex(unsigned index, std::vector<unsigned> &indices_to_search);
-	void MoveToIndex(unsigned smallest_index, std::vector<unsigned> &local_cluster, std::unordered_map<unsigned, std::vector<unsigned>> &clusters);
-	void PrintClusters(std::unordered_map<unsigned, std::vector<unsigned>> &to_print);
-};
 
 /**
 * @brief: Constructor of Graph. Populate mGraph with all neighbours according to periodic boundary conditions.
@@ -53,10 +21,11 @@ Graph::Graph(unsigned dimension, unsigned length) {
 	}
 
 	int nulltime = time(NULL);
-	// MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-	// srand((unsigned)nulltime* (rank+1));
 	srand((unsigned)nulltime);
+
 	unsigned long mSeed = rand();
+
+	//Mersenne Twister: Good quality random number generator
 	mRng.seed(mSeed);
 
 	// How to get a random number
@@ -138,20 +107,22 @@ void Graph::GetLinkedNeighbours(unsigned site, std::vector<unsigned> &linked_nei
 }
 
 /**
-* @brief: Return a neighbour to site that is not exceptSite depending on randNumber input (double 0 to 1).
+* @brief: Return a neighbour to site that is not exceptSite.
+*         If exceptSite is a null pointer, it is interpreted that any neighbour will do
 *
 * @param: unsigned site
-*       : unsigned exceptSite
-*       : const double randNumber
+*       : unsigned* exceptSite
 *
 * @return: unsigned
 */
-unsigned Graph::GetRandomNeighbour(unsigned site, unsigned exceptSite, const double randNumber) {
+unsigned Graph::GetRandomNeighbour(unsigned site, unsigned* exceptSite) {
+	double randNumber = GetRandomNum();
 	// Check if site is in mGraph
 	if (IsInGraph(site)) {
 	
 		// Check that exceptSite is in mGraph[site].neighbours
-		if (AreNeighbours(site, exceptSite)) {
+		if (AreNeighbours(site, *exceptSite)) {
+
 			// If randNumber is less than probToChooseSite, the corresponding site is chosen
 			// size - 1 since we have some exceptSite that can not be chosen
 			double probToChooseSite = 1.0 / (mGraph[site].neighbours.size() - 1);
@@ -160,9 +131,19 @@ unsigned Graph::GetRandomNeighbour(unsigned site, unsigned exceptSite, const dou
 
 			// Add the site index if it is not exceptSite
 			for (auto index_and_value : mGraph[site].neighbours) {
-				// Make sure we do not return exceptSite
-				if (index_and_value.first != exceptSite) {
+				if (exceptSite) {
+					// Make sure we do not return exceptSite
+					if (index_and_value.first != *exceptSite) {
 
+						// Check if we should choose this site
+						if (randNumber < probToChooseSite) {
+							return index_and_value.first;
+						// Else we go to next site
+						} else {
+							probToChooseSite += probIncreasePerSite;
+						}
+					}
+				} else {
 					// Check if we should choose this site
 					if (randNumber < probToChooseSite) {
 						return index_and_value.first;
@@ -263,4 +244,18 @@ void Graph::PrintGraph() {
 */
 long double Graph::GetRandomNum(){
 	return mUniformDist(mRng);
+}
+
+/**
+* @brief: Return a random site index
+*
+* @param: 
+*
+* @return: unsigned
+*/
+unsigned Graph::GetRandomSite() {
+	double randNumber = GetRandomNum();
+	unsigned site_index = std::round(randNumber * (mGraph.size() - 1));
+
+	return site_index;
 }

@@ -1,21 +1,7 @@
-#include <unordered_map>
+#include "Site.h"
 #include <cmath>
 #include <iostream>
-
-class Site {
-public:
-	// Constructor
-	Site (unsigned index, unsigned length);
-
-	// Fields
-	std::unordered_map<unsigned, bool> neighbours;
-	unsigned GetIndex();
-private:
-	unsigned mRootIndex;
-
-	// Functions
-	void AddNeighbours(unsigned length);
-};
+#include <unordered_map>
 
 // Constructor of Site
 Site::Site(unsigned index, unsigned length) {
