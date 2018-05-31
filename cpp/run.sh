@@ -2,10 +2,10 @@
 
 cd ./build || exit
 
-function cmakeRunProject {
-	# Run if build succeeds
+function run_project {
+	# Run binary build succeeds
 	# if cmake --build .; then
-	if make --no-print-directory; then
+	if make --no-print-directory "$1"; then
 		time ./IsingWorm ;
 	fi
 }
@@ -20,9 +20,16 @@ if [[ "$1" == build ]]; then
 	cd ./build || exit
 
 	# Run the code
-	cmakeRunProject
+	run_project all
 	exit
-fi
+elif [[ "$1" == test ]]; then
+	# run_project test
 
-# If not build, then run it via cmake
-cmakeRunProject
+	# Recompile everything if necessary
+	make tests &> /dev/null
+	# Run the tests
+	ctest --output-on-failure
+else
+	# On clean make, just run the project
+	run_project IsingWorm
+fi
