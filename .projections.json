@@ -4,6 +4,6 @@
     },
     "cpp/source/*.h": {
         "alternate": "cpp/source/{}.cpp",
-	"skeleton": "header"
+        "skeleton": "header"
     }
 }

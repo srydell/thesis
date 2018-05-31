@@ -1,6 +1,6 @@
 # Ensure that config can be referenced
-if "config" not in globals():
-    config = {}
+if "graphsConfig" not in globals():
+    graphsConfig = {}
 
 import random
 from utils import *
@@ -42,7 +42,7 @@ def applyBoundaryCondition(boundaryCondition, site, size, startingWeight):
 
     neighbours = []
     for i, x_i in enumerate(site):
-        if config.get("debug"):
+        if graphsConfig.get("debug"):
             print(f"Handling {site} on {x_i}")
             print(f"Size is {size}")
             print(f"i is {i}")
@@ -60,7 +60,7 @@ def applyBoundaryCondition(boundaryCondition, site, size, startingWeight):
             neighbours.append(tuple(beforeIndex + [aboveSite % size[i]] + afterIndex))
             neighbours.append(tuple(beforeIndex + [belowSite % size[i]] + afterIndex))
 
-            if config.get("debug"):
+            if graphsConfig.get("debug"):
                 input(neighbours)
                 print()
 
@@ -74,7 +74,7 @@ def applyBoundaryCondition(boundaryCondition, site, size, startingWeight):
                 # It is not on the bottom border so it's safe to add
                 neighbours.append(tuple(site[:i] + [(x_i - 1)] + site[(i + 1):]))
 
-            if config.get("debug"):
+            if graphsConfig.get("debug"):
                 input(neighbours)
                 print()
 
@@ -186,7 +186,7 @@ class unsupportedBoundaryCondition(Exception):
 
 if __name__ == '__main__':
     # Load the configs
-    config = loadConfigs("config.ini")
+    graphsConfig = loadConfigs("config.ini")
 
     graphDirichlet = buildGraph([3, 3], "dirichlet")
     # graphPeriodic = buildGraph(3, 3, "periodic")
