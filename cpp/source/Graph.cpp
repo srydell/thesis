@@ -107,42 +107,42 @@ void Graph::GetLinkedNeighbours(unsigned site, std::vector<unsigned> &linked_nei
 }
 
 /**
-* @brief: Return a neighbour to site that is not exceptSite.
-*         If exceptSite is a null pointer, it is interpreted that any neighbour will do
+* @brief: Return a neighbour to site that is not except_site.
+*         If except_site is a null pointer, it is interpreted that any neighbour will do
 *
 * @param: unsigned site
-*       : unsigned* exceptSite
+*       : unsigned* except_site
 *
 * @return: unsigned
 */
-unsigned Graph::GetRandomNeighbour(unsigned site, unsigned* exceptSite) {
-	double randNumber = GetRandomNum();
+unsigned Graph::GetRandomNeighbour(unsigned site, unsigned* except_site) {
+	double rand_num = GetRandomNum();
 	// Check if site is in mGraph
 	if (IsInGraph(site)) {
 	
-		// If randNumber is less than probToChooseSite, the corresponding site is chosen
-		bool lessNeighbours = (exceptSite) ? 1 : 0;
-		// size - lessNeighbours since we have some exceptSite that can not be chosen
-		double probToChooseSite = 1.0 / (mGraph[site].neighbours.size() - lessNeighbours);
-		// Will be added to probToChooseSite until a site is chosen or we run out of sites to choose from
-		double probIncreasePerSite = probToChooseSite;
+		// If rand_num is less than prob_of_choosing_site, the corresponding site is chosen
+		bool less_neighbours = (except_site) ? 1 : 0;
+		// size - less_neighbours since we have some except_site that can not be chosen
+		double prob_of_choosing_site = 1.0 / (mGraph[site].neighbours.size() - less_neighbours);
+		// Will be added to prob_of_choosing_site until a site is chosen or we run out of sites to choose from
+		double prob_increase_per_site = prob_of_choosing_site;
 
 		// Check if passed null pointer
-		if (exceptSite) {
-			// Check that exceptSite is in mGraph[site].neighbours
-			if (AreNeighbours(site, *exceptSite)) {
+		if (except_site) {
+			// Check that except_site is in mGraph[site].neighbours
+			if (AreNeighbours(site, *except_site)) {
 
-				// Add the site index if it is not exceptSite
+				// Add the site index if it is not except_site
 				for (auto index_and_value : mGraph[site].neighbours) {
-					// Make sure we do not return exceptSite
-					if (index_and_value.first != *exceptSite) {
+					// Make sure we do not return except_site
+					if (index_and_value.first != *except_site) {
 
 						// Check if we should choose this site
-						if (randNumber < probToChooseSite) {
+						if (rand_num < prob_of_choosing_site) {
 							return index_and_value.first;
 						// Else we go to next site
 						} else {
-							probToChooseSite += probIncreasePerSite;
+							prob_of_choosing_site += prob_increase_per_site;
 						}
 					}
 				}
@@ -151,26 +151,26 @@ unsigned Graph::GetRandomNeighbour(unsigned site, unsigned* exceptSite) {
 				std::stringstream ss;
 				ss << "Call to Graph::GetRandomNeighbour failed somehow.\n"
 					<< "Input was: "
-					<< "Site: " << site << ", exceptSite: " << *exceptSite << ", randNumber: " << randNumber << "\n"
-					<< "probToChooseSite: " << probToChooseSite << "\n";
+					<< "Site: " << site << ", except_site: " << *except_site << ", rand_num: " << rand_num << "\n"
+					<< "prob_of_choosing_site: " << prob_of_choosing_site << "\n";
 				throw ss.str();
 
 			} else {
 				// Error handling for siteX and siteY not neighbours
 				std::stringstream ss;
 				ss << "Call to Graph::GetRandomNeighbour failed since input site "
-					<< site << " and exceptSite " << *exceptSite << " are not in neighbours." << "\n";
+					<< site << " and except_site " << *except_site << " are not in neighbours." << "\n";
 				throw ss.str();
 			}
 		} else {
-			// Here we know that exceptSite is a null pointer
+			// Here we know that except_site is a null pointer
 			for (auto index_and_value : mGraph[site].neighbours) {
 				// Check if we should choose this site
-				if (randNumber < probToChooseSite) {
+				if (rand_num < prob_of_choosing_site) {
 					return index_and_value.first;
 				// Else we go to next site
 				} else {
-					probToChooseSite += probIncreasePerSite;
+					prob_of_choosing_site += prob_increase_per_site;
 				}
 			}
 			// Error handling for Deafult: Unknown error
@@ -178,8 +178,8 @@ unsigned Graph::GetRandomNeighbour(unsigned site, unsigned* exceptSite) {
 			std::stringstream ss;
 			ss << "Call to Graph::GetRandomNeighbour failed somehow.\n"
 				<< "Input was: "
-				<< "Site: " << site << ", exceptSite: " << *exceptSite << ", randNumber: " << randNumber << "\n"
-				<< "probToChooseSite: " << probToChooseSite << "\n";
+				<< "Site: " << site << ", except_site: " << *except_site << ", rand_num: " << rand_num << "\n"
+				<< "prob_of_choosing_site: " << prob_of_choosing_site << "\n";
 			throw ss.str();
 		}
 	} else {
@@ -249,7 +249,7 @@ void Graph::PrintGraph() {
 }
 
 /**
-* @brief: Return a random number generated from Mersienne T
+* @brief: Return a random number generated from Mersienne Twister
 *
 * @param: 
 *
@@ -267,8 +267,8 @@ long double Graph::GetRandomNum(){
 * @return: unsigned
 */
 unsigned Graph::GetRandomSite() {
-	double randNumber = GetRandomNum();
-	unsigned site_index = std::round(randNumber * (mGraph.size() - 1));
+	double rand_num = GetRandomNum();
+	unsigned site_index = std::round(rand_num * (mGraph.size() - 1));
 
 	return site_index;
 }
