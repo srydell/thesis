@@ -11,8 +11,9 @@ function run_project {
 }
 
 if [[ "$1" == build ]]; then
-	# Build the makefiles
-	cmake ../
+	# Build the makefiles using g++
+	#+Clang seem to not like some of the design choices of Catch2
+	cmake -DCMAKE_CXX_COMPILER="$(which g++)" ../
 
 	# Regenerate the doxygen documentation
 	cd ../ || exit
