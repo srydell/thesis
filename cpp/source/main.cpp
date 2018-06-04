@@ -1,7 +1,6 @@
 #include "Graph.h"
 #include "utils.h"
 #include "main.h"
-// #include <cmath>
 #include <iostream>
 #include <string>
 
@@ -38,17 +37,49 @@ int main(){
 		// Get the first site for this simulation
 		unsigned first_site = lattice.GetRandomSite();
 		unsigned * null = NULL;
+		// Get some random neighbour to form the first link
 		unsigned current_site = lattice.GetRandomNeighbour(first_site, null);
-		// lattice.SwitchLinkBetween(first_site, current_site);
 		// Track the previous site to avoid that the current turns 180 degrees
 		unsigned previous_site = first_site;
 		std::cout << "Previous site is : " << previous_site << "\n";
+		// Form the first link
 		lattice.SwitchLinkBetween(first_site, current_site);
 
 		std::unordered_map<unsigned, unsigned> correlation_func;
 		UpdateCorrelationFunction(current_site, first_site, correlation_func);
+		UpdateCorrelationFunction(1, 2, correlation_func);
+
 		// std::unordered_map<unsigned, std::vector<unsigned>> clusters;
 		// lattice.IndexClusters(clusters);
+
+		// loopFormed = False
+		// while not loopFormed:
+		//     # Get potential next step (choose any neighbour exept previousSite)
+		//     nextSite = getRandomNeighbour(site=currentSite, exceptSite=previousSite, graph=gitter)
+		//     if isAccepted(K, currentSite, nextSite, gitter):
+		//         # Flip the weight between currentSite and nextSite
+		//         switchLinkBetween(currentSite, nextSite, gitter)
+		//         previousSite = currentSite
+		//         currentSite = nextSite
+		//         if nextSite == firstSite:
+		//             # Found a new loop
+		//             loopFormed = True
+		//             # Update indexing
+		//             clusters = {}
+		//             indexClusters(clusters, gitter)
+		//             loopLengths = updateLoopLengths(clusters, gitter)
+		//         # Update the correlation function when new site is accepted
+		//         updateCorrFunc(firstSite, nextSite, corrFunction)
+
+		// bool loop_formed = 0;
+		// while (!loop_formed) {
+		// 	unsigned next_site = lattice.GetRandomNeighbour(current_site, &previous_site);
+		// 	std::cout << next_site << "\n";
+		// 	loop_formed = 1;
+		// 	// if (IsAccepted(K, current_site, next_site, link_between)) {
+		// 	// 		std::cout << "hi" << "\n";
+		// 	// 	}
+		// 	}
 
 	} catch(std::string error) {
 		std::cout << error << "\n";
@@ -69,11 +100,19 @@ void UpdateCorrelationFunction(unsigned site0, unsigned site1, std::unordered_ma
     // # add +1 to G(i-i0) for the open path from i0 to i
     // # NOTE: This has to be the absolute value,
     // #       otherwise it will be skewed toward the side with the largest number of sites.
-	int key = site0 - site1;
-	key = (key < 0) ? key*(-1) : key;
-	if (HasKey(key, correlation_func)) {
+
+	std::cout << "Call to UpdateCorrelationFunction" << "\n";
+	std::cout << "Site input: " << site0 << ", " << site1 << "\n";
+
+	// Get the absolute number
+	int key = (site0 > site1) ? site0 - site1 : site1 - site0;
+	std::cout << "key after abs: " << key << "\n";
+
+	if (HasItem(key, correlation_func)) {
+		std::cout << "Adding +1 to old key: " << key << "\n";
 		correlation_func[key]++;
 	} else {
+		std::cout << "Adding +1 to new key: " << key << "\n";
 		correlation_func[key] = 1;
 	}
 }
