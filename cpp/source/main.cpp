@@ -66,22 +66,14 @@ int main(){
 * @return: void
 */
 void UpdateCorrelationFunction(unsigned site0, unsigned site1, std::unordered_map<unsigned, unsigned> &correlation_func) {
-	// TODO: Make this function properly
-	correlation_func.insert( { site0 - site1, 1 } );
     // # add +1 to G(i-i0) for the open path from i0 to i
     // # NOTE: This has to be the absolute value,
     // #       otherwise it will be skewed toward the side with the largest number of sites.
-    // addIfNotExists(abs(firstSite[0] - nextSite[0]), 1, corrFunction)
-	std::cout << "Call to UpdateCorrelationFunction" << "\n";
 	int key = site0 - site1;
-	std::cout << "Key before abs: " << key << "\n";
 	key = (key < 0) ? key*(-1) : key;
-	std::cout << "Key after abs: " << key << "\n";
 	if (HasKey(key, correlation_func)) {
-		std::cout << "Adding as a new key." << "\n";
 		correlation_func[key]++;
 	} else {
-		std::cout << "Adding as an old key." << "\n";
 		correlation_func[key] = 1;
 	}
 }
