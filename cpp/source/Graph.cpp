@@ -1,5 +1,6 @@
 #include "Site.h"
 #include "Graph.h"
+#include "utils.h"
 #include <cmath>
 #include <iostream>
 #include <random>
@@ -9,10 +10,13 @@
 /**
 * @brief: Constructor of Graph. Populate mGraph with all neighbours according to periodic boundary conditions.
 *
-* @param: unsigned dimension
-*       : unsigned length
+* @param: unsigned dim
+*       : unsigned len
 */
-Graph::Graph(unsigned dimension, unsigned length) {
+Graph::Graph(unsigned dim, unsigned len) {
+	dimension = dim;
+	length = len;
+
 	// Initialize the vector with a reserve of length^dimension
 	mGraph.reserve(std::pow(length, dimension));
 
@@ -28,8 +32,17 @@ Graph::Graph(unsigned dimension, unsigned length) {
 	//Mersenne Twister: Good quality random number generator
 	mRng.seed(mSeed);
 
-	// How to get a random number
-    // std::cout << mUniformDist(mRng) << std::endl;
+	// TODO: Check if this functionality is useful: knowing exactly which sites are on the border
+	// Here is only how many there are but which could be implemented somewhere
+	//
+	// std::vector<unsigned> border_values;
+	// // Reserve number of sites on the border
+	// if (dimension == 2) {
+	// 	border_values.reserve(4 * (length - 1));
+	// } else if (dimension == 3) {
+	// 	border_values.reserve((6 * length * length) - (12 * length) + 8);
+	// }
+
 }
 
 /**
@@ -271,4 +284,39 @@ unsigned Graph::GetRandomSite() {
 	unsigned site_index = std::round(rand_num * (mGraph.size() - 1));
 
 	return site_index;
+}
+
+/**
+* @brief: Return the link between site0 and site1 if it exists. Otherwise throw std::string error.
+*
+* @param: unsigned site0
+*       : unsigned site1
+*
+* @return: unsigned
+*/
+unsigned Graph::GetLink(unsigned site0, unsigned site1) {
+	if (IsInGraph(site0) && IsInGraph(site1)) {
+
+		std::cout << "Neighbours to site : " << site0 << "\n";
+		for (auto e : mGraph[site0].neighbours) {
+			std::cout << e.first << ", ";
+		}
+		std::cout << "\n";
+
+		if (AreNeighbours(site1, site0)) {
+			return mGraph[site0].neighbours[site1];
+		} else {
+			// Error handling for site1 not neighbour to site0
+			std::stringstream ss;
+			ss << "Call to Graph::GetLink failed since "
+				<< site1 << " is not a neighbour to " << site0 << "\n";
+			throw ss.str();
+		}
+	} else {
+		// Error handling for site0 not in mGraph
+		std::stringstream ss;
+		ss << "Call to Graph::GetLink failed since one of "
+			<< site0 << " and " << site1 << " is not in mGraph" << "\n";
+		throw ss.str();
+	}
 }

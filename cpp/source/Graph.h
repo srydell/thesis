@@ -8,17 +8,18 @@
 class Graph {
 public:
 	// Constructor
-	Graph (unsigned length, unsigned dimension);
+	Graph(unsigned length, unsigned dimension);
 
 	// Functions
-	void SwitchLinkBetween(unsigned site0, unsigned site1);
+	long double GetRandomNum();
+	unsigned GetLink(unsigned site0, unsigned site1);
 	unsigned GetRandomNeighbour(unsigned site, unsigned* exceptSite);
+	unsigned GetRandomSite();
+	void FindIndices(std::unordered_map<unsigned, std::vector<unsigned>> &clusters, std::vector<unsigned> &local_cluster, std::vector<unsigned> &indices);
 	void GetLinkedNeighbours(unsigned site, std::vector<unsigned> &linked_neighbours);
 	void IndexClusters(std::unordered_map<unsigned, std::vector<unsigned>> &clusters);
-	void FindIndices(std::unordered_map<unsigned, std::vector<unsigned>> &clusters, std::vector<unsigned> &local_cluster, std::vector<unsigned> &indices);
 	void PrintGraph();
-	long double GetRandomNum();
-	unsigned GetRandomSite();
+	void SwitchLinkBetween(unsigned site0, unsigned site1);
 private:
 	// Fields
 	std::vector<Site> mGraph;
@@ -29,6 +30,8 @@ private:
 	std::mt19937 mRng; 
 	// Type of random number distribution
 	std::uniform_real_distribution<double> mUniformDist{std::uniform_real_distribution<double>(0.0, 1.0)};
+	unsigned length;
+	unsigned dimension;
 
 	// Functions
 	bool AreNeighbours(unsigned site0, unsigned site1);
