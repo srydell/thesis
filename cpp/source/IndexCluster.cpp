@@ -67,7 +67,9 @@ void Graph::IndexClusters(std::unordered_map<unsigned, std::vector<unsigned>> &c
 					// std::cout << "Largest index is now: " << largest_index << "\n";
 
 					// Add the sites to the new index
-					clusters.insert({largest_index, local_cluster});
+					// clusters.insert({largest_index, local_cluster});
+					// TODO: See if this way is better
+					clusters[largest_index] = local_cluster;
 
 					std::cout << "Inserted index: " << largest_index << " into clusters with local_cluster." << "\n";
 					std::cout << "Clusters is now:" << "\n";
@@ -189,8 +191,6 @@ void Graph::MoveToIndex(unsigned smallest_index, std::vector<unsigned> &local_cl
 			clusters[smallest_index].push_back(site_in_local_cluster);
 		}
 	}
-	std::cout << "Added the sites in local_cluster to smallest_index. Clusters is now: " << "\n";
-	PrintClusters(clusters);
 
 	// Loop through and record any sites from cluster indices that are not smallest_index
 	std::unordered_map<unsigned, std::vector<unsigned>> indices_and_sites_to_remove;
