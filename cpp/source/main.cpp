@@ -3,6 +3,7 @@
 #include "main.h"
 #include <iostream>
 #include <string>
+#include <unordered_map>
 
 int main(){
 	// Bond strength
@@ -39,6 +40,11 @@ int main(){
 		std::unordered_map<unsigned, std::vector<unsigned>> clusters;
 		lattice.IndexClusters(clusters);
 
+		// TODO: Change this to vector of unsigned after debugging enough
+		std::vector<double> loop_lengths;
+		double average_loop_length = 1;
+		std::cout << average_loop_length << "\n";
+
 		bool loop_formed = 0;
 		while (!loop_formed) {
 			unsigned next_site = lattice.GetRandomNeighbour(current_site, &previous_site);
@@ -62,6 +68,9 @@ int main(){
 					loop_formed = 1;
 					// Update indexing
 					lattice.IndexClusters(clusters);
+					// Update loop lengths
+					UpdateLoopLengths(loop_lengths, clusters, lattice);
+					average_loop_length = GetAverageLoopLength(loop_lengths);
 				}
 				UpdateCorrelationFunction(first_site, next_site, correlation_func);
 			}
@@ -125,5 +134,62 @@ bool IsAccepted(double K, bool link_between, long double &random_num) {
 		return 1;
 	} else {
 		return 0;
+	}
+}
+
+/**
+* @brief: Get the average loop length weighted with tanh(L)
+*
+* @param: std::vector<double> &loop_lengths
+*
+* @return: double
+*/
+double GetAverageLoopLength(std::vector<double> &loop_lengths) {
+	// TODO: Write this function
+	std::cout << loop_lengths[0] << "\n";
+	return 10;
+}
+
+/**
+* @brief: For each cluster in clusters, find the length of that loop
+*
+* @param: std::vector<double> &loop_lengths
+*       : std::unordered_map<unsigned, std::vector<unsigned> &clusters
+*       : Graph &lattice
+*
+* @return: void
+*/
+void UpdateLoopLengths(std::vector<double> &loop_lengths, std::unordered_map<unsigned, std::vector<unsigned>> &clusters, Graph &lattice) {
+	//TODO: Test this function
+
+	std::cout << "Call to UpdateLoopLengths" << "\n";
+
+	// Will be used to measure the length of all links from site
+	std::vector<unsigned> linked_neighbours;
+	for (auto index_and_sites : clusters) {
+		// Start each cluster with zero length
+		double current_length = 0;
+
+		std::cout << "On index: " << index_and_sites.first << "\n";
+
+		for (unsigned site : index_and_sites.second) {
+			// Find the number of links going through site
+			// NOTE: This will be double counting since if
+			//       site0 is a linked neighbour to site1
+			//       site1 is a linked neighbour to site0.
+			lattice.GetLinkedNeighbours(site, linked_neighbours);
+			current_length += linked_neighbours.size();
+
+			std::cout << "Added site: " << site << "\n";
+			std::cout << "Current length is now: " << current_length << "\n";
+
+			// Reinitialize the vector to be used on the next site
+			linked_neighbours.clear();
+		}
+
+		std::cout << "This cluster size is: " << current_length / 2 << "\n";
+
+		// Divide by 2 to avoid double counting
+		loop_lengths.push_back(current_length / 2);
 	}
 }
