@@ -10,7 +10,6 @@ int main(){
 	// Temperature
 	double T = 1;
 	double K = J/T;
-	std::cout << K << "\n";
 	// Length of one side of the lattice
 	int length = 4;
 	// 2D, 3D, ...
@@ -22,17 +21,6 @@ int main(){
 	try {
 
 		// std::vector<unsigned> neighbours;
-
-		// # Initialize starting site as some random [i, j, ...] within the gitter
-		// firstSite = [random.randrange(0, maxX) for maxX in size]
-		// # Get some random neighbour to form the first link
-		// currentSite = getRandomNeighbour(firstSite, None, gitter)
-		// switchLinkBetween(currentSite, firstSite, gitter)
-		// # Track the previous site to avoid that the current turns 180 degrees
-		// previousSite = firstSite
-		// clusters = {}
-		// indexClusters(clusters, gitter)
-		// updateCorrFunc(firstSite, currentSite, corrFunction)
 
 		// Get the first site for this simulation
 		unsigned first_site = lattice.GetRandomSite();
@@ -47,39 +35,37 @@ int main(){
 
 		std::unordered_map<unsigned, unsigned> correlation_func;
 		UpdateCorrelationFunction(current_site, first_site, correlation_func);
-		UpdateCorrelationFunction(1, 2, correlation_func);
 
-		// std::unordered_map<unsigned, std::vector<unsigned>> clusters;
-		// lattice.IndexClusters(clusters);
+		std::unordered_map<unsigned, std::vector<unsigned>> clusters;
+		lattice.IndexClusters(clusters);
 
-		// loopFormed = False
-		// while not loopFormed:
-		//     # Get potential next step (choose any neighbour exept previousSite)
-		//     nextSite = getRandomNeighbour(site=currentSite, exceptSite=previousSite, graph=gitter)
-		//     if isAccepted(K, currentSite, nextSite, gitter):
-		//         # Flip the weight between currentSite and nextSite
-		//         switchLinkBetween(currentSite, nextSite, gitter)
-		//         previousSite = currentSite
-		//         currentSite = nextSite
-		//         if nextSite == firstSite:
-		//             # Found a new loop
-		//             loopFormed = True
-		//             # Update indexing
-		//             clusters = {}
-		//             indexClusters(clusters, gitter)
-		//             loopLengths = updateLoopLengths(clusters, gitter)
-		//         # Update the correlation function when new site is accepted
-		//         updateCorrFunc(firstSite, nextSite, corrFunction)
+		bool loop_formed = 0;
+		while (!loop_formed) {
+			unsigned next_site = lattice.GetRandomNeighbour(current_site, &previous_site);
 
-		// bool loop_formed = 0;
-		// while (!loop_formed) {
-		// 	unsigned next_site = lattice.GetRandomNeighbour(current_site, &previous_site);
-		// 	std::cout << next_site << "\n";
-		// 	loop_formed = 1;
-		// 	// if (IsAccepted(K, current_site, next_site, link_between)) {
-		// 	// 		std::cout << "hi" << "\n";
-		// 	// 	}
-		// 	}
+			std::cout << "Next site is: " << next_site << "\n";
+
+			// loop_formed = 1;
+			auto rand_num = lattice.GetRandomNum();
+			if (IsAccepted(K, lattice.GetLink(current_site, next_site), rand_num)) {
+
+				std::cout << "Got accepted!" << "\n";
+				std::cout << "Switch link between sites: " << current_site << " and " << next_site << "\n";
+
+				// Flip the weight between currentSite and nextSite
+				lattice.SwitchLinkBetween(current_site, next_site);
+				previous_site = current_site;
+				current_site = next_site;
+				// If we have found a loop
+				if (next_site == first_site) {
+					std::cout << "Found a loop!" << "\n";
+					loop_formed = 1;
+					// Update indexing
+					lattice.IndexClusters(clusters);
+				}
+				UpdateCorrelationFunction(first_site, next_site, correlation_func);
+			}
+		}
 
 	} catch(std::string error) {
 		std::cout << error << "\n";
@@ -100,13 +86,14 @@ void UpdateCorrelationFunction(unsigned site0, unsigned site1, std::unordered_ma
     // # add +1 to G(i-i0) for the open path from i0 to i
     // # NOTE: This has to be the absolute value,
     // #       otherwise it will be skewed toward the side with the largest number of sites.
+	// TODO: Change this so it only adds keys in one direction
+	//       Probably the highest for that dimension (y for 2D, z for 3D) since it is easier to extract
 
 	std::cout << "Call to UpdateCorrelationFunction" << "\n";
 	std::cout << "Site input: " << site0 << ", " << site1 << "\n";
 
 	// Get the absolute number
 	int key = (site0 > site1) ? site0 - site1 : site1 - site0;
-	std::cout << "key after abs: " << key << "\n";
 
 	if (HasItem(key, correlation_func)) {
 		std::cout << "Adding +1 to old key: " << key << "\n";
@@ -114,5 +101,29 @@ void UpdateCorrelationFunction(unsigned site0, unsigned site1, std::unordered_ma
 	} else {
 		std::cout << "Adding +1 to new key: " << key << "\n";
 		correlation_func[key] = 1;
+	}
+}
+
+/**
+* @brief: Check if the link between current_site and next_site in gitter is accepted
+*
+* @param: double K
+*       : unsigned current_site
+*       : unsigned next_site
+*       : bool link_between
+*       : bool random_num
+*
+* @return: bool
+*/
+bool IsAccepted(double K, bool link_between, long double &random_num) {
+	// TODO: Debug this function
+
+    // Probability of being accepted
+    auto p = std::pow(std::tanh(K), 1 - link_between);
+
+	if (random_num < p) {
+		return 1;
+	} else {
+		return 0;
 	}
 }

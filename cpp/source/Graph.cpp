@@ -29,6 +29,8 @@ Graph::Graph(unsigned dim, unsigned len) {
 
 	unsigned long mSeed = rand();
 
+	std::cout << "Seed is: " << mSeed << "\n";
+
 	//Mersenne Twister: Good quality random number generator
 	mRng.seed(mSeed);
 
@@ -292,17 +294,10 @@ unsigned Graph::GetRandomSite() {
 * @param: unsigned site0
 *       : unsigned site1
 *
-* @return: unsigned
+* @return: bool
 */
-unsigned Graph::GetLink(unsigned site0, unsigned site1) {
+bool Graph::GetLink(unsigned site0, unsigned site1) {
 	if (IsInGraph(site0) && IsInGraph(site1)) {
-
-		std::cout << "Neighbours to site : " << site0 << "\n";
-		for (auto e : mGraph[site0].neighbours) {
-			std::cout << e.first << ", ";
-		}
-		std::cout << "\n";
-
 		if (AreNeighbours(site1, site0)) {
 			return mGraph[site0].neighbours[site1];
 		} else {
