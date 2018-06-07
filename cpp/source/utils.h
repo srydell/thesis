@@ -1,11 +1,6 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include <typeinfo>
-#include <vector>
-#include <algorithm>
-#include <iostream>
-
 /**
 * @brief: Return true if item exist in map
 *
@@ -17,7 +12,7 @@
 template<typename T1, typename T2>
 bool HasItem(T1 item, T2 &map) {
 	// Try with unordered_map like behaviour
-	return map.find(item) == map.end();
+	return map.find(item) != map.end();
 }
 
 #endif
