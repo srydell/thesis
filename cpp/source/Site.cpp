@@ -33,6 +33,26 @@ void Site::AddNeighbours(unsigned length) {
 	// x = N - y * L
 	// y = N // L
 	//
+	// --- General ---
+	// x + y * L + z * L^2 + ... = N
+	//
+	// let k be some index in the graph
+	// x = k % L
+	// y = floor(k, L) % L
+	// z = floor(k, L^2) % L
+	// ...
+	//
+	// Implementation of general:
+	// vector<unsigned> convert(index) {
+	// 	vector<unsigned> xyz;
+	// 	xyz.reserve(mDimension);
+	// 	for (unsigned i = 0; i < mDimension; ++i) {
+	// 		xyz[i] = index % mLength;
+	// 		index = floor(index / mLength);
+	// 	}
+	// 	return xyz
+	// }
+	//
 	// Assume 2D
 	// Get the indices
 	// Important that the division is a floor (//) here.
@@ -41,6 +61,7 @@ void Site::AddNeighbours(unsigned length) {
 	unsigned x = mRootIndex - length*y;
 	bool startingWeight = 0;
 
+	// TODO: Rewrite this for arbitrary dimension. It should probably take the dimension as a parameter then
 	// Find the neighbours with periodic boundary conditions
 	// Check x + 1
 	if ((x+1)<length){
