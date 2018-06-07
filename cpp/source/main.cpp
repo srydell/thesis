@@ -12,16 +12,14 @@ int main(){
 	double T = 1;
 	double K = J/T;
 	// Length of one side of the lattice
-	int length = 4;
+	unsigned length = 4;
 	// 2D, 3D, ...
-	const int dimension = 2;
+	const unsigned dimension = 2;
 	Graph lattice(dimension, length);
 
 	// g.PrintGraph();
 	// Simulation
 	try {
-
-		// std::vector<unsigned> neighbours;
 
 		// Get the first site for this simulation
 		unsigned first_site = lattice.GetRandomSite();
@@ -35,7 +33,7 @@ int main(){
 		lattice.SwitchLinkBetween(first_site, current_site);
 
 		std::unordered_map<unsigned, unsigned> correlation_func;
-		UpdateCorrelationFunction(current_site, first_site, correlation_func);
+		UpdateCorrelationFunction(current_site, first_site, length, correlation_func);
 
 		std::unordered_map<unsigned, std::vector<unsigned>> clusters;
 		lattice.IndexClusters(clusters);
@@ -70,9 +68,10 @@ int main(){
 					lattice.IndexClusters(clusters);
 					// Update loop lengths
 					UpdateLoopLengths(loop_lengths, clusters, lattice);
-					average_loop_length = GetAverageLoopLength(loop_lengths);
+					average_loop_length = GetAverageLoopLength(loop_lengths, K);
+					std::cout << "Average loop length is: " << average_loop_length << "\n";
 				}
-				UpdateCorrelationFunction(first_site, next_site, correlation_func);
+				UpdateCorrelationFunction(first_site, next_site, length, correlation_func);
 			}
 		}
 
@@ -91,18 +90,39 @@ int main(){
 *
 * @return: void
 */
-void UpdateCorrelationFunction(unsigned site0, unsigned site1, std::unordered_map<unsigned, unsigned> &correlation_func) {
+void UpdateCorrelationFunction(unsigned site0, unsigned site1, unsigned length, std::unordered_map<unsigned, unsigned> &correlation_func) {
     // # add +1 to G(i-i0) for the open path from i0 to i
     // # NOTE: This has to be the absolute value,
     // #       otherwise it will be skewed toward the side with the largest number of sites.
 	// TODO: Change this so it only adds keys in one direction
 	//       Probably the highest for that dimension (y for 2D, z for 3D) since it is easier to extract
+	// 2D:
+	//       y = N // L
+	// 3D:
+	//       z = N // (L * L)
 
 	std::cout << "Call to UpdateCorrelationFunction" << "\n";
 	std::cout << "Site input: " << site0 << ", " << site1 << "\n";
 
+	// unsigned size = std::pow(length, dimension - 1);
+
+	// For 2D this is the y value
+	// For 3D this is the z value
+	// This relies on / being floor (as is for unsigned)
+	// If these are ever changed to double/float use std::floor
+	unsigned site0_yz = site0 % length;
+	unsigned site1_yz = site1 % length;
+
+	std::cout << "x value for site " << site0 << " is " << site0_yz << "\n";
+	std::cout << "x value for site " << site1 << " is " << site1_yz << "\n";
+
 	// Get the absolute number
-	int key = (site0 > site1) ? site0 - site1 : site1 - site0;
+	int key = (site0_yz > site1_yz) ? site0_yz - site1_yz : site1_yz - site0_yz;
+
+	std::cout << "Correlation function is as: " << "\n";
+	for (auto element : correlation_func) {
+		std::cout << element.first << ": "<< element.second << "\n";
+	}
 
 	if (HasItem(key, correlation_func)) {
 		std::cout << "Adding +1 to old key: " << key << "\n";
@@ -139,15 +159,29 @@ bool IsAccepted(double K, bool link_between, long double &random_num) {
 
 /**
 * @brief: Get the average loop length weighted with tanh(L)
+*         \sum { l * tanh^l(K) }
+*         ----------------------
+*           \sum { tanh^l(K) }
 *
 * @param: std::vector<double> &loop_lengths
 *
 * @return: double
 */
-double GetAverageLoopLength(std::vector<double> &loop_lengths) {
+double GetAverageLoopLength(std::vector<double> &loop_lengths, double const &K) {
 	// TODO: Write this function
 	std::cout << loop_lengths[0] << "\n";
-	return 10;
+	double tanh_to_l;
+	double sum_above = 0;
+	double sum_below = 0;
+	for (auto l : loop_lengths) {
+		tanh_to_l = std::pow(std::tanh(K), l);
+		sum_above += l * tanh_to_l;
+		sum_below += tanh_to_l;
+	}
+	// \sum { l * tanh^l(K) }
+	// ----------------------
+	//   \sum { tanh^l(K) }
+	return sum_above / sum_below;
 }
 
 /**

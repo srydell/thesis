@@ -13,9 +13,9 @@
 * @param: unsigned dim
 *       : unsigned len
 */
-Graph::Graph(unsigned dim, unsigned len) {
-	dimension = dim;
-	length = len;
+Graph::Graph(unsigned dimension, unsigned length) {
+	this->mDimension = dimension;
+	this->mLength = length;
 
 	// Initialize the vector with a reserve of length^dimension
 	mGraph.reserve(std::pow(length, dimension));
@@ -314,4 +314,21 @@ bool Graph::GetLink(unsigned site0, unsigned site1) {
 			<< site0 << " and " << site1 << " is not in mGraph" << "\n";
 		throw ss.str();
 	}
+}
+
+/**
+* @brief: Creates a vector from index with x, y, z, ... depending on dimension of the graph
+*
+* @param: unsigned index
+*
+* @return: std::vector<unsigned>
+*/
+std::vector<unsigned> Graph::GetxyzConversion(unsigned index) {
+	std::vector<unsigned> xyz;
+	xyz.reserve(mDimension);
+	for (unsigned i = 0; i < mDimension; ++i) {
+		xyz[i] = index % mLength;
+		index = std::floor(index / mLength);
+	}
+	return xyz;
 }

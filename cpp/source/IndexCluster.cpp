@@ -68,7 +68,7 @@ void Graph::IndexClusters(std::unordered_map<unsigned, std::vector<unsigned>> &c
 
 					// Add the sites to the new index
 					// clusters.insert({largest_index, local_cluster});
-					// TODO: See if this way is better
+					// TODO: See if this way is better by writing a test where a worm overwrites an earlier configuration
 					clusters[largest_index] = local_cluster;
 
 					std::cout << "Inserted index: " << largest_index << " into clusters with local_cluster." << "\n";
