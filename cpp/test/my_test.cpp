@@ -2,7 +2,7 @@
 #include "catch.hpp"
 #include "Graph.h"
 
-TEST_CASE("A test case", "[testing]") {
+TEST_CASE("UpdateCorrelationFunction", "[testing]") {
 	Graph lattice = Graph(4, 4);
 	REQUIRE( 2 == 2 );
 }
