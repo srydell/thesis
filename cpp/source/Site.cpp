@@ -37,7 +37,7 @@ void Site::AddNeighbours(unsigned length) {
 	// Get the indices
 	// Important that the division is a floor (//) here.
 	// Since both mRootIndex and length are unsigned / is a floor operation
-	unsigned y = mRootIndex/length;
+	unsigned y = mRootIndex / length;
 	unsigned x = mRootIndex - length*y;
 	bool startingWeight = 0;
 

@@ -20,6 +20,7 @@ public:
 	void IndexClusters(std::unordered_map<unsigned, std::vector<unsigned>> &clusters);
 	void PrintGraph();
 	void SwitchLinkBetween(unsigned site0, unsigned site1);
+	std::vector<unsigned> GetxyzConversion(unsigned index);
 private:
 	// Fields
 	std::vector<Site> mGraph;
@@ -30,8 +31,8 @@ private:
 	std::mt19937 mRng; 
 	// Type of random number distribution
 	std::uniform_real_distribution<double> mUniformDist{std::uniform_real_distribution<double>(0.0, 1.0)};
-	unsigned length;
-	unsigned dimension;
+	unsigned mLength;
+	unsigned mDimension;
 
 	// Functions
 	bool AreNeighbours(unsigned site0, unsigned site1);
