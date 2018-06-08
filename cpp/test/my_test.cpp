@@ -1,6 +1,7 @@
 #define CATCH_CONFIG_MAIN
 #include "catch.hpp"
 #include "Graph.h"
+#include "IsingWorm.h"
 
 TEST_CASE("UpdateCorrelationFunction", "[testing]") {
 	Graph lattice = Graph(4, 4);
