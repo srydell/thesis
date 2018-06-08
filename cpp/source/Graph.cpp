@@ -27,7 +27,11 @@ Graph::Graph(unsigned dimension, unsigned length) {
 	int nulltime = time(NULL);
 	srand((unsigned)nulltime);
 
-	unsigned long mSeed = rand();
+	// unsigned long mSeed = rand();
+
+	// Produces a cluster with only two sites (impossible)
+	// TODO: Solve this by debugging the cluster function probably
+	unsigned long mSeed = 420974030;
 
 	std::cout << "Seed is: " << mSeed << "\n";
 

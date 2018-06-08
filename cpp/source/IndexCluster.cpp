@@ -43,12 +43,12 @@ void Graph::IndexClusters(std::unordered_map<unsigned, std::vector<unsigned>> &c
 					local_cluster.push_back(neighbour);
 				}
 
-				std::cout << "On site: " << site.GetIndex() << "\n";
-				std::cout << "After initialization, local_cluster is: ";
-				for (auto n : local_cluster) {
-					std::cout << n << " ";
-				}
-				std::cout << "\n";
+				// std::cout << "On site: " << site.GetIndex() << "\n";
+				// std::cout << "After initialization, local_cluster is: ";
+				// for (auto n : local_cluster) {
+				// 	std::cout << n << " ";
+				// }
+				// std::cout << "\n";
 
 				// // Add the local cluster to clusters
 				// clusters.insert({largest_index, local_cluster});
@@ -71,10 +71,10 @@ void Graph::IndexClusters(std::unordered_map<unsigned, std::vector<unsigned>> &c
 					// TODO: See if this way is better by writing a test where a worm overwrites an earlier configuration
 					clusters[largest_index] = local_cluster;
 
-					std::cout << "Inserted index: " << largest_index << " into clusters with local_cluster." << "\n";
-					std::cout << "Clusters is now:" << "\n";
-					PrintClusters(clusters);
-					std::cout << "\n";
+					// std::cout << "Inserted index: " << largest_index << " into clusters with local_cluster." << "\n";
+					// std::cout << "Clusters is now:" << "\n";
+					// PrintClusters(clusters);
+					// std::cout << "\n";
 
 					// Go to next site
 					continue;
@@ -91,25 +91,25 @@ void Graph::IndexClusters(std::unordered_map<unsigned, std::vector<unsigned>> &c
 				// If not all are indexed or not all have the smallest_index
 				if ((local_cluster.size() != indices.size()) || !(AllHaveIndex(smallest_index, indices))) {
 
-					std::cout << "Going to call move since:" << "\n";
-					std::cout << "local_cluster.size() != indices.size() : " <<
-						local_cluster.size() << " != " << indices.size() << "\n";
-					std::cout << "Or" << "\n";
-					std::cout << "All do not have smallest index. Smallest_index : " <<
-						smallest_index << "\n";
-					std::cout << "indices : ";
-					for (unsigned i : indices) {
-						std::cout << i << " ";
-					}
-					std::cout << "\n";
-					std::cout << "Clusters before move" << "\n";
-					PrintClusters(clusters);
+					// std::cout << "Going to call move since:" << "\n";
+					// std::cout << "local_cluster.size() != indices.size() : " <<
+					// 	local_cluster.size() << " != " << indices.size() << "\n";
+					// std::cout << "Or" << "\n";
+					// std::cout << "All do not have smallest index. Smallest_index : " <<
+					// 	smallest_index << "\n";
+					// std::cout << "indices : ";
+					// for (unsigned i : indices) {
+					// 	std::cout << i << " ";
+					// }
+					// std::cout << "\n";
+					// std::cout << "Clusters before move" << "\n";
+					// PrintClusters(clusters);
 
 					// Move all sites in local_cluster to smallest_index
 					MoveToIndex(smallest_index, local_cluster, clusters);
 
-					std::cout << "Clusters after move" << "\n";
-					PrintClusters(clusters);
+					// std::cout << "Clusters after move" << "\n";
+					// PrintClusters(clusters);
 
 				}
 			}
@@ -138,8 +138,6 @@ void Graph::FindIndices(std::unordered_map<unsigned, std::vector<unsigned>> &clu
 			}
 		}
 	}
-
-	std::cout << "\n";
 }
 
 /**
@@ -182,7 +180,7 @@ bool Graph::AllHaveIndex(unsigned index, std::vector<unsigned> &indices_to_searc
 * @return: void
 */
 void Graph::MoveToIndex(unsigned smallest_index, std::vector<unsigned> &local_cluster, std::unordered_map<unsigned, std::vector<unsigned>> &clusters) {
-	std::cout << "MoveToIndex called" << "\n";
+	// std::cout << "MoveToIndex called" << "\n";
 	// Add the sites to smallest_index in clusters
 	for (unsigned site_in_local_cluster : local_cluster) {
 		// If site_in_local_cluster is not already in clusters for smallest_index
@@ -204,10 +202,10 @@ void Graph::MoveToIndex(unsigned smallest_index, std::vector<unsigned> &local_cl
 				// Check if local_site is in this index
 				// If it is, it should be removed
 				if (std::find(begin, end, local_site) != end) {
-					std::cout << "Found site: " << local_site << " that should be removed" << "\n";
+					// std::cout << "Found site: " << local_site << " that should be removed" << "\n";
 					indices_and_sites_to_remove[index_and_sites.first].push_back(local_site);
-					std::cout << "So now indices_and_sites_to_remove is as:" << "\n";
-					PrintClusters(indices_and_sites_to_remove);
+					// std::cout << "So now indices_and_sites_to_remove is as:" << "\n";
+					// PrintClusters(indices_and_sites_to_remove);
 				}
 			}
 		}
@@ -217,17 +215,17 @@ void Graph::MoveToIndex(unsigned smallest_index, std::vector<unsigned> &local_cl
 	// Now actually remove the sites
 	for (auto index_and_sites : indices_and_sites_to_remove) {
 		for (unsigned site : index_and_sites.second) {
-			std::cout << "Want to delete site: " << site << "\n";
+			// std::cout << "Want to delete site: " << site << "\n";
 			auto start = clusters[index_and_sites.first].begin();
 			auto end = clusters[index_and_sites.first].end();
 			// Search through and remove site from that cluster index
 			clusters[index_and_sites.first].erase(std::remove(start, end, site));
 
-			std::cout << "Removed site: " << site << " from cluster index: " << index_and_sites.first << "\n";
+			// std::cout << "Removed site: " << site << " from cluster index: " << index_and_sites.first << "\n";
 		}
 		// Check if the index is now empy, if it is, remove it
 		if (clusters[index_and_sites.first].size() == 0) {
-			std::cout << "Removed index : " << index_and_sites.first << " from clusters totally." << "\n";
+			// std::cout << "Removed index : " << index_and_sites.first << " from clusters totally." << "\n";
 			clusters.erase(index_and_sites.first);
 		}
 	}
