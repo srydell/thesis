@@ -28,9 +28,10 @@ elif [[ "$1" == test ]]; then
 	# What it is called in the CMakeLists.txt
 	custom_test_name=my_test
 	# Recompile everything if necessary
-	make $custom_test_name
-	# Run the tests
-	ctest --output-on-failure $custom_test_name
+	if make $custom_test_name; then
+		# Run the tests
+		ctest --output-on-failure $custom_test_name
+	fi
 else
 	# On clean make, just run the project
 	run_project IsingWorm
