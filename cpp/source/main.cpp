@@ -39,7 +39,7 @@ int main(){
 		lattice.IndexClusters(clusters);
 
 		// TODO: Change this to vector of unsigned after debugging enough
-		std::vector<double> loop_lengths;
+		std::vector<unsigned> loop_lengths;
 		double average_loop_length = 1;
 		std::cout << average_loop_length << "\n";
 
@@ -151,12 +151,12 @@ bool IsAccepted(double K, bool link_between, long double &random_num) {
 *         ----------------------
 *           \sum { tanh^l(K) }
 *
-* @param: std::vector<double> &loop_lengths
+* @param: std::vector<unsigned> &loop_lengths
 *       : double const &K
 *
 * @return: double
 */
-double GetAverageLoopLength(std::vector<double> &loop_lengths, double const &K) {
+double GetAverageLoopLength(std::vector<unsigned> &loop_lengths, double const &K) {
 	// TODO: Test this function
 
 	//     tanh^L(K)
@@ -168,7 +168,7 @@ double GetAverageLoopLength(std::vector<double> &loop_lengths, double const &K) 
 	//    \sum { tanh^l(K) }
 	double sum_below = 0;
 
-	for (auto l : loop_lengths) {
+	for (unsigned l : loop_lengths) {
 		tanhK_to_l = std::pow(std::tanh(K), l);
 		sum_above += l * tanhK_to_l;
 		sum_below += tanhK_to_l;
@@ -182,13 +182,13 @@ double GetAverageLoopLength(std::vector<double> &loop_lengths, double const &K) 
 /**
 * @brief: For each cluster in clusters, find the length of that loop
 *
-* @param: std::vector<double> &loop_lengths
+* @param: std::vector<unsigned> &loop_lengths
 *       : std::unordered_map<unsigned, std::vector<unsigned> &clusters
 *       : Graph &lattice
 *
 * @return: void
 */
-void UpdateLoopLengths(std::vector<double> &loop_lengths, std::unordered_map<unsigned, std::vector<unsigned>> &clusters, Graph &lattice) {
+void UpdateLoopLengths(std::vector<unsigned> &loop_lengths, std::unordered_map<unsigned, std::vector<unsigned>> &clusters, Graph &lattice) {
 	//TODO: Test this function
 
 	std::cout << "Call to UpdateLoopLengths" << "\n";
@@ -197,7 +197,7 @@ void UpdateLoopLengths(std::vector<double> &loop_lengths, std::unordered_map<uns
 	std::vector<unsigned> linked_neighbours;
 	for (auto index_and_sites : clusters) {
 		// Start each cluster with zero length
-		double current_length = 0;
+		unsigned current_length = 0;
 
 		std::cout << "On index: " << index_and_sites.first << "\n";
 
