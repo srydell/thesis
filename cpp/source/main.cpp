@@ -15,9 +15,21 @@ int main(){
 	unsigned length = 10;
 	// 2D, 3D, ...
 	const unsigned dimension = 2;
-	Graph lattice(dimension, length);
 
-	// g.PrintGraph();
+	int nulltime = time(NULL);
+	srand((unsigned)nulltime);
+
+	// unsigned long mSeed = rand();
+
+	// Produces a cluster with only two sites (impossible)
+	// For: length: 10, dimension: 2
+	// TODO: Solve this by debugging the cluster function probably
+	unsigned long seed = 420974030;
+
+	std::cout << "Seed is: " << seed << "\n";
+
+	Graph lattice(dimension, length, seed);
+
 	// Simulation
 	try {
 

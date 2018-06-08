@@ -1,21 +1,15 @@
-#define CATCH_CONFIG_MAIN
+#define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file
 #include "catch.hpp"
 #include "Graph.h"
-#include "IsingWorm.h"
 
-TEST_CASE("UpdateCorrelationFunction", "[testing]") {
-	Graph lattice = Graph(4, 4);
-	REQUIRE( 2 == 2 );
+unsigned int Factorial( unsigned int number ) {
+    return number <= 1 ? number : Factorial(number-1)*number;
 }
 
-TEST_CASE("simple test case", "[testing]") {
-	REQUIRE( 2 == 2 );
-}
-
-TEST_CASE("Ajkldsf test case", "[testing]") {
-	REQUIRE( 5 == 5 );
-}
-
-TEST_CASE("Another test case", "[testing]") {
-	REQUIRE( 4 == 4 );
+TEST_CASE( "Factorials are computed", "[factorial]" ) {
+    REQUIRE( Factorial(1) == 1 );
+    REQUIRE( Factorial(2) == 2 );
+    REQUIRE( Factorial(3) == 6 );
+    REQUIRE( Factorial(10) == 3628800 );
+    REQUIRE( 10 == 3628800 );
 }
