@@ -30,7 +30,7 @@ target_include_directories(Catch INTERFACE ${CATCH2_FOLDER})
 file(GLOB_RECURSE TEST_SOURCES "test/*.cpp")
 file(GLOB_RECURSE TEST_HEADERS "test/*.h")
 # Cannot use the globs from SOURCES & HEADERS since main.cpp has a main() function (Can only have one per executable)
-add_executable(${TEST_NAME} ${TEST_SOURCES} ${TEST_HEADERS} "source/Site.cpp" "source/Site.h" "source/Graph.h" "source/Graph.cpp")
+add_executable(${TEST_NAME} ${TEST_SOURCES} ${TEST_HEADERS} "source/Site.cpp" "source/Site.h" "source/Graph.h" "source/Graph.cpp" "source/IsingWorm.h" "source/IsingWorm.cpp")
 
 # Link to Catch
 target_link_libraries(${TEST_NAME} PRIVATE Catch)
