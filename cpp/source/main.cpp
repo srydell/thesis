@@ -16,7 +16,7 @@ int main(){
 	// 2D, 3D, ...
 	const unsigned dimension = 2;
 
-	int nulltime = time(NULL);
+	int nulltime = time(nullptr);
 	srand((unsigned)nulltime);
 
 	// unsigned long mSeed = rand();
