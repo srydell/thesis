@@ -26,9 +26,9 @@ elif [[ "$1" == test ]]; then
 	# run_project test
 
 	# What it is called in the CMakeLists.txt
-	custom_test_name=tests
+	custom_test_name=my_test
 	# Recompile everything if necessary
-	make $custom_test_name &> /dev/null
+	make $custom_test_name
 	# Run the tests
 	ctest --output-on-failure $custom_test_name
 else

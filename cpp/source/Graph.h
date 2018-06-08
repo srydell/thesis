@@ -19,6 +19,7 @@ public:
 	void GetLinkedNeighbours(unsigned site, std::vector<unsigned> &linked_neighbours);
 	void IndexClusters(std::unordered_map<unsigned, std::vector<unsigned>> &clusters);
 	void PrintGraph();
+	void PrintClusters(std::unordered_map<unsigned, std::vector<unsigned>> &to_print);
 	void SwitchLinkBetween(unsigned site0, unsigned site1);
 	std::vector<unsigned> GetxyzConversion(unsigned index);
 private:
@@ -40,7 +41,6 @@ private:
 	bool IsInVector(unsigned item, std::vector<unsigned> &vector_to_search);
 	bool AllHaveIndex(unsigned index, std::vector<unsigned> &indices_to_search);
 	void MoveToIndex(unsigned smallest_index, std::vector<unsigned> &local_cluster, std::unordered_map<unsigned, std::vector<unsigned>> &clusters);
-	void PrintClusters(std::unordered_map<unsigned, std::vector<unsigned>> &to_print);
 };
 
 #endif

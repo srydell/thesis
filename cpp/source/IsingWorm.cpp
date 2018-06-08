@@ -20,29 +20,29 @@ void UpdateCorrelationFunction(unsigned site0, unsigned site1, unsigned length, 
     // # NOTE: This has to be the absolute value,
     // #       otherwise it will be skewed toward the side with the largest number of sites.
 
-	std::cout << "Call to UpdateCorrelationFunction" << "\n";
-	std::cout << "Site input: " << site0 << ", " << site1 << "\n";
+	// std::cout << "Call to UpdateCorrelationFunction" << "\n";
+	// std::cout << "Site input: " << site0 << ", " << site1 << "\n";
 
 	// Get the x values for each site
 	unsigned x_0 = site0 % length;
 	unsigned x_1 = site1 % length;
 
-	std::cout << "x value for site " << site0 << " is " << x_0 << "\n";
-	std::cout << "x value for site " << site1 << " is " << x_1 << "\n";
+	// std::cout << "x value for site " << site0 << " is " << x_0 << "\n";
+	// std::cout << "x value for site " << site1 << " is " << x_1 << "\n";
 
 	// Get the absolute number of the difference between the x values
 	int key = (x_0 > x_1) ? x_0 - x_1 : x_1 - x_0;
 
-	std::cout << "Correlation function is as: " << "\n";
-	for (auto element : correlation_func) {
-		std::cout << element.first << ": "<< element.second << "\n";
-	}
+	// std::cout << "Correlation function is as: " << "\n";
+	// for (auto element : correlation_func) {
+	// 	std::cout << element.first << ": "<< element.second << "\n";
+	// }
 
 	if (HasItem(key, correlation_func)) {
-		std::cout << "Adding +1 to old key: " << key << "\n";
+		// std::cout << "Adding +1 to old key: " << key << "\n";
 		correlation_func[key]++;
 	} else {
-		std::cout << "Adding +1 to new key: " << key << "\n";
+		// std::cout << "Adding +1 to new key: " << key << "\n";
 		correlation_func[key] = 1;
 	}
 }
@@ -115,7 +115,7 @@ double GetAverageLoopLength(std::vector<unsigned> &loop_lengths, double const &K
 void UpdateLoopLengths(std::vector<unsigned> &loop_lengths, std::unordered_map<unsigned, std::vector<unsigned>> &clusters, Graph &lattice) {
 	//TODO: Test this function
 
-	std::cout << "Call to UpdateLoopLengths" << "\n";
+	// std::cout << "Call to UpdateLoopLengths" << "\n";
 
 	// Will be used to measure the length of all links from site
 	std::vector<unsigned> linked_neighbours;
@@ -123,7 +123,7 @@ void UpdateLoopLengths(std::vector<unsigned> &loop_lengths, std::unordered_map<u
 		// Start each cluster with zero length
 		unsigned current_length = 0;
 
-		std::cout << "On index: " << index_and_sites.first << "\n";
+		// std::cout << "On index: " << index_and_sites.first << "\n";
 
 		for (unsigned site : index_and_sites.second) {
 			// Find the number of links going through site
@@ -133,14 +133,14 @@ void UpdateLoopLengths(std::vector<unsigned> &loop_lengths, std::unordered_map<u
 			lattice.GetLinkedNeighbours(site, linked_neighbours);
 			current_length += linked_neighbours.size();
 
-			std::cout << "Added site: " << site << "\n";
-			std::cout << "Current length is now: " << current_length << "\n";
+			// std::cout << "Added site: " << site << "\n";
+			// std::cout << "Current length is now: " << current_length << "\n";
 
 			// Reinitialize the vector to be used on the next site
 			linked_neighbours.clear();
 		}
 
-		std::cout << "This cluster size is: " << current_length / 2 << "\n";
+		// std::cout << "This cluster size is: " << current_length / 2 << "\n";
 
 		// Divide by 2 to avoid double counting
 		loop_lengths.push_back(current_length / 2);
