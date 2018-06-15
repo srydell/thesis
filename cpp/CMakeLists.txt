@@ -1,10 +1,27 @@
 cmake_minimum_required(VERSION 3.8)
-project(IsingWorm)
+# Languages cxx tells cmake to not try to compile with C compilers etc
+project(IsingWorm LANGUAGES CXX)
 
+# Set C++ 14 globally
+set(CMAKE_CXX_STANDARD 14)
+# Possible to set it target specific as such:
+# set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 14)
+
+# Fail if the set C++ standard is not available
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# Do not use GNU extensions
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+# Export compile flags to json database.
+# Useful for linters and autocompletion
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+# Set warning flags for Windows and Unix
 if(MSVC)
-	add_compile_options(/W3 /WX)
+    add_compile_options(/W3 /WX)
 else()
-	add_compile_options(-W -Wall -Werror)
+    add_compile_options(-W -Wall -Werror)
 endif()
 
 # Add all source files recursively
@@ -12,9 +29,6 @@ file(GLOB_RECURSE SOURCES "source/*.cpp")
 file(GLOB_RECURSE HEADERS "source/*.h")
 add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 target_include_directories(${PROJECT_NAME} PUBLIC source)
-# Set C++ standard
-# target_compile_features(${PROJECT_NAME} PRIVATE cxx_std_14)
-set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 14)
 
 # TODO: Fix this please, future Simon you are my only hope
 # # This is how it should look
