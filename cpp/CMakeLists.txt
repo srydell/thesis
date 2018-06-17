@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.8)
 # Languages cxx tells cmake to not try to compile with C compilers etc
-project(IsingWorm LANGUAGES CXX)
+project(MasterThesis LANGUAGES CXX)
 
 # Set C++ 14 globally
 set(CMAKE_CXX_STANDARD 14)
@@ -24,11 +24,19 @@ else()
     add_compile_options(-W -Wall -Werror)
 endif()
 
-# Add all source files recursively
-file(GLOB_RECURSE SOURCES "source/*.cpp")
-file(GLOB_RECURSE HEADERS "source/*.h")
-add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
-target_include_directories(${PROJECT_NAME} PUBLIC source)
+# Add all source files from source
+file(GLOB SOURCES "source/*.cpp")
+file(GLOB HEADERS "source/*.h")
+set(CATCH_SOURCE external/catch2/catch.hpp)
+
+# Set IsingWorm executable
+add_executable(IsingWorm ${SOURCES} ${HEADERS} application/main.cpp)
+target_include_directories(IsingWorm PUBLIC source)
+
+# Set testing of source files
+add_executable(Testing ${SOURCES} ${HEADERS} ${CATCH_SOURCE} source/test/test1.cpp)
+target_include_directories(Testing PUBLIC source)
+target_include_directories(Testing PUBLIC external/catch2)
 
 # TODO: Fix this please, future Simon you are my only hope
 # # This is how it should look
