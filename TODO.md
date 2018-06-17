@@ -4,6 +4,10 @@
 
 ### Questions for Mats ###
 
+* How good is the approximation of box dimension compared to the Hausdorff dimension with differing radii of balls?
+* How much of the first paper can I apply to mine? (bad question)
+* Could the correlation dimension be used as an easier to compute alternative? I've seen examples where a smaller amount of points are needed to git a good enough result for approximate fractals drawned as dots in a plot.
+
 ### Paper ###
 
 * Read one of the given example papers.
