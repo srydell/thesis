@@ -38,6 +38,11 @@ add_executable(Testing ${SOURCES} ${HEADERS} ${CATCH_SOURCE} source/test/test1.c
 target_include_directories(Testing PUBLIC source)
 target_include_directories(Testing PUBLIC external/catch2)
 
+enable_testing()
+
+add_test(NAME Testing COMMAND Testing)
+
+
 # TODO: Fix this please, future Simon you are my only hope
 # # This is how it should look
 # # In each mitttest.cmake, include everything after -------------
