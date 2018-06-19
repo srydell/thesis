@@ -2,10 +2,7 @@
 #include "catch.hpp"
 #include "cmath"
 #include "Graph.h"
-
-unsigned int Factorial( unsigned int number ) {
-    return number <= 1 ? number : Factorial(number-1)*number;
-}
+#include <algorithm>
 
 TEST_CASE( "All neighbours are neighbours to each other", "[Graph]" ) {
 	unsigned dimension = 2;
@@ -28,8 +25,11 @@ TEST_CASE( "All neighbours are neighbours to each other", "[Graph]" ) {
 		std::vector<unsigned> neighbours;
 		lattice.GetLinkedNeighbours(i, neighbours);
 		for (auto n : neighbours) {
-			std::cout << n << "\n";
+			// Neighbours to this neighbour
+			std::vector<unsigned> neighbours_to_n;
+			lattice.GetLinkedNeighbours(n, neighbours_to_n);
+			// All neighbours to i also have i as a neighbour
+			REQUIRE( std::find(neighbours_to_n.begin(), neighbours_to_n.end(), i) != neighbours_to_n.end() );
 		}
 	}
-	// REQUIRE( 4 == 5 );
 }
