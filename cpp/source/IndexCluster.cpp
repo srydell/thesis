@@ -27,7 +27,7 @@ void Graph::IndexClusters(std::unordered_map<unsigned, std::vector<unsigned>> &c
 			// Used to store site + neighbours if there are any neighbours
 			std::vector<unsigned> local_cluster;
 
-			// std::cout << "Handling site : " << site.GetIndex() << "\n";
+			std::cout << "Handling site : " << site.GetIndex() << "\n";
 
 			if (!neighbours.empty()) {
 				// Found a cluster
@@ -37,18 +37,18 @@ void Graph::IndexClusters(std::unordered_map<unsigned, std::vector<unsigned>> &c
 				local_cluster.push_back(site.GetIndex());
 				for (unsigned neighbour : neighbours) {
 
-					// std::cout << "Found neighbour : " << neighbour << "\n";
+					std::cout << "Found neighbour : " << neighbour << "\n";
 
 					// Add the all the neighbours
 					local_cluster.push_back(neighbour);
 				}
 
-				// std::cout << "On site: " << site.GetIndex() << "\n";
-				// std::cout << "After initialization, local_cluster is: ";
-				// for (auto n : local_cluster) {
-				// 	std::cout << n << " ";
-				// }
-				// std::cout << "\n";
+				std::cout << "On site: " << site.GetIndex() << "\n";
+				std::cout << "After initialization, local_cluster is: ";
+				for (auto n : local_cluster) {
+					std::cout << n << " ";
+				}
+				std::cout << "\n";
 
 				// // Add the local cluster to clusters
 				// clusters.insert({largest_index, local_cluster});
@@ -64,17 +64,17 @@ void Graph::IndexClusters(std::unordered_map<unsigned, std::vector<unsigned>> &c
 					index_has_changed = 1;
 					largest_index++;
 
-					// std::cout << "Largest index is now: " << largest_index << "\n";
+					std::cout << "Largest index is now: " << largest_index << "\n";
 
 					// Add the sites to the new index
 					// clusters.insert({largest_index, local_cluster});
 					// TODO: See if this way is better by writing a test where a worm overwrites an earlier configuration
 					clusters[largest_index] = local_cluster;
 
-					// std::cout << "Inserted index: " << largest_index << " into clusters with local_cluster." << "\n";
-					// std::cout << "Clusters is now:" << "\n";
-					// PrintClusters(clusters);
-					// std::cout << "\n";
+					std::cout << "Inserted index: " << largest_index << " into clusters with local_cluster." << "\n";
+					std::cout << "Clusters is now:" << "\n";
+					PrintClusters(clusters);
+					std::cout << "\n";
 
 					// Go to next site
 					continue;
@@ -84,32 +84,32 @@ void Graph::IndexClusters(std::unordered_map<unsigned, std::vector<unsigned>> &c
 				// Get the smallest index that will be the index of the whole local_clusters
 				unsigned smallest_index = *std::min_element(indices.begin(), indices.end());
 
-				// std::cout << "Smallest index is : " << smallest_index << "\n";
-				// std::cout << "local_cluster size is : " << local_cluster.size() << "\n";
-				// std::cout << "indices size is : " << indices.size() << "\n";
+				std::cout << "Smallest index is : " << smallest_index << "\n";
+				std::cout << "local_cluster size is : " << local_cluster.size() << "\n";
+				std::cout << "indices size is : " << indices.size() << "\n";
 
 				// If not all are indexed or not all have the smallest_index
 				if ((local_cluster.size() != indices.size()) || !(AllHaveIndex(smallest_index, indices))) {
 
-					// std::cout << "Going to call move since:" << "\n";
-					// std::cout << "local_cluster.size() != indices.size() : " <<
-					// 	local_cluster.size() << " != " << indices.size() << "\n";
-					// std::cout << "Or" << "\n";
-					// std::cout << "All do not have smallest index. Smallest_index : " <<
-					// 	smallest_index << "\n";
-					// std::cout << "indices : ";
-					// for (unsigned i : indices) {
-					// 	std::cout << i << " ";
-					// }
-					// std::cout << "\n";
-					// std::cout << "Clusters before move" << "\n";
-					// PrintClusters(clusters);
+					std::cout << "Going to call move since:" << "\n";
+					std::cout << "local_cluster.size() != indices.size() : " <<
+						local_cluster.size() << " != " << indices.size() << "\n";
+					std::cout << "Or" << "\n";
+					std::cout << "All do not have smallest index. Smallest_index : " <<
+						smallest_index << "\n";
+					std::cout << "indices : ";
+					for (unsigned i : indices) {
+						std::cout << i << " ";
+					}
+					std::cout << "\n";
+					std::cout << "Clusters before move" << "\n";
+					PrintClusters(clusters);
 
 					// Move all sites in local_cluster to smallest_index
 					MoveToIndex(smallest_index, local_cluster, clusters);
 
-					// std::cout << "Clusters after move" << "\n";
-					// PrintClusters(clusters);
+					std::cout << "Clusters after move" << "\n";
+					PrintClusters(clusters);
 
 				}
 			}

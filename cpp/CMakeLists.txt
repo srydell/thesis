@@ -34,7 +34,7 @@ add_executable(IsingWorm ${SOURCES} ${HEADERS} application/main.cpp)
 target_include_directories(IsingWorm PUBLIC source)
 
 # Set testing of source files
-add_executable(Testing ${SOURCES} ${HEADERS} external/catch2/catch.hpp source/test/test1.cpp)
+add_executable(Testing ${SOURCES} ${HEADERS} ${CATCH_SOURCE} source/test/test1.cpp)
 target_include_directories(Testing PUBLIC source)
 target_include_directories(Testing PUBLIC external/catch2)
 
