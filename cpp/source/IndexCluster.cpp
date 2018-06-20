@@ -16,8 +16,12 @@ void Graph::IndexClusters(std::unordered_map<unsigned, std::vector<unsigned>> &c
 	unsigned largest_index = 0;
 	bool index_has_changed = 1;
 
+	unsigned num_loops = 0;
+
 	while (index_has_changed) {
 		index_has_changed = 0;
+
+		std::cout << "On loop: " << ++num_loops << "\n";
 
 		for (Site site : mGraph) {
 			// Initialize neighbours
@@ -50,9 +54,6 @@ void Graph::IndexClusters(std::unordered_map<unsigned, std::vector<unsigned>> &c
 				}
 				std::cout << "\n";
 
-				// // Add the local cluster to clusters
-				// clusters.insert({largest_index, local_cluster});
-
 				// Populate indices with the indices of the sites in local_cluster.
 				// These are found in clusters.
 				// If not indexed before, indices has size = 0.
@@ -61,6 +62,7 @@ void Graph::IndexClusters(std::unordered_map<unsigned, std::vector<unsigned>> &c
 
 				// If no sites were indexed before
 				if (indices.size() == 0) {
+					std::cout << "Not indexed before" << "\n";
 					index_has_changed = 1;
 					largest_index++;
 
@@ -105,6 +107,7 @@ void Graph::IndexClusters(std::unordered_map<unsigned, std::vector<unsigned>> &c
 					std::cout << "Clusters before move" << "\n";
 					PrintClusters(clusters);
 
+					index_has_changed = 1;
 					// Move all sites in local_cluster to smallest_index
 					MoveToIndex(smallest_index, local_cluster, clusters);
 
@@ -112,9 +115,24 @@ void Graph::IndexClusters(std::unordered_map<unsigned, std::vector<unsigned>> &c
 					PrintClusters(clusters);
 
 				}
+			} else {
+				// This site has no neighbours
+				// If it exists in clusters, remove it
+				// TODO: Make this work
+				for (auto& index_and_sites : clusters) {
+					if (IsInVector(site.GetIndex(), clusters[index_and_sites.first])) {
+						auto& v = clusters[index_and_sites.first];
+						const auto& it = std::find(v.begin(), v.end(), site.GetIndex());
+						clusters[index_and_sites.first].erase(it);
+						std::cout << "HAD TO REMOVE SOMETHING" << "\n";
+					}
+				}
 			}
 		}
 	}
+
+	// RemoveDeprecated(clusters);
+
 }
 
 /**
