@@ -8,6 +8,14 @@
 * How much of the first paper can I apply to mine? (bad question)
 * Could the correlation dimension be used as an easier to compute alternative? I've seen examples where a smaller amount of points are needed to git a good enough result for approximate fractals drawned as dots in a plot.
 
+### General ###
+
+* Understand the Sudbo article
+* Implement box dimension using site perculation (occupied/not occupied sites)
+* Implement box dimension dividing the lattice in fours
+* Implement correlation dimension using site perculation
+* Implement correlation dimension dividing the lattice in fours
+
 ### Paper ###
 
 * Read one of the given example papers.
@@ -19,10 +27,12 @@
 * The periodic boundary conditions come from the fact that we are interested in a large system. This is a 'cheap' way of simulating this.
 * Add a section describing Monte Carlo simulations chapter ~6
 * Add a subsection describing detailed balance
+* Add the papers to Bibtex
+* Write about choices made in this paper. 
+** How the figure 8 can be interpreted as one or two loops. In this case I chose one. 
 
 ### Tips from Emil ###
 
-* 'Flatten' out the graph by putting into a vector where the index of each site is (i * N + j) (this is always unique for 2D)
 * Append the state configuration to the data to avoid keeping two files. (std::copy)
 
 ### isingWorm.py ###
@@ -55,5 +65,3 @@
 ### Hoshen Kopelman ###
 
 * If there is time, write the Hoshen Kopelman algorithm for indexing clusters.
-
-### utils.py ###
