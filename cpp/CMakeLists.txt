@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-# Languages cxx tells cmake to not try to compile with C compilers etc
+# Languages CXX tells cmake to not try to compile with C compilers etc
 project(MasterThesis LANGUAGES CXX)
 
 # Set C++ 14 globally
@@ -13,7 +13,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Do not use GNU extensions
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-# Export compile flags to json database.
+# Export compile flags to compile_commands.json database.
 # Useful for linters and autocompletion
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -27,16 +27,22 @@ endif()
 # Add all source files from source
 file(GLOB SOURCES "source/*.cpp")
 file(GLOB HEADERS "source/*.h")
-set(CATCH_SOURCE external/catch2/catch.hpp)
+set(CATCH_DIR external/catch2)
+
+# Define Catch as a library
+add_library(Catch INTERFACE)
+target_sources(Catch INTERFACE ${PROJECT_SOURCE_DIR}/${CATCH_DIR}/catch.hpp)
+target_include_directories(Catch INTERFACE ${CATCH_DIR})
 
 # Set IsingWorm executable
 add_executable(IsingWorm ${SOURCES} ${HEADERS} application/main.cpp)
-target_include_directories(IsingWorm PUBLIC source)
+target_include_directories(IsingWorm PRIVATE source)
 
 # Set testing of source files
-add_executable(Testing ${SOURCES} ${HEADERS} ${CATCH_SOURCE} source/test/test1.cpp)
-target_include_directories(Testing PUBLIC source)
-target_include_directories(Testing PUBLIC external/catch2)
+add_executable(Testing ${SOURCES} ${HEADERS} ${CATCH_DIR}/catch.hpp source/test/test1.cpp)
+target_include_directories(Testing PRIVATE source)
+# 'Link' to Catch
+target_link_libraries(Testing Catch)
 
 enable_testing()
 
