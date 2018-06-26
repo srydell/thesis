@@ -12,20 +12,20 @@ int main(){
 	double T = 1;
 	double K = J/T;
 	// Length of one side of the lattice
-	unsigned length = 100;
+	unsigned length = 4;
 	// 2D, 3D, ...
 	const unsigned dimension = 2;
 
 	int nulltime = time(nullptr);
 	srand((unsigned)nulltime);
 
-	// unsigned long seed = rand();
+	unsigned long seed = rand();
 
 	// Produces a cluster with only two sites (impossible)
 	// For: length: 10, dimension: 2
 	// TODO: Solve this by debugging the cluster function probably
 	// unsigned long seed = 420974030;
-	unsigned long seed = 1692706254;
+	// unsigned long seed = 1692706254;
 
 	std::cout << "Seed is: " << seed << "\n";
 
