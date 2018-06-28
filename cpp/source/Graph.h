@@ -22,6 +22,10 @@ public:
 	void PrintClusters(std::unordered_map<unsigned, std::vector<unsigned>> &to_print);
 	void SwitchLinkBetween(unsigned site0, unsigned site1);
 	std::vector<unsigned> GetxyzConversion(unsigned index);
+
+	// ClusterDimension
+	void DivideGraph(std::unordered_map<unsigned, std::vector<unsigned>>& blocks);
+	void GetBoxDimension(std::unordered_map<unsigned, std::vector<unsigned>>& blocks, std::vector<double>& dimensions);
 private:
 	// Fields
 	std::vector<Site> mGraph;
@@ -41,6 +45,9 @@ private:
 	bool IsInVector(unsigned item, std::vector<unsigned> &vector_to_search);
 	bool AllHaveIndex(unsigned index, std::vector<unsigned> &indices_to_search);
 	void MoveToIndex(unsigned smallest_index, std::vector<unsigned> &local_cluster, std::unordered_map<unsigned, std::vector<unsigned>> &clusters);
+
+	// ClusterDimension
+	void DivideGraphRec(std::unordered_map<unsigned, std::vector<unsigned>>& blocks, unsigned side_length, unsigned start, unsigned system_size);
 };
 
 #endif
