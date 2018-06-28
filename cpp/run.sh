@@ -30,7 +30,8 @@ elif [[ "$1" == test ]]; then
 	# Recompile everything if necessary
 	if make $custom_test_name; then
 		# Run the tests
-		ctest --output-on-failure $custom_test_name
+		# ctest --output-on-failure $custom_test_name
+		./$custom_test_name
 	fi
 else
 	# On clean make, just run the project
