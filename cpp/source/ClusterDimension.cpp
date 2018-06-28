@@ -14,6 +14,13 @@
 * @return: std::unordered_map<unsigned, std::vector<unsigned>>
 */
 void Graph::DivideGraph(std::unordered_map<unsigned, std::vector<unsigned>>& blocks){
+	// blocks will be divided but each side_length will still have all the sites
+	// (only in a different order where every side_length^mDimension number of sites is one block)
+	unsigned l = mLength;
+	while (l >= 2) {
+		blocks[l].reserve(std::pow(mLength, mDimension));
+		l = l/2;
+	}
 	DivideGraphRec(blocks, mLength, 0, mLength);
 }
 
