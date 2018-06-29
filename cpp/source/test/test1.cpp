@@ -107,7 +107,7 @@ TEST_CASE( "8x8 blocks are the correct size", "[ClusterDimension]" ) {
 	REQUIRE( blocks[8] == block_8 );
 
 	INFO( "Block with size 4 has all the indices sorted" );
-std::vector<unsigned> block_4 = {0, 1, 2, 3, 8, 9, 10, 11, 16, 17, 18, 19, 24, 25, 26, 27, 32, 33, 34, 35, 40, 41, 42, 43, 48, 49, 50, 51, 56, 57, 58, 59, 4, 5, 6, 7, 12, 13, 14, 15, 20, 21, 22, 23, 28, 29, 30, 31, 36, 37, 38, 39, 44, 45, 46, 47, 52, 53, 54, 55, 60, 61, 62, 63};
+	std::vector<unsigned> block_4 = {0, 1, 2, 3, 8, 9, 10, 11, 16, 17, 18, 19, 24, 25, 26, 27, 32, 33, 34, 35, 40, 41, 42, 43, 48, 49, 50, 51, 56, 57, 58, 59, 4, 5, 6, 7, 12, 13, 14, 15, 20, 21, 22, 23, 28, 29, 30, 31, 36, 37, 38, 39, 44, 45, 46, 47, 52, 53, 54, 55, 60, 61, 62, 63};
 	REQUIRE( blocks[4] == block_4 );
 
 	INFO( "Block with size 2 has all the indices sorted two and two" );
@@ -123,5 +123,30 @@ std::vector<unsigned> block_4 = {0, 1, 2, 3, 8, 9, 10, 11, 16, 17, 18, 19, 24, 2
 	// 	}
 	// 	std::cout << "\n";
 	// }
+}
 
+TEST_CASE( "4x4 blocks box dimension test", "[ClusterDimension]" ) {
+	unsigned dimension = 2;
+	unsigned length = 4;
+	int nulltime = time(nullptr);
+	srand((unsigned)nulltime);
+	unsigned long mSeed = rand();
+
+	Graph lattice = Graph(dimension, length, mSeed);
+	std::unordered_map<unsigned, std::vector<unsigned>> blocks;
+
+	// Create a cluster
+	lattice.SwitchLinkBetween(0, 1);
+	lattice.SwitchLinkBetween(13, 1);
+	lattice.SwitchLinkBetween(13, 14);
+	lattice.SwitchLinkBetween(14, 10);
+	lattice.SwitchLinkBetween(6, 10);
+	lattice.SwitchLinkBetween(7, 6);
+	lattice.SwitchLinkBetween(7, 4);
+	lattice.SwitchLinkBetween(0, 4);
+
+	lattice.DivideGraph(blocks);
+
+	std::vector<double> box_dimensions;
+	lattice.GetBoxDimension(blocks, box_dimensions);
 }
