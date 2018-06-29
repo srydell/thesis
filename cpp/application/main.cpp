@@ -1,6 +1,7 @@
 #include "Graph.h"
 #include "IsingWorm.h"
 #include "utils.h"
+#include <cmath>
 #include <iostream>
 #include <string>
 #include <unordered_map>
@@ -12,7 +13,7 @@ int main(){
 	double T = 1;
 	double K = J/T;
 	// Length of one side of the lattice
-	unsigned length = 4;
+	unsigned length = std::pow(2, 4);
 	// 2D, 3D, ...
 	const unsigned dimension = 2;
 
@@ -100,7 +101,7 @@ int main(){
 			}
 		}
 
-	} catch(std::string error) {
+	} catch(std::string& error) {
 		std::cout << error << "\n";
 	}
 }
