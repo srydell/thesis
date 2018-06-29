@@ -25,7 +25,7 @@ public:
 
 	// ClusterDimension
 	void DivideGraph(std::unordered_map<unsigned, std::vector<unsigned>>& blocks);
-	void GetBoxDimension(std::unordered_map<unsigned, std::vector<unsigned>>& blocks, std::vector<double>& dimensions);
+	void GetBoxDimension(std::unordered_map<unsigned, std::vector<unsigned>>& blocks, std::vector<double>& box_dimensions);
 private:
 	// Fields
 	std::vector<Site> mGraph;
