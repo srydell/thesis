@@ -4,6 +4,29 @@
 #include <iostream>
 #include <algorithm>
 #include <vector>
+#include <ostream>
+
+/**
+* @brief: Write to ostream out the contents of container c with delimiter '\n' by default
+*
+* @param: const Container& c
+*         std::ostream& out
+*         char delimiter = '\n'
+*
+* @return: None
+*/
+template<class Container>
+std::ostream& write_container(const Container& c, std::ostream& out, char delimiter = '\n') {
+    bool write_sep = false;
+    for (const auto& e: c) {
+        if (write_sep)
+            out << delimiter;
+        else
+            write_sep = true;
+        out << e;
+    }
+    return out;
+}
 
 /**
 * @brief: Populate vector_to_store_perms_in with all the permutations of values in vector_to_permute
