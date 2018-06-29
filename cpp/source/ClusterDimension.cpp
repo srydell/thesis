@@ -168,22 +168,60 @@ void Graph::DivideGraphRec(std::unordered_map<unsigned, std::vector<unsigned>>& 
 /**
 * @brief: For each block size, calculate how many blocks are covering the worm
 *         Then calculate the box dimension as D_box = log(N_s) / log(1/s)
-*         Where s = size and N_s is the number of occupied blocks
+*         Where s = size and N_s is the number of occupied blocks for that size
 *
 * @param: unordered_map<unsigned std::vector<unsigned>>& blocks
-*         std::vector<unsigned>& dimensions
+*         std::vector<unsigned>& box_dimensions
 *
 * @return: void
 */
-void Graph::GetBoxDimension(std::unordered_map<unsigned, std::vector<unsigned>>& blocks, std::vector<double>& dimensions) {
-	for (auto& size : blocks) {
+void Graph::GetBoxDimension(std::unordered_map<unsigned, std::vector<unsigned>>& blocks, std::vector<double>& box_dimensions) {
+	std::cout << "\nCall to GetBoxDimension" << "\n";
+	for (auto& side_length_and_sites : blocks) {
+
+		std::cout << "Examining side length: " << side_length_and_sites.first << "\n";
+
 		unsigned num_occupied = 0;
 		unsigned index = 0;
-		while (index < std::pow(mLength, mDimension)) {
-			for (unsigned i = 0; i < std::pow(size.first, mDimension); ++i) {
-				index++;
+		bool occupied = 0;
+		for (auto& site : side_length_and_sites.second) {
+			// Keep track of how far we've gone
+			index++;
+			std::cout << "Examining site: " << site << "\n";
+			std::cout << "On index: " << index << "\n";
+
+			// If not occupied, check if current site is
+			if (!occupied) {
+				// Check if this site is connected
+				std::vector<unsigned> neighbours;
+				GetLinkedNeighbours(site, neighbours);
+				if (neighbours.size() != 0) {
+					// It is connected so this box is occupied
+					num_occupied += 1;
+					occupied = 1;
+
+					std::cout << "Found an occupied site: " << site << "\n";
+					std::cout << "Adding to num_occupied and it's now: " << num_occupied << "\n\n";
+
+				}
 			}
+
+			// Check if we have a new box
+			unsigned num_sites_in_box = std::pow(side_length_and_sites.first, mDimension);
+			if (index % num_sites_in_box == 0) {
+				std::cout << "Setting occupied to 0 since: index % num_sites_in_box == 0: " << index << " % " << num_sites_in_box << "\n";
+				occupied = 0;
+			}
+
 		}
-		dimensions.push_back(std::log(num_occupied) / std::log(1 / size.first));
+
+		double box_dim = std::log(num_occupied) / std::log(1.0 / side_length_and_sites.first);
+		box_dimensions.push_back(box_dim);
+
+		std::cout << "Adding new box dimension: log(num_occupied) / log(1 / side_length) = " << box_dim << "\n";
+		std::cout << "num_occupied: " << num_occupied << "\n";
+		std::cout << "side_length: " << side_length_and_sites.first << "\n";
+
 	}
+
 }
