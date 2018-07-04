@@ -1,10 +1,28 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include <iostream>
 #include <algorithm>
-#include <vector>
+#include <iostream>
 #include <ostream>
+#include <vector>
+
+/**
+* @brief: Return the values inbetween v_to_slice[start_index] and v_to_slice[end_index] as a vector
+*
+* @param: std::vector<T> const v_to_slice
+*       : int start_index
+*       : int end_index
+*
+* @return: std::vector<T>
+*/
+template<typename T>
+std::vector<T> slice(std::vector<T> const &v_to_slice, int start_index, int end_index) {
+	auto first = v_to_slice.cbegin() + start_index;
+	auto last = v_to_slice.cbegin() + end_index + 1;
+
+	std::vector<T> out_v(first, last);
+	return out_v;
+}
 
 /**
 * @brief: Write to ostream out the contents of container c with delimiter '\n' by default
