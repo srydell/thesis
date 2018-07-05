@@ -171,11 +171,11 @@ void Graph::DivideGraphRec(std::unordered_map<unsigned, std::vector<unsigned>>& 
 *         Where s = size and N_s is the number of occupied blocks for that size
 *
 * @param: unordered_map<unsigned std::vector<unsigned>>& blocks
-*         std::unordered_map<unsigned, double>& box_dimensions
+*         std::vector<unsigned>& box_dimensions
 *
 * @return: void
 */
-void Graph::GetBoxDimension(std::unordered_map<unsigned, std::vector<unsigned>>& blocks, std::unordered_map<unsigned, double>& box_dimensions) {
+void Graph::GetBoxDimension(std::unordered_map<unsigned, std::vector<unsigned>>& blocks, std::vector<double>& box_dimensions) {
 	std::cout << "\nCall to GetBoxDimension" << "\n";
 	for (auto& side_length_and_sites : blocks) {
 
@@ -192,7 +192,7 @@ void Graph::GetBoxDimension(std::unordered_map<unsigned, std::vector<unsigned>>&
 
 			// If not occupied, check if current site is
 			if (!occupied) {
-				// Check if this site is connected i.e. has connectedneighbours
+				// Check if this site is connected i.e. has connected neighbours
 				std::vector<unsigned> neighbours;
 				GetLinkedNeighbours(site, neighbours);
 				if (neighbours.size() != 0) {
@@ -216,7 +216,7 @@ void Graph::GetBoxDimension(std::unordered_map<unsigned, std::vector<unsigned>>&
 		}
 
 		double box_dim = std::log(num_occupied) / std::log(1.0 / side_length_and_sites.first);
-		box_dimensions[side_length_and_sites.first] = box_dim;
+		box_dimensions.push_back(box_dim);
 
 		std::cout << "Adding new box dimension: log(num_occupied) / log(1 / side_length) = " << box_dim << "\n";
 		std::cout << "num_occupied: " << num_occupied << "\n";
