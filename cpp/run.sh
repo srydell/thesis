@@ -1,24 +1,29 @@
 #!/usr/bin/env bash
 
-cd ./build || exit
+# Ensure that build directory is available
+if [[ -d build ]]; then
+	mkdir build
+fi
 
 function run_project {
+	cd ./build || exit
+
 	# Run binary build succeeds
 	if make --no-print-directory "$1"; then
 		time ./IsingWorm ;
 	fi
+
+	cd - || exit
 }
 
 if [[ "$1" == build ]]; then
 	# Build the makefiles using g++
 	#+Clang seem to not like some of the design choices of Catch2
 	compiler=$(command -v g++)
-	cmake -DCMAKE_CXX_COMPILER="$compiler" ../
+	cmake -DCMAKE_CXX_COMPILER="$compiler" --build build -H.
 
 	# Regenerate the doxygen documentation
-	cd ../ || exit
 	doxygen &> /dev/null
-	cd ./build || exit
 
 	# Run the code
 	run_project all
