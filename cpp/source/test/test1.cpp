@@ -150,3 +150,13 @@ TEST_CASE( "4x4 blocks box dimension test", "[ClusterDimension]" ) {
 	std::vector<double> box_dimensions;
 	lattice.GetBoxDimension(blocks, box_dimensions);
 }
+
+TEST_CASE( "The template function GetMaximumMapValue finds maximums", "[GetMaximumMapValue]" ) {
+	std::unordered_map<unsigned, unsigned> test_map1 = {{2, 2}, {4, 1}, {100, 200}};
+	std::unordered_map<float, unsigned> test_map2 = {{5.2, 2}, {4.1, 1}, {100.4, 0}};
+	auto max_value1 = GetMaximumMapIndex(test_map1);
+	auto max_value2 = GetMaximumMapIndex(test_map2);
+
+	REQUIRE( max_value1 == 100 );
+	REQUIRE( max_value2 == 5.2f );
+}

@@ -109,7 +109,7 @@ double GetAverageLoopLength(std::vector<unsigned> &loop_lengths, double const &K
 *
 * @return: void
 */
-void UpdateLoopLengths(std::vector<unsigned> &loop_lengths, std::unordered_map<unsigned, std::vector<unsigned>> &clusters, Graph &lattice) {
+void UpdateLoopLengths(std::unordered_map<unsigned, unsigned> &loop_lengths, std::unordered_map<unsigned, std::vector<unsigned>> &clusters, Graph &lattice) {
 	//TODO: Test this function
 
 	// std::cout << "Call to UpdateLoopLengths" << "\n";
@@ -144,7 +144,7 @@ void UpdateLoopLengths(std::vector<unsigned> &loop_lengths, std::unordered_map<u
 		// std::cout << "This cluster size is: " << current_length / 2 << "\n";
 
 		// Divide by 2 to avoid double counting
-		loop_lengths.push_back(current_length / 2);
+		loop_lengths[index_and_sites.first] = current_length / 2;
 	}
 }
 

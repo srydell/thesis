@@ -3,8 +3,32 @@
 
 #include <algorithm>
 #include <iostream>
+#include <limits>
 #include <ostream>
+#include <unordered_map>
 #include <vector>
+
+/**
+* @brief: Return the index of type T1 that correspond to the maximum value of type T2
+*
+* @param: std::unordered_map<T1, T2> map
+*
+* @return: T1
+*/
+template<typename T1, typename T2>
+T1 GetMaximumMapIndex(std::unordered_map<T1, T2>& map) {
+	T1 max_index;
+	// Start with the smallest value possible
+	T2 max_value = std::numeric_limits<T1>::min();
+	for (auto& index_and_value : map) {
+		if (max_value < index_and_value.second) {
+			// This is the new maximum
+			max_value = index_and_value.second;
+			max_index = index_and_value.first;
+		}
+	}
+	return max_index;
+}
 
 /**
 * @brief: Return the values inbetween v_to_slice[start_index] and v_to_slice[end_index] as a vector
