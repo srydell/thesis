@@ -171,11 +171,12 @@ void Graph::DivideGraphRec(std::unordered_map<unsigned, std::vector<unsigned>>& 
 *         Where s = size and N_s is the number of occupied blocks for that size
 *
 * @param: unordered_map<unsigned std::vector<unsigned>>& blocks
-*         std::vector<unsigned>& box_dimensions
+*         std::unordered_map<unsigned, double>& box_dimensions
+*         std::vector<unsigned>& structure
 *
 * @return: void
 */
-void Graph::GetBoxDimension(std::unordered_map<unsigned, std::vector<unsigned>>& blocks, std::vector<double>& box_dimensions) {
+void Graph::GetBoxDimension(std::unordered_map<unsigned, std::vector<unsigned>>& blocks, std::unordered_map<unsigned, double>& box_dimensions, std::vector<unsigned>& structure) {
 	std::cout << "\nCall to GetBoxDimension" << "\n";
 	for (auto& side_length_and_sites : blocks) {
 
@@ -190,19 +191,16 @@ void Graph::GetBoxDimension(std::unordered_map<unsigned, std::vector<unsigned>>&
 			std::cout << "Examining site: " << site << "\n";
 			std::cout << "On index: " << index << "\n";
 
-			// If not occupied, check if current site is
+			// If current box not already occupied
 			if (!occupied) {
-				// Check if this site is connected i.e. has connected neighbours
-				std::vector<unsigned> neighbours;
-				GetLinkedNeighbours(site, neighbours);
-				if (neighbours.size() != 0) {
+				// The site is occupied if it is in structure
+				if (IsInVector(site, structure)) {
 					// It is connected so this box is occupied
 					num_occupied += 1;
 					occupied = 1;
 
 					std::cout << "Found an occupied site: " << site << "\n";
 					std::cout << "Adding to num_occupied and it's now: " << num_occupied << "\n\n";
-
 				}
 			}
 
@@ -215,13 +213,12 @@ void Graph::GetBoxDimension(std::unordered_map<unsigned, std::vector<unsigned>>&
 
 		}
 
-		double box_dim = std::log(num_occupied) / std::log(1.0 / side_length_and_sites.first);
-		box_dimensions.push_back(box_dim);
+		double box_dim = std::log(num_occupied) / std::log(side_length_and_sites.first);
+		box_dimensions[side_length_and_sites.first] = box_dim;
 
-		std::cout << "Adding new box dimension: log(num_occupied) / log(1 / side_length) = " << box_dim << "\n";
+		// std::cout << "Adding new box dimension: log(num_occupied) / log(side_length) = " << box_dim << "\n";
 		std::cout << "num_occupied: " << num_occupied << "\n";
 		std::cout << "side_length: " << side_length_and_sites.first << "\n";
 
 	}
-
 }
