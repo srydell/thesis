@@ -42,7 +42,7 @@ target_include_directories(IsingWorm PRIVATE source)
 add_executable(Testing ${SOURCES} ${HEADERS} ${CATCH_DIR}/catch.hpp source/test/test1.cpp)
 target_include_directories(Testing PRIVATE source)
 # 'Link' to Catch
-target_link_libraries(Testing Catch)
+target_link_libraries(Testing PRIVATE Catch)
 
 enable_testing()
 
