@@ -169,14 +169,15 @@ void Graph::DivideGraphRec(std::unordered_map<unsigned, std::vector<unsigned>>& 
 * @brief: For each block size, calculate how many blocks are covering the worm
 *         Then calculate the box dimension as D_box = log(N_s) / log(1/s)
 *         Where s = size and N_s is the number of occupied blocks for that size
+*         structure is a collection of sites that should be examined as a fractal object
 *
 * @param: unordered_map<unsigned std::vector<unsigned>>& blocks
-*         std::unordered_map<unsigned, double>& box_dimensions
+*         std::unordered_map<unsigned, unsigned>& sidelength_and_numoccupied
 *         std::vector<unsigned>& structure
 *
 * @return: void
 */
-void Graph::GetBoxDimension(std::unordered_map<unsigned, std::vector<unsigned>>& blocks, std::unordered_map<unsigned, double>& box_dimensions, std::vector<unsigned>& structure) {
+void Graph::GetBoxDimension(std::unordered_map<unsigned, std::vector<unsigned>>& blocks, std::unordered_map<unsigned, unsigned>& sidelength_and_numoccupied, std::vector<unsigned>& structure) {
 	std::cout << "\nCall to GetBoxDimension" << "\n";
 	for (auto& side_length_and_sites : blocks) {
 
@@ -193,14 +194,20 @@ void Graph::GetBoxDimension(std::unordered_map<unsigned, std::vector<unsigned>>&
 
 			// If current box not already occupied
 			if (!occupied) {
-				// The site is occupied if it is in structure
-				if (IsInVector(site, structure)) {
-					// It is connected so this box is occupied
-					num_occupied += 1;
-					occupied = 1;
+				std::vector<unsigned> neighbours;
+				GetLinkedNeighbours(site, neighbours);
+				for (auto& neighbour : neighbours) {
+					// The site is occupied if it and its connected neighbour are both in structure
+					if ((IsInVector(site, structure)) && (IsInVector(neighbour, structure))) {
+						// It is connected so this box is occupied
+						num_occupied += 1;
+						occupied = 1;
 
-					std::cout << "Found an occupied site: " << site << "\n";
-					std::cout << "Adding to num_occupied and it's now: " << num_occupied << "\n\n";
+						std::cout << "Found an occupied site: " << site << "\n";
+						std::cout << "Adding to num_occupied and it's now: " << num_occupied << "\n\n";
+
+						break;
+					}
 				}
 			}
 
@@ -213,10 +220,9 @@ void Graph::GetBoxDimension(std::unordered_map<unsigned, std::vector<unsigned>>&
 
 		}
 
-		double box_dim = std::log(num_occupied) / std::log(side_length_and_sites.first);
-		box_dimensions[side_length_and_sites.first] = box_dim;
+		// double box_dim = std::log(num_occupied) / std::log(side_length_and_sites.first);
+		sidelength_and_numoccupied[side_length_and_sites.first] = num_occupied;
 
-		// std::cout << "Adding new box dimension: log(num_occupied) / log(side_length) = " << box_dim << "\n";
 		std::cout << "num_occupied: " << num_occupied << "\n";
 		std::cout << "side_length: " << side_length_and_sites.first << "\n";
 
