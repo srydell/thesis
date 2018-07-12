@@ -147,8 +147,8 @@ TEST_CASE( "4x4 blocks box dimension test", "[ClusterDimension]" ) {
 
 	lattice.DivideGraph(blocks);
 
-	std::vector<double> box_dimensions;
-	lattice.GetBoxDimension(blocks, box_dimensions);
+	// std::unordered_map<unsigned, std::vector<unsigned>> box_dimensions;
+	// lattice.GetBoxDimension(blocks, box_dimensions);
 }
 
 TEST_CASE( "The template function GetMaximumMapValue finds maximums", "[GetMaximumMapValue]" ) {

@@ -75,12 +75,12 @@ bool IsAccepted(double K, bool link_between, long double &random_num) {
 *         ----------------------
 *           \sum { tanh^l(K) }
 *
-* @param: std::vector<unsigned> &loop_lengths
+* @param: std::unordered_map<unsigned, unsigned> &loop_lengths
 *       : double const &K
 *
 * @return: double
 */
-double GetAverageLoopLength(std::vector<unsigned> &loop_lengths, double const &K) {
+double GetAverageLoopLength(std::unordered_map<unsigned, unsigned> &loop_lengths, double const &K) {
 	// TODO: Test this function
 
 	//    \sum { l * tanh^l(K) }
@@ -89,9 +89,9 @@ double GetAverageLoopLength(std::vector<unsigned> &loop_lengths, double const &K
 	//    \sum { tanh^l(K) }
 	double sum_below = 0;
 
-	for (unsigned l : loop_lengths) {
-		double tanhK_to_l = std::pow(std::tanh(K), l);
-		sum_above += l * tanhK_to_l;
+	for (auto& index_and_loop_length : loop_lengths) {
+		double tanhK_to_l = std::pow(std::tanh(K), index_and_loop_length.second);
+		sum_above += index_and_loop_length.second * tanhK_to_l;
 		sum_below += tanhK_to_l;
 	}
 	// \sum { l * tanh^l(K) }
@@ -103,7 +103,7 @@ double GetAverageLoopLength(std::vector<unsigned> &loop_lengths, double const &K
 /**
 * @brief: For each cluster in clusters, find the length of that loop
 *
-* @param: std::vector<unsigned> &loop_lengths
+* @param: std::unordered_map<unsigned, unsigned> &loop_lengths
 *       : std::unordered_map<unsigned, std::vector<unsigned> &clusters
 *       : Graph &lattice
 *
@@ -153,8 +153,9 @@ void UpdateLoopLengths(std::unordered_map<unsigned, unsigned> &loop_lengths, std
 *
 * @param: Graph &lattice
 *       : std::vector<unsigned> correlation_func
-*       : std::unordered_map<unsigned
 *       : std::vector<unsigned>> dimensions
+*       : unsigned length
+*       : double K
 *
 * @return: void
 */
