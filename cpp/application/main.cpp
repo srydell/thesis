@@ -37,13 +37,16 @@ int main(/*int argc, char** argv*/) {
 		// unsigned long seed = 1692706254;
 
 		// std::string final_sizes_filename = argv[0];
-		std::string final_sizes_filename = "final_sizes.txt";
+		// std::string final_sizes_filename = "final_sizes.txt";
+		std::string dimension_filename = "box_size_occupied.txt";
 
 		// To store results
-		std::ofstream final_sizes_file;
+		// std::ofstream final_sizes_file;
+		std::ofstream dimensions_file;
 
 		// Open all the datafiles
-		final_sizes_file.open(final_sizes_filename, std::ios_base::app);
+		// final_sizes_file.open(final_sizes_filename, std::ios_base::app);
+		dimensions_file.open(dimension_filename, std::ios_base::app);
 
 		unsigned max_length_exponent = 7;
 
@@ -92,26 +95,20 @@ int main(/*int argc, char** argv*/) {
 
 			std::cout << "Box dimensions:" << "\n";
 			for (auto& sl_and_no : side_length_and_num_occupied) {
-				std::cout << sl_and_no.first << " : ";
-				std::cout << sl_and_no.second << "\n";
+				dimensions_file << sl_and_no.first << " ";
+				dimensions_file << sl_and_no.second << "\n";
 			}
 		
 			// std::cout << *std::max_element(loop_lengths.begin(), loop_lengths.end()) << "\n";
 			// After num_simulations the max length has converged and we can append it
 			// max_loop_lengths.push_back(*std::max_element(loop_lengths.begin(), loop_lengths.end()));
 		
-			// std::cout << "Loop lengths:" << "\n";
-			// for (auto& ll : loop_lengths) {
-			// 	std::cout << ll.second << ", ";
-			// }
-			// std::cout << "\n";
-		
 			std::cout << "Finished with graph of size: " << std::pow(2, i) << "\n";
 		
 		}
-		write_container(max_loop_lengths, final_sizes_file, ' ');
+		// write_container(max_loop_lengths, final_sizes_file, ' ');
 		// Make a new row for the next run
-		final_sizes_file << '\n';
+		// final_sizes_file << '\n';
 
 		// This will store the average loop length according to Mats' notes
 		// double average_loop_length = GetAverageLoopLength(loop_lengths, K);
