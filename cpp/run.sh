@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# Ensure that build directory is available
-if [[ -d build ]]; then
+# Make sure that build directory is available
+if ! [[ -d build ]]; then
 	mkdir build
 fi
 
