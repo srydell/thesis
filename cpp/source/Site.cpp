@@ -14,8 +14,7 @@ Site::Site(unsigned index, unsigned length) {
 /**
 * @brief: Create the neighbours to site according to periodic boundary conditions
 *
-* @param: unsigned mRootIndex
-*       : unsigned length
+* @param: unsigned length
 *
 * @return: void
 */
@@ -99,7 +98,6 @@ void Site::AddNeighbours(unsigned length) {
 	// for (std::pair<unsigned, bool> element : neighbours) {
 	// 	std::cout << element.first << " : " << element.second << std::endl;
 	// }
-
 }
 
 /**
