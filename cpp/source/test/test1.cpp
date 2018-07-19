@@ -1,6 +1,7 @@
 #define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file
 
 #include "Graph.h"
+#include "Site.h"
 #include "catch.hpp"
 #include "cmath"
 #include "utils.h"
@@ -159,4 +160,34 @@ TEST_CASE( "The template function GetMaximumMapValue finds maximums", "[GetMaxim
 
 	REQUIRE( max_value1 == 100 );
 	REQUIRE( max_value2 == 5.2f );
+}
+
+TEST_CASE( "N-dimensional Site calculates correct 2D neighbours", "[Site]" ) {
+	unsigned index_1 = 15;
+	unsigned length_1 = 4;
+	unsigned dimension_1 = 2;
+	Site s_1 = Site(index_1, length_1, dimension_1);
+	std::vector<unsigned> correct_neighbours_1 = {12, 14, 3, 11};
+
+	std::cout << "Site: " << s_1.GetIndex() << " has neighbours:" << "\n";
+	for (auto& n : s_1.neighbours) {
+		std::cout << "	" << n.first << "\n";
+
+		auto it = std::find(correct_neighbours_1.begin(), correct_neighbours_1.end(), n.first);
+		REQUIRE( it != correct_neighbours_1.end() );
+	}
+
+	unsigned index_2 = 3;
+	unsigned length_2 = 4;
+	unsigned dimension_2 = 3;
+	Site s_2 = Site(index_2, length_2, dimension_2);
+	std::vector<unsigned> correct_neighbours_2 = {2, 0, 7, 15, 19, 51};
+
+	std::cout << "Site: " << s_2.GetIndex() << " has neighbours:" << "\n";
+	for (auto& n : s_2.neighbours) {
+		std::cout << "	" << n.first << "\n";
+
+		auto it = std::find(correct_neighbours_2.begin(), correct_neighbours_2.end(), n.first);
+		REQUIRE( it != correct_neighbours_2.end() );
+	}
 }
