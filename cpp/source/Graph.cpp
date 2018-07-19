@@ -23,7 +23,7 @@ Graph::Graph(unsigned dimension, unsigned length, unsigned long seed) {
 
 	for (unsigned index = 0; index < std::pow(length,dimension); ++index) {
 		// emplace_back to avoid copying the Site after creation
-		mGraph.emplace_back(index, length);
+		mGraph.emplace_back(index, length, dimension);
 	}
 
 	//Mersenne Twister: Good quality random number generator

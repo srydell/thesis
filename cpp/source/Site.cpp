@@ -1,31 +1,26 @@
 #include "Site.h"
 #include <cmath>
 #include <iostream>
+#include <vector>
 #include <unordered_map>
 
 // Constructor of Site
-Site::Site(unsigned index, unsigned length) {
+Site::Site(unsigned index, unsigned length, unsigned dimension) {
 	// The index of this site
-	mRootIndex = index;
+	this->mRootIndex = index;
 	// Populate the neighbours unordered_map
-	AddNeighbours(length);
+	AddNeighbours(length, dimension);
 }
 
 /**
 * @brief: Create the neighbours to site according to periodic boundary conditions
 *
 * @param: unsigned length
+*       : unsigned dimension
 *
 * @return: void
 */
-void Site::AddNeighbours(unsigned length) {
-	// --- 3D ---
-	// x + y * L + z * L * L = N
-	//
-	// x = N - y * L - z * L * L
-	// y = N // L - z * L
-	// z = N // (L * L)
-	//
+void Site::AddNeighbours(unsigned length, unsigned dimension) {
 	// --- 2D ---
 	// x + y * L = N
 	//
@@ -34,62 +29,80 @@ void Site::AddNeighbours(unsigned length) {
 	//
 	// --- General ---
 	// x + y * L + z * L^2 + ... = N
-	//
-	// let k be some index in the graph
-	// x = k % L
-	// y = floor(k, L) % L
-	// z = floor(k, L^2) % L
-	// ...
-	//
-	// Implementation of general:
-	// vector<unsigned> convert(index) {
-	// 	vector<unsigned> xyz;
-	// 	xyz.reserve(mDimension);
-	// 	for (unsigned i = 0; i < mDimension; ++i) {
-	// 		xyz[i] = index % mLength;
-	// 		index = floor(index / mLength);
-	// 	}
-	// 	return xyz
-	// }
-	//
-	// Assume 2D
-	// Get the indices
-	// Important that the division is a floor (//) here.
-	// Since both mRootIndex and length are unsigned / is a floor operation
-	unsigned y = mRootIndex / length;
-	unsigned x = mRootIndex - length*y;
 	bool startingWeight = 0;
 
-	// TODO: Rewrite this for arbitrary dimension. It should probably take the dimension as a parameter then
-	// Find the neighbours with periodic boundary conditions
-	// Check x + 1
-	if ((x+1)<length){
-		neighbours.insert({x+1 + length*y, startingWeight});
-	} else {
-		// x is on the 'top' border, so set it to zero
-		neighbours.insert({0 + length*y, startingWeight});
-	}
-	// Check x - 1 < 0
-	if (x != 0){
-		neighbours.insert({x-1 + length*y, startingWeight});
-	} else {
-		// x is on the 'bottom' border, so set it to length-1
-		neighbours.insert({length-1 + length*y, startingWeight});
+	// Find the (x, y, z, ...) vector corresponding to the given index (mRootIndex)
+	std::vector<unsigned> xyz;
+	xyz.reserve(dimension);
+	auto temp_index = mRootIndex;
+	for (unsigned i = 0; i < dimension; ++i) {
+
+		std::cout << "Xyz index: " << i << "\n";
+		std::cout << "Adding: temp_index % length : " << temp_index << " % " << length << " : " << temp_index % length << "\n";
+
+		xyz.push_back(temp_index % length);
+		temp_index = std::floor(temp_index / length);
 	}
 
-	// Check y + 1
-	if ((y+1)<length){
-		neighbours.insert({x + length*(y+1), startingWeight});
-	} else {
-		// y is on the 'top' border, so set it to zero
-		neighbours.insert({x + 0, startingWeight});
+	// std::vector<unsigned> xyz;
+	// xyz.reserve(mDimension);
+	// for (unsigned i = 0; i < mDimension; ++i) {
+	// 	xyz[i] = index % mLength;
+	// 	index = std::floor(index / mLength);
+	// }
+
+	std::cout << "On site with index: " << mRootIndex << " with dimension: " << dimension << " and length: " << length << "\n";
+	std::cout << "Found xyz: (";
+	for (auto& x : xyz) {
+		std::cout << x << ", ";
 	}
-	// Check y - 1 < 0
-	if (y != 0){
-		neighbours.insert({x + length*(y-1), startingWeight});
-	} else {
-		// y is on the 'bottom' border, so set it to length-1
-		neighbours.insert({x + length*(length-1), startingWeight});
+	std::cout << ")" << "\n";
+
+	// Go through and check all directions, adding them to neighbours
+	for (auto& x_i : xyz) {
+		if ((x_i + 1) < length) {
+			// + direction is within the graph
+			x_i++;
+
+			std::cout << "x_i on the + border. Adding: " << CalcIndexFromVector(xyz, length) << "\n";
+
+			neighbours.insert({CalcIndexFromVector(xyz, length), startingWeight});
+			// Make sure xyz is returned to its original state
+			x_i--;
+		} else {
+			// + direction was on border - Apply periodic boundary conditions
+			// x -> 0
+			auto x_old = x_i;
+			x_i = 0;
+
+			std::cout << "x_i not on the + border. Adding: " << CalcIndexFromVector(xyz, length) << "\n";
+
+			neighbours.insert({CalcIndexFromVector(xyz, length), startingWeight});
+			// Make sure xyz is returned to its original state
+			x_i = x_old;
+		}
+
+		if (x_i != 0) {
+			// - direction is within the graph
+			x_i--;
+
+			std::cout << "x_i on the - border. Adding: " << CalcIndexFromVector(xyz, length) << "\n";
+
+			neighbours.insert({CalcIndexFromVector(xyz, length), startingWeight});
+			// Make sure xyz is returned to its original state
+			x_i++;
+		} else {
+			// - direction was on border - Apply periodic boundary conditions
+			// x -> length - 1
+			auto x_old = x_i;
+			x_i = length - 1;
+
+			std::cout << "x_i not on the - border. Adding: " << CalcIndexFromVector(xyz, length) << "\n";
+
+			neighbours.insert({CalcIndexFromVector(xyz, length), startingWeight});
+			// Make sure xyz is returned to its original state
+			x_i = x_old;
+		}
 	}
 
 	// std::cout << "x is : " << x << "\n";
@@ -98,6 +111,25 @@ void Site::AddNeighbours(unsigned length) {
 	// for (std::pair<unsigned, bool> element : neighbours) {
 	// 	std::cout << element.first << " : " << element.second << std::endl;
 	// }
+}
+
+/**
+* @brief: Calculate the index corresponding to the values in xyz = (x_0, x_1, ..., x_N)
+*
+* @param: std::vector<unsigned>& xyz
+*
+* @return: unsigned
+*/
+unsigned Site::CalcIndexFromVector(std::vector<unsigned>& xyz, unsigned length) {
+	// index = x_0 + L * x_1 + L^2 * x_2 + ...
+	auto index = 0;
+	auto exponent = 0;
+	for (auto& x_i : xyz) {
+		// x_i * L^i
+		index += x_i * std::pow(length, exponent);
+		exponent++;
+	}
+	return index;
 }
 
 /**
