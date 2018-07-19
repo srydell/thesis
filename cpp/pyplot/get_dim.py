@@ -74,7 +74,7 @@ for size in [1/2, 1/4, 1/8, 1/16, 1/32]:
 # plt.scatter(sizes, average_etas, c=list(size_colors.values()), s=40, label=r"Average calculated $\eta$")
 plt.errorbar(sizes, average_etas, yerr=std_average,\
         ecolor='gray', elinewidth=2, fmt='k.', linestyle="None",\
-        capsize=3, capthick=2, label=r"Average calculated $\eta$")
+        capsize=3, capthick=2, label=r"$\bar \eta \pm \sigma_\eta$")
 
 # Plot the real eta as a black line
 real_eta = 1/4
