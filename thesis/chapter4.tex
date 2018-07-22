@@ -1,0 +1,64 @@
+\section{Fractals}
+\label{sec:fractals}
+
+Everyone agrees that the dimension of a point is zero, and that of a smooth line is one, but what about a set of points? A definition could be to say that the dimension is the minimum number of coordinates needed to describe every point in the set. Effectively, a point would describe itself, and a curve could be parametrized to the distance of some point on the same curve.
+% TODO: Add this reference to Nonlinear dynamics and chaos with applications to physics, biology, chemistry, and engineering by Steven H. Strogatz
+% TODO: Add a plot of the Koch curve.
+
+The situation is more complex when examining fractals. Take for example the Koch curve, it starts out as a line segment of length $L_0$, and successively adds a `bump', making the total length $L_1 = 4/3 \cdot L_0$. Continuing this trend gives for the $n$th iteration a line length of $L_n = {(4 / 3)}^n \cdot L_0$, and so for the final fractal the length is infinite. Now any two point on the curve has a distance of infinity between them, so parametrization is impossible, but the area is still finite, so the dimension should be somewhere between one and two.
+
+A useful concept here is the similarity dimension, defined by the scaling of each iteration. If $m$ is the number of similar elements after an iteration and $r$ is the scaling factor, the dimension is defined as $m = r^d$, or equivalently
+
+\begin{equation}
+	d = \frac{\ln m}{\ln r}
+\end{equation}
+
+So for the Koch curve, each segment is divided into fourths with each having one third the length from the previous iteration, giving it a dimension of $\ln 4 / \ln 3 \approx 1.26$.
+
+
+\section{Box dimension}
+\label{sec:boxdimension}
+
+\section{Division of Graph Algorithm}
+\label{sec:GraphDivisonAlgorithm}
+
+% TODO: Add illustration of graph division here
+
+In order to calculate the box dimension the lattice needs to be divided into boxes of decreasing size. A step by step instruction of a graph dividing algorithm is provided below, and an implementation in pseudocode is available in the Appendix at Section \ref{sec:pseudocodeboxdivisionalgo}.
+
+For brevity some abbreviations are introduced.
+
+\begin{equation*}
+    \begin{aligned}
+        d =& \ \text{dimension} &\quad l_i =& \ \text{side length of the current box}\\
+%
+        l_0 =& \ \text{side length of the} &\quad e_j^i =& \ \text{vector of length } l_i / 2 \\
+%
+             & \ \text{smallest box allowed} & & \text{ in the }j\text{'th direction} \\
+%
+        \text{perm}(v) =& \ \text{All permutations of } v &\quad s_i =& \ \text{starting site of the current box}
+    \end{aligned}
+\end{equation*}
+
+\begin{enumerate}
+    \item If $l_i \geq l_0$, go to 2, else stop.
+%
+    \item Save all sites in the current box, starting for $s_i$ going $l_i$ in $d$ directions.
+%
+    \item Find all starting points for new boxes.
+%
+    \begin{enumerate}[label=(\roman*)]
+%
+        \item Form the matrix $E^i = (e_0^i, e_1^i, \  \ldots, e_d^i)^T$
+%
+        \item For all vectors $v_k$ in perm$(0, 0, \ \ldots , 0)$, perm$(1, 0, \ \ldots , 0)$, \\ \ldots, perm$(1, 1, \ \ldots , 1)$, create the new start $s^i_k$ as $$s^i_k = v_k E^i$$
+%
+    \end{enumerate}
+%
+    \item For each start $s_k^i$:
+    \begin{enumerate}[label=(\roman*)]
+        \item $s_i = s^i_k$, $l_i = l_i / 2$
+        \item Go to 1.
+    \end{enumerate}
+%
+\end{enumerate}
