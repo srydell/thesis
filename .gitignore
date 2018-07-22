@@ -31,4 +31,5 @@ python/venv/*
 !cpp/
 !latex/
 !literature/
+!thesis/
 !python/
