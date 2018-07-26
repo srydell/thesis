@@ -37,8 +37,8 @@ void Site::AddNeighbours(unsigned length, unsigned dimension) {
 	auto temp_index = mRootIndex;
 	for (unsigned i = 0; i < dimension; ++i) {
 
-		std::cout << "Xyz index: " << i << "\n";
-		std::cout << "Adding: temp_index % length : " << temp_index << " % " << length << " : " << temp_index % length << "\n";
+		// std::cout << "Xyz index: " << i << "\n";
+		// std::cout << "Adding: temp_index % length : " << temp_index << " % " << length << " : " << temp_index % length << "\n";
 
 		xyz.push_back(temp_index % length);
 		temp_index = std::floor(temp_index / length);
@@ -51,12 +51,12 @@ void Site::AddNeighbours(unsigned length, unsigned dimension) {
 	// 	index = std::floor(index / mLength);
 	// }
 
-	std::cout << "On site with index: " << mRootIndex << " with dimension: " << dimension << " and length: " << length << "\n";
-	std::cout << "Found xyz: (";
-	for (auto& x : xyz) {
-		std::cout << x << ", ";
-	}
-	std::cout << ")" << "\n";
+	// std::cout << "On site with index: " << mRootIndex << " with dimension: " << dimension << " and length: " << length << "\n";
+	// std::cout << "Found xyz: (";
+	// for (auto& x : xyz) {
+	// 	std::cout << x << ", ";
+	// }
+	// std::cout << ")" << "\n";
 
 	// Go through and check all directions, adding them to neighbours
 	for (auto& x_i : xyz) {
@@ -64,7 +64,7 @@ void Site::AddNeighbours(unsigned length, unsigned dimension) {
 			// + direction is within the graph
 			x_i++;
 
-			std::cout << "x_i on the + border. Adding: " << CalcIndexFromVector(xyz, length) << "\n";
+			// std::cout << "x_i on the + border. Adding: " << CalcIndexFromVector(xyz, length) << "\n";
 
 			neighbours.insert({CalcIndexFromVector(xyz, length), startingWeight});
 			// Make sure xyz is returned to its original state
@@ -75,7 +75,7 @@ void Site::AddNeighbours(unsigned length, unsigned dimension) {
 			auto x_old = x_i;
 			x_i = 0;
 
-			std::cout << "x_i not on the + border. Adding: " << CalcIndexFromVector(xyz, length) << "\n";
+			// std::cout << "x_i not on the + border. Adding: " << CalcIndexFromVector(xyz, length) << "\n";
 
 			neighbours.insert({CalcIndexFromVector(xyz, length), startingWeight});
 			// Make sure xyz is returned to its original state
@@ -86,7 +86,7 @@ void Site::AddNeighbours(unsigned length, unsigned dimension) {
 			// - direction is within the graph
 			x_i--;
 
-			std::cout << "x_i on the - border. Adding: " << CalcIndexFromVector(xyz, length) << "\n";
+			// std::cout << "x_i on the - border. Adding: " << CalcIndexFromVector(xyz, length) << "\n";
 
 			neighbours.insert({CalcIndexFromVector(xyz, length), startingWeight});
 			// Make sure xyz is returned to its original state
@@ -97,7 +97,7 @@ void Site::AddNeighbours(unsigned length, unsigned dimension) {
 			auto x_old = x_i;
 			x_i = length - 1;
 
-			std::cout << "x_i not on the - border. Adding: " << CalcIndexFromVector(xyz, length) << "\n";
+			// std::cout << "x_i not on the - border. Adding: " << CalcIndexFromVector(xyz, length) << "\n";
 
 			neighbours.insert({CalcIndexFromVector(xyz, length), startingWeight});
 			// Make sure xyz is returned to its original state

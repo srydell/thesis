@@ -152,6 +152,41 @@ TEST_CASE( "4x4 blocks box dimension test", "[ClusterDimension]" ) {
 	// lattice.GetBoxDimension(blocks, box_dimensions);
 }
 
+TEST_CASE( "4x4x4 blocks are the correct size", "[ClusterDimension3D]" ) {
+	unsigned dimension = 3;
+	unsigned length = 4;
+	int nulltime = time(nullptr);
+	srand((unsigned)nulltime);
+	unsigned long mSeed = rand();
+
+	Graph lattice = Graph(dimension, length, mSeed);
+	std::unordered_map<unsigned, std::vector<unsigned>> blocks;
+
+	lattice.DivideGraph(blocks);
+	SECTION( "The block with system size as side length should contain all sites" )
+	for (unsigned i = 0; i < std::pow(length, dimension); ++i) {
+		std::stringstream ss;
+		ss << "Is site number: " << i << " in the block with side length same as system size?";
+		INFO( ss.str() );
+
+		bool has_site = std::find(blocks[length].begin(), blocks[length].end(), i) != blocks[length].end();
+		REQUIRE( has_site );
+	}
+
+	SECTION( "The unsorted map blocks should contain blocks of sizes 4 and 2" )
+	// Blocks should contain blocks with side length 2, 4
+	REQUIRE( HasItem(4, blocks) );
+	REQUIRE( HasItem(2, blocks) );
+
+	INFO( "Block with size 4 has all the indices sorted" );
+	std::vector<unsigned> block_4 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
+	REQUIRE( blocks[4] == block_4 );
+
+	INFO( "Block with size 2 has all the indices sorted two and two" );
+	std::vector<unsigned> block_2 = {0, 1, 4, 5, 8, 9, 12, 13, 2, 3, 6, 7, 10, 11, 14, 15};
+	REQUIRE( blocks[2] == block_2 );
+}
+
 TEST_CASE( "The template function GetMaximumMapValue finds maximums", "[GetMaximumMapValue]" ) {
 	std::unordered_map<unsigned, unsigned> test_map1 = {{2, 2}, {4, 1}, {100, 200}};
 	std::unordered_map<float, unsigned> test_map2 = {{5.2, 2}, {4.1, 1}, {100.4, 0}};
