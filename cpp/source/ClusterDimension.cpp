@@ -26,6 +26,9 @@ void Graph::DivideGraph(std::unordered_map<unsigned, std::vector<unsigned>>& blo
 
 /**
 * @brief: Divide the mGraph into blocks recursively for fractal dimension analysis
+*         side_length here is the side length of the block
+*         start is the starting index of the current block
+*         system_size is the linear size of the total system
 *
 * @param: std::unordered_map<unsigned, std::vector<unsigned>>& blocks
 *         unsigned side_length
@@ -53,15 +56,7 @@ void Graph::DivideGraphRec(std::unordered_map<unsigned, std::vector<unsigned>>& 
 		// (start + system_size*(side_length-1)), (start + system_size*(side_length-1)) + 1,
 		//                                  ... , (start + system_size*(side_length-1)) + (side_length - 1)
 		// ]
-		for (unsigned i = 0; i <= (side_length - 1); ++i) {
-			for (unsigned j = 0; j <= (side_length - 1); ++j) {
-				blocks[side_length].push_back((start + i * system_size) + j);
-
-				std::cout << "Adding site " << (start + i * system_size) + j <<
-					" to side_length " << side_length << "\n";
-
-			}
-		}
+		AppendCurrentBox(start, side_length, blocks[side_length]);
 
 		// Find the starts for the rest of the recursive calls:
 		// For 2d:
@@ -161,6 +156,115 @@ void Graph::DivideGraphRec(std::unordered_map<unsigned, std::vector<unsigned>>& 
 		// Call recursively with these starting points and half the side length
 		for (auto& s : starts) {
 			DivideGraphRec(blocks, side_length/2, s, system_size);
+		}
+	}
+}
+
+/**
+* @brief: Append all the sites in the current block corresponding to the inputs to blocks
+*         NOTE: side_length here is the side_length of the current block and not of the whole system
+*
+* @param: unsigned start
+*       : unsigned side_length
+*       : unsigned system_size
+*       : unsigned dimension
+*       : std::vector<unsigned>& blocks
+*
+* @return: void
+*/
+void Graph::AppendCurrentBox(unsigned start, unsigned side_length, std::vector<unsigned>& current_box) {
+
+	std::cout << "Call to AppendCurrentBox with inputs:" << "\n";
+	std::cout << "start: " << start << "\n";
+	std::cout << "side_length: " << side_length << "\n";
+	std::cout << "dimension: " << mDimension << "\n";
+	std::cout << "current_box: " << "(";
+	for (auto& value : current_box) {
+		std::cout << value << ", ";
+	}
+	std::cout << ")" << "\n";
+
+    // site_in_box = start + to_add .* [1, system_size, system_size^2, ..., system_size^(dimension-1)]
+    // Each element of to_add goes from 0 to side_length-1
+    // When to_add[0] gets to side_length-1, to_add[1] goes from 0 to 1,
+    // when to_add[1] gets to side_length-1, to_add[2] goes from 0 to 1 and so on.
+	std::vector<unsigned> to_add(mDimension, 0);
+
+	// base_directions = [1, L, L^2, ..., L^(d-1)]
+	std::vector<unsigned> base_directions;
+	for (unsigned exponent = 0; exponent < mDimension; ++exponent) {
+		base_directions.emplace_back(std::pow(mLength, exponent));
+	}
+
+	std::cout << "to_add: " << "(";
+	for (auto& value : to_add) {
+		std::cout << value << ", ";
+	}
+	std::cout << ")" << "\n";
+	std::cout << "base_directions: " << "(";
+	for (auto& value : base_directions) {
+		std::cout << value << ", ";
+	}
+	std::cout << ")" << "\n";
+
+    // start is always part of the current box
+	current_box.push_back(start);
+
+	std::cout << "Resulted in adding the site: " << start << "\n";
+
+	while ( !(std::all_of(to_add.begin(), to_add.end(), [&](unsigned i){return i == (side_length-1);})) ) {
+		// Get the next values to add
+		NextToAdd(to_add, side_length);
+
+		std::cout << "to_add: " << "(";
+		for (auto& value : to_add) {
+			std::cout << value << ", ";
+		}
+		std::cout << ")" << "\n";
+
+		// Calculate the next site that is within the box
+		// site_in_box = start + i * system_size + j * system_size^2 + ... + w * system_size^(dimension-1)
+		// where [i, j, ..., w] all are integers in the range 0 -> (side_length-1)
+		unsigned site_in_box = start;
+		for (unsigned i = 0; i < mDimension; ++i) {
+			site_in_box += to_add[i] * base_directions[i];
+		}
+
+		std::cout << "Resulted in adding the site: " << site_in_box << "\n";
+
+		// Add the calculated new site to all sites
+		current_box.push_back(site_in_box);
+	}
+
+	std::cout << "Got the box: " << "\n(";
+	for (auto& value : current_box) {
+		std::cout << value << ", ";
+	}
+	std::cout << ")" << "\n";
+
+}
+
+/**
+* @brief: Calculate the next to_add and override the to_add with it
+*         Examples:
+*             [0,             0, 0, ..., 0]             -> [1, 0,             0, 0, ..., 0]
+*             [0,             side_length-1, 0, ..., 0] -> [1, side_length-1, 0, 0, ..., 0]
+*             [side_length-1, side_length-1, 0, ..., 0] -> [0, 0,             1, 0, ..., 0]
+*
+* @param: std::vector<unsigned>& to_add
+*       : unsigned side_length
+*
+* @return: void
+*/
+void Graph::NextToAdd(std::vector<unsigned>& to_add, unsigned side_length) {
+	for (unsigned i = 0; i < to_add.size(); ++i) {
+		// Add one to first value if that value is less than side_length-1,
+		// else set that value to zero until a value is encountered that is less than side_length-1 and add 1 to that
+		if (to_add[i] == (side_length-1)) {
+			to_add[i] = 0;
+		} else {
+			to_add[i] += 1;
+			break;
 		}
 	}
 }
