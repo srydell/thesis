@@ -49,13 +49,6 @@ void Graph::DivideGraphRec(std::unordered_map<unsigned, std::vector<unsigned>>& 
 	// If we can divide once more
 	if (side_length >= 2) {
 		// Add the sites in this block to blocks[side_length]:
-		// [
-		// (start + system_size*0), (start + system_size*0) + 1, ..., (start + system_size*0) + (side_length - 1),
-		// (start + system_size*1), (start + system_size*1) + 1, ..., (start + system_size*1) + (side_length - 1),
-		// ...
-		// (start + system_size*(side_length-1)), (start + system_size*(side_length-1)) + 1,
-		//                                  ... , (start + system_size*(side_length-1)) + (side_length - 1)
-		// ]
 		AppendCurrentBox(start, side_length, blocks[side_length]);
 
 		// Find the starts for the rest of the recursive calls:
