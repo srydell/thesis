@@ -48,6 +48,8 @@ private:
 
 	// ClusterDimension
 	void DivideGraphRec(std::unordered_map<unsigned, std::vector<unsigned>>& blocks, unsigned side_length, unsigned start, unsigned system_size);
+	void AppendCurrentBox(unsigned start, unsigned side_length, std::vector<unsigned>& current_box);
+	void NextToAdd(std::vector<unsigned>& to_add, unsigned side_length);
 };
 
 #endif
