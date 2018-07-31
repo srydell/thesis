@@ -29,7 +29,7 @@ if [[ "$1" == build ]]; then
 	run_project all
 	exit
 elif [[ "$1" == test ]]; then
-	# run_project test
+	cd ./build || exit
 
 	# What it is called in the CMakeLists.txt
 	custom_test_name=Testing
