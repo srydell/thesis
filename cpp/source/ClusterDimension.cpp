@@ -39,11 +39,11 @@ void Graph::DivideGraph(std::unordered_map<unsigned, std::vector<unsigned>>& blo
 */
 void Graph::DivideGraphRec(std::unordered_map<unsigned, std::vector<unsigned>>& blocks, unsigned side_length, unsigned start, unsigned system_size){
 
-	std::cout << "\n";
-	std::cout << "Call to DivideGraphRec with parameters:" << "\n";
-	std::cout << "side_length: " << side_length << "\n";
-	std::cout << "start: " << start << "\n";
-	std::cout << "system_size: " << system_size << "\n";
+	// std::cout << "\n";
+	// std::cout << "Call to DivideGraphRec with parameters:" << "\n";
+	// std::cout << "side_length: " << side_length << "\n";
+	// std::cout << "start: " << start << "\n";
+	// std::cout << "system_size: " << system_size << "\n";
 
 	// If we can divide once more
 	if (side_length >= 2) {
@@ -76,23 +76,23 @@ void Graph::DivideGraphRec(std::unordered_map<unsigned, std::vector<unsigned>>& 
 			// Populate all_permutations
 			GetPermutations(ground_level_perm, all_permutations);
 
-			// ------------ TEST BLOCK ------------
-			std::cout << "Started with perm(";
-			for (auto& test_gp : ground_level_perm) {
-				std::cout << test_gp << ", ";
-			}
-			std::cout << ")";
-			std::cout << "\nAnd got permutations:" << "\n";
-			unsigned test_counter = 0;
-			for (auto& test_p : all_permutations) {
-				if (test_counter % ground_level_perm.size() == 0) {
-					std::cout << "\n";
-				}
-				std::cout << test_p << ", ";
-				test_counter++;
-			}
-			std::cout << "\n";
-			// ------------ /TEST BLOCK ------------
+			// // ------------ TEST BLOCK ------------
+			// std::cout << "Started with perm(";
+			// for (auto& test_gp : ground_level_perm) {
+			// 	std::cout << test_gp << ", ";
+			// }
+			// std::cout << ")";
+			// std::cout << "\nAnd got permutations:" << "\n";
+			// unsigned test_counter = 0;
+			// for (auto& test_p : all_permutations) {
+			// 	if (test_counter % ground_level_perm.size() == 0) {
+			// 		std::cout << "\n";
+			// 	}
+			// 	std::cout << test_p << ", ";
+			// 	test_counter++;
+			// }
+			// std::cout << "\n";
+			// // ------------ /TEST BLOCK ------------
 
 			unsigned next_start = start;
 			// Track what side_length^dimension_counter / 2 we are on
@@ -102,23 +102,23 @@ void Graph::DivideGraphRec(std::unordered_map<unsigned, std::vector<unsigned>>& 
 				dimension_counter++;
 				next_start = next_start + ((perm_value * side_length * std::pow(system_size, dimension_counter-1)) / 2);
 
-				std::cout << "Adding perm_value * side_length^dimension_counter / 2 to next_start" << "\n";
-				std::cout << "perm_value * side_length^dimension_counter / 2:\n" <<
-					perm_value <<
-					" * " << std::pow(side_length, dimension_counter) <<
-					" / 2 = " << ((perm_value * std::pow(side_length, dimension_counter)) / 2) <<
-					"\n";
-				std::cout << "=> next_start: " << next_start << "\n";
+				// std::cout << "Adding perm_value * side_length^dimension_counter / 2 to next_start" << "\n";
+				// std::cout << "perm_value * side_length^dimension_counter / 2:\n" <<
+				// 	perm_value <<
+				// 	" * " << std::pow(side_length, dimension_counter) <<
+				// 	" / 2 = " << ((perm_value * std::pow(side_length, dimension_counter)) / 2) <<
+				// 	"\n";
+				// std::cout << "=> next_start: " << next_start << "\n";
 
 				// all_permutations is just a long list of all permutations after each other
 				// therefore, need to split it up into chunks of each permutation
 				// Each permutation has the length of ground_level_perm.size()
 				if ((dimension_counter % ground_level_perm.size() == 0) && (dimension_counter != 0)) {
 
-					std::cout << "Going to add a new start since dimension_counter % ground_level_perm.size() == 0: " << dimension_counter << " % " << ground_level_perm.size() << "\n";
-					std::cout << "=============="<< "\n";
-					std::cout << "New start: " << next_start << "\n";
-					std::cout << "==============" << "\n";
+					// std::cout << "Going to add a new start since dimension_counter % ground_level_perm.size() == 0: " << dimension_counter << " % " << ground_level_perm.size() << "\n";
+					// std::cout << "=============="<< "\n";
+					// std::cout << "New start: " << next_start << "\n";
+					// std::cout << "==============" << "\n";
 
 					// We have moved through one permutation
 					starts.push_back(next_start);
@@ -129,8 +129,8 @@ void Graph::DivideGraphRec(std::unordered_map<unsigned, std::vector<unsigned>>& 
 				}
 			}
 
-			std::cout << "Flipping index: " << perm_counter << " in ground_level_perm." << "\n";
-			std::cout << "\n\n================================\n\n";
+			// std::cout << "Flipping index: " << perm_counter << " in ground_level_perm." << "\n";
+			// std::cout << "\n\n================================\n\n";
 
 			if (perm_counter < ground_level_perm.size()) {
 				// Get the next set of permutations
@@ -139,11 +139,11 @@ void Graph::DivideGraphRec(std::unordered_map<unsigned, std::vector<unsigned>>& 
 			}
 		}
 
-		std::cout << "All the starts found: " << "\n";
-		for (auto& s : starts) {
-			std::cout << s << ", ";
-		}
-		std::cout << "\n";
+		// std::cout << "All the starts found: " << "\n";
+		// for (auto& s : starts) {
+		// 	std::cout << s << ", ";
+		// }
+		// std::cout << "\n";
 
 		// Call recursively with these starting points and half the side length
 		for (auto& s : starts) {
@@ -166,15 +166,15 @@ void Graph::DivideGraphRec(std::unordered_map<unsigned, std::vector<unsigned>>& 
 */
 void Graph::AppendCurrentBox(unsigned start, unsigned side_length, std::vector<unsigned>& current_box) {
 
-	std::cout << "Call to AppendCurrentBox with inputs:" << "\n";
-	std::cout << "start: " << start << "\n";
-	std::cout << "side_length: " << side_length << "\n";
-	std::cout << "dimension: " << mDimension << "\n";
-	std::cout << "current_box: " << "(";
-	for (auto& value : current_box) {
-		std::cout << value << ", ";
-	}
-	std::cout << ")" << "\n";
+	// std::cout << "Call to AppendCurrentBox with inputs:" << "\n";
+	// std::cout << "start: " << start << "\n";
+	// std::cout << "side_length: " << side_length << "\n";
+	// std::cout << "dimension: " << mDimension << "\n";
+	// std::cout << "current_box: " << "(";
+	// for (auto& value : current_box) {
+	// 	std::cout << value << ", ";
+	// }
+	// std::cout << ")" << "\n";
 
     // site_in_box = start + to_add .* [1, system_size, system_size^2, ..., system_size^(dimension-1)]
     // Each element of to_add goes from 0 to side_length-1
@@ -188,31 +188,31 @@ void Graph::AppendCurrentBox(unsigned start, unsigned side_length, std::vector<u
 		base_directions.emplace_back(std::pow(mLength, exponent));
 	}
 
-	std::cout << "to_add: " << "(";
-	for (auto& value : to_add) {
-		std::cout << value << ", ";
-	}
-	std::cout << ")" << "\n";
-	std::cout << "base_directions: " << "(";
-	for (auto& value : base_directions) {
-		std::cout << value << ", ";
-	}
-	std::cout << ")" << "\n";
+	// std::cout << "to_add: " << "(";
+	// for (auto& value : to_add) {
+	// 	std::cout << value << ", ";
+	// }
+	// std::cout << ")" << "\n";
+	// std::cout << "base_directions: " << "(";
+	// for (auto& value : base_directions) {
+	// 	std::cout << value << ", ";
+	// }
+	// std::cout << ")" << "\n";
 
     // start is always part of the current box
 	current_box.push_back(start);
 
-	std::cout << "Resulted in adding the site: " << start << "\n";
+	// std::cout << "Resulted in adding the site: " << start << "\n";
 
 	while ( !(std::all_of(to_add.begin(), to_add.end(), [&](unsigned i){return i == (side_length-1);})) ) {
 		// Get the next values to add
 		NextToAdd(to_add, side_length);
 
-		std::cout << "to_add: " << "(";
-		for (auto& value : to_add) {
-			std::cout << value << ", ";
-		}
-		std::cout << ")" << "\n";
+		// std::cout << "to_add: " << "(";
+		// for (auto& value : to_add) {
+		// 	std::cout << value << ", ";
+		// }
+		// std::cout << ")" << "\n";
 
 		// Calculate the next site that is within the box
 		// site_in_box = start + i * system_size + j * system_size^2 + ... + w * system_size^(dimension-1)
@@ -222,17 +222,17 @@ void Graph::AppendCurrentBox(unsigned start, unsigned side_length, std::vector<u
 			site_in_box += to_add[i] * base_directions[i];
 		}
 
-		std::cout << "Resulted in adding the site: " << site_in_box << "\n";
+		// std::cout << "Resulted in adding the site: " << site_in_box << "\n";
 
 		// Add the calculated new site to all sites
 		current_box.push_back(site_in_box);
 	}
 
-	std::cout << "Got the box: " << "\n(";
-	for (auto& value : current_box) {
-		std::cout << value << ", ";
-	}
-	std::cout << ")" << "\n";
+	// std::cout << "Got the box: " << "\n(";
+	// for (auto& value : current_box) {
+	// 	std::cout << value << ", ";
+	// }
+	// std::cout << ")" << "\n";
 
 }
 
@@ -274,10 +274,12 @@ void Graph::NextToAdd(std::vector<unsigned>& to_add, unsigned side_length) {
 * @return: void
 */
 void Graph::GetBoxDimension(std::unordered_map<unsigned, std::vector<unsigned>>& blocks, std::unordered_map<unsigned, unsigned>& sidelength_and_numoccupied, std::vector<unsigned>& structure) {
-	std::cout << "\nCall to GetBoxDimension" << "\n";
+
+	// std::cout << "\nCall to GetBoxDimension" << "\n";
+
 	for (auto& side_length_and_sites : blocks) {
 
-		std::cout << "Examining side length: " << side_length_and_sites.first << "\n";
+		// std::cout << "Examining side length: " << side_length_and_sites.first << "\n";
 
 		unsigned num_occupied = 0;
 		unsigned index = 0;
@@ -285,8 +287,9 @@ void Graph::GetBoxDimension(std::unordered_map<unsigned, std::vector<unsigned>>&
 		for (auto& site : side_length_and_sites.second) {
 			// Keep track of how far we've gone
 			index++;
-			std::cout << "Examining site: " << site << "\n";
-			std::cout << "On index: " << index << "\n";
+
+			// std::cout << "Examining site: " << site << "\n";
+			// std::cout << "On index: " << index << "\n";
 
 			// If current box not already occupied
 			if (!occupied) {
@@ -299,8 +302,8 @@ void Graph::GetBoxDimension(std::unordered_map<unsigned, std::vector<unsigned>>&
 						num_occupied += 1;
 						occupied = 1;
 
-						std::cout << "Found an occupied site: " << site << "\n";
-						std::cout << "Adding to num_occupied and it's now: " << num_occupied << "\n\n";
+						// std::cout << "Found an occupied site: " << site << "\n";
+						// std::cout << "Adding to num_occupied and it's now: " << num_occupied << "\n\n";
 
 						break;
 					}
@@ -310,7 +313,9 @@ void Graph::GetBoxDimension(std::unordered_map<unsigned, std::vector<unsigned>>&
 			// Check if we have a new box
 			unsigned num_sites_in_box = std::pow(side_length_and_sites.first, mDimension);
 			if (index % num_sites_in_box == 0) {
-				std::cout << "Setting occupied to 0 since: index % num_sites_in_box == 0: " << index << " % " << num_sites_in_box << "\n";
+
+				// std::cout << "Setting occupied to 0 since: index % num_sites_in_box == 0: " << index << " % " << num_sites_in_box << "\n";
+
 				occupied = 0;
 			}
 
@@ -319,8 +324,8 @@ void Graph::GetBoxDimension(std::unordered_map<unsigned, std::vector<unsigned>>&
 		// double box_dim = std::log(num_occupied) / std::log(side_length_and_sites.first);
 		sidelength_and_numoccupied[side_length_and_sites.first] = num_occupied;
 
-		std::cout << "num_occupied: " << num_occupied << "\n";
-		std::cout << "side_length: " << side_length_and_sites.first << "\n";
+		// std::cout << "num_occupied: " << num_occupied << "\n";
+		// std::cout << "side_length: " << side_length_and_sites.first << "\n";
 
 	}
 }

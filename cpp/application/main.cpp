@@ -59,7 +59,7 @@ int main(/*int argc, char** argv*/) {
 			unsigned long seed = rand();
 			Graph lattice(dimension, length, seed);
 		
-			std::cout << "Seed is: " << seed << "\n";
+			// std::cout << "Seed is: " << seed << "\n";
 
 			// This will store (Cluster index: Loop lengths)
 			std::unordered_map<unsigned, unsigned> loop_lengths;
@@ -73,7 +73,9 @@ int main(/*int argc, char** argv*/) {
 			unsigned num_worms_started = 10000;
 			// Run the simulation until it hopefully goes to equilibrium
 			for (unsigned j = 0; j < num_worms_started; ++j) {
+
 				std::cout << "Worm number:" << j << "\n";
+
 				IsingSimulation(lattice, correlation_func, length, K);
 			}
 		
@@ -92,17 +94,17 @@ int main(/*int argc, char** argv*/) {
 			std::unordered_map<unsigned, unsigned> side_length_and_num_occupied;
 			lattice.GetBoxDimension(blocks, side_length_and_num_occupied, largest_worm);
 
-			std::cout << "Box dimensions:" << "\n";
-			for (auto& sl_and_no : side_length_and_num_occupied) {
-				dimensions_file << sl_and_no.first << " ";
-				dimensions_file << sl_and_no.second << "\n";
-			}
+			// std::cout << "Box dimensions:" << "\n";
+			// for (auto& sl_and_no : side_length_and_num_occupied) {
+			// 	dimensions_file << sl_and_no.first << " ";
+			// 	dimensions_file << sl_and_no.second << "\n";
+			// }
 		
 			// std::cout << *std::max_element(loop_lengths.begin(), loop_lengths.end()) << "\n";
 			// After num_simulations the max length has converged and we can append it
 			// max_loop_lengths.push_back(*std::max_element(loop_lengths.begin(), loop_lengths.end()));
 		
-			std::cout << "Finished with graph of size: " << std::pow(2, i) << "\n";
+			// std::cout << "Finished with graph of size: " << std::pow(2, i) << "\n";
 		
 		}
 		// write_container(max_loop_lengths, final_sizes_file, ' ');
