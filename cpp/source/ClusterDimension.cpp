@@ -38,7 +38,6 @@ void Graph::DivideGraph(std::unordered_map<unsigned, std::vector<unsigned>>& blo
 * @return: void
 */
 void Graph::DivideGraphRec(std::unordered_map<unsigned, std::vector<unsigned>>& blocks, unsigned side_length, unsigned start, unsigned system_size){
-	// TODO: Test this for 3D graph
 
 	std::cout << "\n";
 	std::cout << "Call to DivideGraphRec with parameters:" << "\n";

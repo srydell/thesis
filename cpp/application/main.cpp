@@ -32,7 +32,6 @@ int main(/*int argc, char** argv*/) {
 
 		// Produces a cluster with only two sites (impossible)
 		// For: length: 10, dimension: 2
-		// TODO: Solve this by debugging the cluster function probably
 		// unsigned long seed = 420974030;
 		// unsigned long seed = 1692706254;
 
