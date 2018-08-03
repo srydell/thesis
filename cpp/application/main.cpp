@@ -21,11 +21,13 @@ int main(/*int argc, char** argv*/) {
 		double J = 0.5;
 		// Temperature
 		// Critical temperature for Ising
-		// 2 / (ln(1 + sqrt(2)))
-		double T = 2.269185314213;
+		// T_2D = 2 / (ln(1 + sqrt(2)))
+		// T_3D = 4.515
+		// double T = 2.269185314213;
+		double T = 4.515;
 		double K = J/T;
 		// 2D, 3D, ...
-		const unsigned dimension = 2;
+		const unsigned dimension = 3;
 
 		int nulltime = time(nullptr);
 		srand((unsigned)nulltime);
@@ -36,24 +38,24 @@ int main(/*int argc, char** argv*/) {
 		// unsigned long seed = 1692706254;
 
 		// std::string final_sizes_filename = argv[0];
-		// std::string final_sizes_filename = "final_sizes.txt";
+		std::string final_sizes_filename = "final_sizes.txt";
 		std::string dimension_filename = "box_size_occupied.txt";
 
 		// To store results
-		// std::ofstream final_sizes_file;
+		std::ofstream final_sizes_file;
 		std::ofstream dimensions_file;
 
 		// Open all the datafiles
-		// final_sizes_file.open(final_sizes_filename, std::ios_base::app);
+		final_sizes_file.open(final_sizes_filename, std::ios_base::app);
 		dimensions_file.open(dimension_filename, std::ios_base::app);
 
-		unsigned max_length_exponent = 7;
+		unsigned max_length_exponent = 6;
 
 		std::vector<unsigned> max_loop_lengths;
 		max_loop_lengths.reserve(max_length_exponent);
 
 		// How many different sizes of the simulation should run (L = 2^i)
-		for (unsigned i = max_length_exponent-1; i < max_length_exponent; ++i) {
+		for (unsigned i = 4; i < max_length_exponent; ++i) {
 			// Create a new graph
 			unsigned length = std::pow(2, i);
 			unsigned long seed = rand();
@@ -74,7 +76,7 @@ int main(/*int argc, char** argv*/) {
 			// Run the simulation until it hopefully goes to equilibrium
 			for (unsigned j = 0; j < num_worms_started; ++j) {
 
-				std::cout << "Worm number:" << j << "\n";
+				// std::cout << "Worm number:" << j << "\n";
 
 				IsingSimulation(lattice, correlation_func, length, K);
 			}
@@ -95,21 +97,22 @@ int main(/*int argc, char** argv*/) {
 			lattice.GetBoxDimension(blocks, side_length_and_num_occupied, largest_worm);
 
 			// std::cout << "Box dimensions:" << "\n";
-			// for (auto& sl_and_no : side_length_and_num_occupied) {
-			// 	dimensions_file << sl_and_no.first << " ";
-			// 	dimensions_file << sl_and_no.second << "\n";
-			// }
+			dimensions_file << "\n" << dimension << "D, L=" << length << ":\n";
+			for (auto& sl_and_no : side_length_and_num_occupied) {
+				dimensions_file << sl_and_no.first << " ";
+				dimensions_file << sl_and_no.second << "\n";
+			}
 		
 			// std::cout << *std::max_element(loop_lengths.begin(), loop_lengths.end()) << "\n";
 			// After num_simulations the max length has converged and we can append it
-			// max_loop_lengths.push_back(*std::max_element(loop_lengths.begin(), loop_lengths.end()));
+			max_loop_lengths.push_back(loop_lengths[GetMaximumMapIndex(loop_lengths)]);
 		
 			// std::cout << "Finished with graph of size: " << std::pow(2, i) << "\n";
 		
 		}
-		// write_container(max_loop_lengths, final_sizes_file, ' ');
+		write_container(max_loop_lengths, final_sizes_file, ' ');
 		// Make a new row for the next run
-		// final_sizes_file << '\n';
+		final_sizes_file << '\n';
 
 		// This will store the average loop length according to Mats' notes
 		// double average_loop_length = GetAverageLoopLength(loop_lengths, K);
