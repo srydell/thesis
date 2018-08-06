@@ -29,11 +29,6 @@ file(GLOB SOURCES "source/*.cpp")
 file(GLOB HEADERS "source/*.h")
 set(CATCH_DIR external/catch2)
 
-# Define Catch as a library
-add_library(Catch INTERFACE)
-target_sources(Catch INTERFACE ${PROJECT_SOURCE_DIR}/${CATCH_DIR}/catch.hpp)
-target_include_directories(Catch INTERFACE ${CATCH_DIR})
-
 # Set IsingWorm executable
 add_executable(IsingWorm ${SOURCES} ${HEADERS} application/main.cpp)
 target_include_directories(IsingWorm PRIVATE source)
@@ -41,7 +36,10 @@ target_include_directories(IsingWorm PRIVATE source)
 # Set testing of source files
 add_executable(Testing ${SOURCES} ${HEADERS} ${CATCH_DIR}/catch.hpp source/test/test1.cpp)
 target_include_directories(Testing PRIVATE source)
-# 'Link' to Catch
+
+# Define Catch as a library
+add_library(Catch INTERFACE)
+target_include_directories(Catch INTERFACE ${CATCH_DIR})
 target_link_libraries(Testing PRIVATE Catch)
 
 enable_testing()
