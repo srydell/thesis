@@ -38,7 +38,7 @@ void UpdateCorrelationFunction(unsigned site0, unsigned site1, unsigned length, 
 	// 	std::cout << element.first << ": "<< element.second << "\n";
 	// }
 
-	if (HasItem(key, correlation_func)) {
+	if (MapHasItem(key, correlation_func)) {
 		// std::cout << "Adding +1 to old key: " << key << "\n";
 		correlation_func[key]++;
 	} else {

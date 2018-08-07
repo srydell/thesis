@@ -97,7 +97,7 @@ void GetPermutations(std::vector<T> vector_to_permute, std::vector<T>& vector_to
 * @return: bool
 */
 template<typename T1, typename T2>
-bool HasItem(T1 item, T2 &map) {
+bool MapHasItem(T1 item, T2 &map) {
 	// Try with unordered_map like behaviour
 	return map.find(item) != map.end();
 }
