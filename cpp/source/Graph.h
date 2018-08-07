@@ -2,8 +2,9 @@
 #define GRAPH_H
 
 #include "Site.h"
-#include <vector>
+#include <memory>
 #include <random>
+#include <vector>
 
 class Graph {
 public:
@@ -17,11 +18,16 @@ public:
 	unsigned GetRandomSite();
 	void FindIndices(std::unordered_map<unsigned, std::vector<unsigned>> &clusters, std::vector<unsigned> &local_cluster, std::vector<unsigned> &indices);
 	void GetLinkedNeighbours(unsigned site, std::vector<unsigned> &linked_neighbours);
-	void IndexClusters(std::unordered_map<unsigned, std::vector<unsigned>> &clusters);
 	void PrintGraph();
 	void PrintClusters(std::unordered_map<unsigned, std::vector<unsigned>> &to_print);
 	void SwitchLinkBetween(unsigned site0, unsigned site1);
 	std::vector<unsigned> GetxyzConversion(unsigned index);
+
+	// IndexClusters
+	void IndexClusters(std::unordered_map<unsigned, std::vector<unsigned>> &clusters);
+
+	// Hoshen Kopelman
+	void HKIndex(std::unordered_map<unsigned, std::vector<unsigned>> &clusters);
 
 	// ClusterDimension
 	void DivideGraph(std::unordered_map<unsigned, std::vector<unsigned>>& blocks);
@@ -39,7 +45,6 @@ private:
 	unsigned mLength;
 	unsigned mDimension;
 
-	// Functions
 	bool AreNeighbours(unsigned site0, unsigned site1);
 	bool IsInGraph(unsigned site);
 	bool IsInVector(unsigned item, std::vector<unsigned> &vector_to_search);
@@ -50,6 +55,9 @@ private:
 	void DivideGraphRec(std::unordered_map<unsigned, std::vector<unsigned>>& blocks, unsigned side_length, unsigned start, unsigned system_size);
 	void AppendCurrentBox(unsigned start, unsigned side_length, std::vector<unsigned>& current_box);
 	void NextToAdd(std::vector<unsigned>& to_add, unsigned side_length);
+
+	// Hoshen Kopelman
+	void Union(unsigned neighbour, unsigned largest_label, std::vector<unsigned> &local_cluster, std::unique_ptr<std::vector<unsigned>> &visited_clusters);
 };
 
 #endif
