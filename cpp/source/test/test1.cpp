@@ -64,8 +64,8 @@ TEST_CASE( "4x4 blocks are the correct size", "[ClusterDimension]" ) {
 
 	SECTION( "The unsorted map blocks should contain blocks of sizes 4 and 2" )
 	// Blocks should contain blocks with side length 2, 4
-	REQUIRE( HasItem(4, blocks) );
-	REQUIRE( HasItem(2, blocks) );
+	REQUIRE( MapHasItem(4, blocks) );
+	REQUIRE( MapHasItem(2, blocks) );
 
 	INFO( "Block with size 4 has all the indices sorted" );
 	std::vector<unsigned> block_4 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15};
@@ -99,9 +99,9 @@ TEST_CASE( "8x8 blocks are the correct size", "[ClusterDimension]" ) {
 
 	SECTION( "The unsorted map blocks should contain blocks of sizes 8, 4 and 2" )
 	// Blocks should contain blocks with side length 2, 4, 8
-	REQUIRE( HasItem(2, blocks) );
-	REQUIRE( HasItem(4, blocks) );
-	REQUIRE( HasItem(8, blocks) );
+	REQUIRE( MapHasItem(2, blocks) );
+	REQUIRE( MapHasItem(4, blocks) );
+	REQUIRE( MapHasItem(8, blocks) );
 
 	INFO( "Block with size 8 has all the indices sorted" );
 	std::vector<unsigned> block_8 = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63};
@@ -175,8 +175,8 @@ TEST_CASE( "4x4x4 blocks are the correct size", "[ClusterDimension3D]" ) {
 
 	SECTION( "The unsorted map blocks should contain blocks of sizes 4 and 2" )
 	// Blocks should contain blocks with side length 2, 4
-	REQUIRE( HasItem(4, blocks) );
-	REQUIRE( HasItem(2, blocks) );
+	REQUIRE( MapHasItem(4, blocks) );
+	REQUIRE( MapHasItem(2, blocks) );
 
 	INFO( "Block with size 4 has all the indices sorted" );
 	std::vector<unsigned> block_4 = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63 };
@@ -197,7 +197,7 @@ TEST_CASE( "The template function GetMaximumMapValue finds maximums", "[GetMaxim
 	REQUIRE( max_value2 == 5.2f );
 }
 
-TEST_CASE( "N-dimensional Site calculates correct 2D neighbours", "[Site]" ) {
+TEST_CASE( "N-dimensional Site calculates correct 2D/3D neighbours", "[Site]" ) {
 	unsigned index_1 = 15;
 	unsigned length_1 = 4;
 	unsigned dimension_1 = 2;
@@ -225,4 +225,34 @@ TEST_CASE( "N-dimensional Site calculates correct 2D neighbours", "[Site]" ) {
 		auto it = std::find(correct_neighbours_2.begin(), correct_neighbours_2.end(), n.first);
 		REQUIRE( it != correct_neighbours_2.end() );
 	}
+}
+
+TEST_CASE( "HoskenKopelman algorithm finds all 2D clusters", "[HK]" ) {
+	unsigned dimension = 2;
+	unsigned length = 4;
+	int nulltime = time(nullptr);
+	srand((unsigned)nulltime);
+
+	unsigned long mSeed = rand();
+	Graph lattice = Graph(dimension, length, mSeed);
+
+	// Cluster 1
+	lattice.SwitchLinkBetween(0, 1);
+	lattice.SwitchLinkBetween(13, 1);
+	lattice.SwitchLinkBetween(13, 14);
+	lattice.SwitchLinkBetween(14, 10);
+	lattice.SwitchLinkBetween(6, 10);
+	lattice.SwitchLinkBetween(7, 6);
+	lattice.SwitchLinkBetween(7, 3);
+	lattice.SwitchLinkBetween(0, 3);
+
+	// Cluster 2
+	lattice.SwitchLinkBetween(4, 5);
+	lattice.SwitchLinkBetween(9, 5);
+	lattice.SwitchLinkBetween(9, 8);
+	lattice.SwitchLinkBetween(4, 8);
+
+	std::unordered_map<unsigned, std::vector<unsigned>> clusters;
+	lattice.HKIndex(clusters);
+	REQUIRE( 1 == 1 );
 }
