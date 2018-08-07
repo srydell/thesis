@@ -254,5 +254,53 @@ TEST_CASE( "HoskenKopelman algorithm finds all 2D clusters", "[HK]" ) {
 
 	std::unordered_map<unsigned, std::vector<unsigned>> clusters;
 	lattice.HKIndex(clusters);
-	REQUIRE( 1 == 1 );
+
+	std::unordered_map<unsigned, std::vector<unsigned>> correct_clusters;
+	correct_clusters.insert( {1, {0, 3, 7, 6, 10, 14, 13, 1}} );
+	correct_clusters.insert( {2, {4, 8, 9, 5}} );
+
+	for (auto& value : correct_clusters) {
+		REQUIRE( clusters[value.first] == value.second );
+	}
+}
+
+TEST_CASE( "Hosken Kopelman algorithm gives the same as brute force solution", "[HK]" ) {
+	unsigned dimension = 2;
+	unsigned length = 4;
+	int nulltime = time(nullptr);
+	srand((unsigned)nulltime);
+
+	unsigned long mSeed = rand();
+	Graph lattice = Graph(dimension, length, mSeed);
+
+	// Cluster 1
+	lattice.SwitchLinkBetween(0, 1);
+	lattice.SwitchLinkBetween(13, 1);
+	lattice.SwitchLinkBetween(13, 14);
+	lattice.SwitchLinkBetween(14, 10);
+	lattice.SwitchLinkBetween(6, 10);
+	lattice.SwitchLinkBetween(7, 6);
+	lattice.SwitchLinkBetween(7, 3);
+	lattice.SwitchLinkBetween(0, 3);
+
+	// Cluster 2
+	lattice.SwitchLinkBetween(4, 5);
+	lattice.SwitchLinkBetween(9, 5);
+	lattice.SwitchLinkBetween(9, 8);
+	lattice.SwitchLinkBetween(4, 8);
+
+	std::unordered_map<unsigned, std::vector<unsigned>> clusters_hk;
+	lattice.HKIndex(clusters_hk);
+
+	std::unordered_map<unsigned, std::vector<unsigned>> clusters_bf;
+	lattice.IndexClusters(clusters_bf);
+
+	for (auto& label_and_sites : clusters_hk) {
+		for (auto& site : label_and_sites.second) {
+			auto bf_solution = clusters_bf[label_and_sites.first];
+			// See if site in brute force solution
+			auto it = std::find(bf_solution.begin(), bf_solution.end(), site);
+			REQUIRE( it != bf_solution.end() );
+		}
+	}
 }
