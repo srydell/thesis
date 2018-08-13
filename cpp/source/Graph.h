@@ -57,7 +57,7 @@ private:
 	void NextToAdd(std::vector<unsigned>& to_add, unsigned side_length);
 
 	// Hoshen Kopelman
-	void Union(unsigned neighbour, unsigned largest_label, std::vector<unsigned> &local_cluster, std::unique_ptr<std::vector<unsigned>> &visited_clusters);
+	void Union(unsigned neighbour, unsigned largest_label, std::vector<unsigned> &local_cluster, std::unique_ptr<std::vector<bool>> &visited_clusters);
 };
 
 #endif
