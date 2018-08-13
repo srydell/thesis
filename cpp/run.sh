@@ -26,7 +26,7 @@ if [[ "$1" == build ]]; then
 	doxygen &> /dev/null
 
 	# Run the code
-	run_project all
+	# run_project all
 	exit
 elif [[ "$1" == test ]]; then
 	cd ./build || exit

@@ -15,7 +15,7 @@ void Graph::HKIndex(std::unordered_map<unsigned, std::vector<unsigned>> &cluster
 	unsigned largest_label = 0;
 
 	// Used to avoid indexing a cluster twice
-	auto visited_clusters = std::make_unique<std::vector<unsigned>>(std::pow(mLength, mDimension), 0);
+	auto visited_clusters = std::make_unique<std::vector<bool>>(std::pow(mLength, mDimension), 0);
 	
 	for (Site &site : mGraph) {
 		// Initialize neighbours
@@ -37,7 +37,7 @@ void Graph::HKIndex(std::unordered_map<unsigned, std::vector<unsigned>> &cluster
 				// Add the current site
 				local_cluster.push_back(site.GetIndex());
 				largest_label++;
-				(*visited_clusters)[site.GetIndex()] = largest_label;
+				(*visited_clusters)[site.GetIndex()] = 1;
 
 				// Go in all directions
 				for (unsigned &neighbour : neighbours) {
@@ -68,11 +68,11 @@ void Graph::HKIndex(std::unordered_map<unsigned, std::vector<unsigned>> &cluster
 *
 * @param: unsigned neighbour
 *       : std::vector<unsigned> &local_cluster
-*       : std::unique_ptr<std::vector<unsigned>>& visited_clusters
+*       : std::unique_ptr<std::vector<bool>>& visited_clusters
 *
 * @return: void
 */
-void Graph::Union(unsigned neighbour, unsigned largest_label, std::vector<unsigned> &local_cluster, std::unique_ptr<std::vector<unsigned>> &visited_clusters) {
+void Graph::Union(unsigned neighbour, unsigned largest_label, std::vector<unsigned> &local_cluster, std::unique_ptr<std::vector<bool>> &visited_clusters) {
 
 	std::cout << "\nCall to Union with parameters:" << "\n";
 	std::cout << "neighbour: " << neighbour << "\n";
@@ -84,7 +84,7 @@ void Graph::Union(unsigned neighbour, unsigned largest_label, std::vector<unsign
 		std::cout << "Neighbour not visited before. Adding to local_cluster." << "\n";
 
 		// Mark as visited
-		(*visited_clusters)[neighbour] = largest_label;
+		(*visited_clusters)[neighbour] = 1;
 		local_cluster.push_back(neighbour);
 
 		std::vector<unsigned> neighbours_to_neighbour;

@@ -82,7 +82,7 @@ int main(/*int argc, char** argv*/) {
 			}
 		
 			// Update indexing
-			lattice.IndexClusters(clusters);
+			lattice.HKIndex(clusters);
 		
 			UpdateLoopLengths(loop_lengths, clusters, lattice);
 		
