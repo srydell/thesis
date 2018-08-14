@@ -25,7 +25,7 @@ void Graph::HKIndex(std::unordered_map<unsigned, std::vector<unsigned>> &cluster
 		// Used to store site + neighbours if there are any neighbours
 		std::vector<unsigned> local_cluster;
 
-		std::cout << "Handling site : " << site.GetIndex() << "\n";
+		// std::cout << "Handling site : " << site.GetIndex() << "\n";
 
 		if (!neighbours.empty()) {
 			if (!(*visited_clusters)[site.GetIndex()]) {
@@ -42,18 +42,18 @@ void Graph::HKIndex(std::unordered_map<unsigned, std::vector<unsigned>> &cluster
 				// Go in all directions
 				for (unsigned &neighbour : neighbours) {
 
-					std::cout << "Found neighbour : " << neighbour << "\n";
+					// std::cout << "Found neighbour : " << neighbour << "\n";
 
 					// Add whole cluster to local_cluster one direction at a time
 					Union(neighbour, largest_label, local_cluster, visited_clusters);
 				}
 
-				std::cout << "On label: " << largest_label << "\n";
-				std::cout << "Adding local_cluster:" << "\n";
-				for (auto& value : local_cluster) {
-					std::cout << value << ", ";
-				}
-				std::cout << "\n\n";
+				// std::cout << "On label: " << largest_label << "\n";
+				// std::cout << "Adding local_cluster:" << "\n";
+				// for (auto& value : local_cluster) {
+				// 	std::cout << value << ", ";
+				// }
+				// std::cout << "\n\n";
 
 				// This cluster is fully found
 				clusters[largest_label] = local_cluster;
@@ -74,14 +74,14 @@ void Graph::HKIndex(std::unordered_map<unsigned, std::vector<unsigned>> &cluster
 */
 void Graph::Union(unsigned neighbour, unsigned largest_label, std::vector<unsigned> &local_cluster, std::unique_ptr<std::vector<bool>> &visited_clusters) {
 
-	std::cout << "\nCall to Union with parameters:" << "\n";
-	std::cout << "neighbour: " << neighbour << "\n";
-	std::cout << "largest_label: " << largest_label << "\n";
+	// std::cout << "\nCall to Union with parameters:" << "\n";
+	// std::cout << "neighbour: " << neighbour << "\n";
+	// std::cout << "largest_label: " << largest_label << "\n";
 
 	// If not previously visited
 	if (!(*visited_clusters)[neighbour]) {
 
-		std::cout << "Neighbour not visited before. Adding to local_cluster." << "\n";
+		// std::cout << "Neighbour not visited before. Adding to local_cluster." << "\n";
 
 		// Mark as visited
 		(*visited_clusters)[neighbour] = 1;
@@ -90,11 +90,11 @@ void Graph::Union(unsigned neighbour, unsigned largest_label, std::vector<unsign
 		std::vector<unsigned> neighbours_to_neighbour;
 		GetLinkedNeighbours(neighbour, neighbours_to_neighbour);
 
-		std::cout << "Found neighbours to neighbour: " << neighbour << "\n";
-		for (auto& value : neighbours_to_neighbour) {
-			std::cout << value << ", ";
-		}
-		std::cout << "\n\n";
+		// std::cout << "Found neighbours to neighbour: " << neighbour << "\n";
+		// for (auto& value : neighbours_to_neighbour) {
+		// 	std::cout << value << ", ";
+		// }
+		// std::cout << "\n\n";
 
 		for (auto& nn : neighbours_to_neighbour) {
 			// Add whole cluster to local_cluster one direction at a time
