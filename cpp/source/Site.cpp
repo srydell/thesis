@@ -44,13 +44,6 @@ void Site::AddNeighbours(unsigned length, unsigned dimension) {
 		temp_index = std::floor(temp_index / length);
 	}
 
-	// std::vector<unsigned> xyz;
-	// xyz.reserve(mDimension);
-	// for (unsigned i = 0; i < mDimension; ++i) {
-	// 	xyz[i] = index % mLength;
-	// 	index = std::floor(index / mLength);
-	// }
-
 	// std::cout << "On site with index: " << mRootIndex << " with dimension: " << dimension << " and length: " << length << "\n";
 	// std::cout << "Found xyz: (";
 	// for (auto& x : xyz) {
@@ -104,13 +97,6 @@ void Site::AddNeighbours(unsigned length, unsigned dimension) {
 			x_i = x_old;
 		}
 	}
-
-	// std::cout << "x is : " << x << "\n";
-	// std::cout << "y is : " << y << "\n";
-	// std::cout << "\n";
-	// for (std::pair<unsigned, bool> element : neighbours) {
-	// 	std::cout << element.first << " : " << element.second << std::endl;
-	// }
 }
 
 /**
