@@ -22,6 +22,7 @@ public:
 	void PrintClusters(std::unordered_map<unsigned, std::vector<unsigned>> &to_print);
 	void SwitchLinkBetween(unsigned site0, unsigned site1);
 	std::vector<unsigned> GetxyzConversion(unsigned index);
+	void GetPercolatingIndices(std::unordered_map<unsigned, std::vector<unsigned>> const &clusters, std::vector<unsigned> &percolating_indices);
 
 	// IndexClusters
 	void IndexClusters(std::unordered_map<unsigned, std::vector<unsigned>> &clusters);
