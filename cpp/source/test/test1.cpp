@@ -310,7 +310,24 @@ TEST_CASE( "HoskenKopelman algorithm finds all 3D clusters", "[HK]" ) {
 	correct_clusters.insert( {3, {42, 46, 47, 43}} );
 
 	for (auto& label_and_sites : correct_clusters) {
-		REQUIRE( clusters[label_and_sites.first] == label_and_sites.second );
+		for (auto& site : label_and_sites.second) {
+			// Every site in correct_clusters[label] should be in clusters[label]
+			auto it = std::find(clusters[label_and_sites.first].begin(),
+					clusters[label_and_sites.first].end(),
+					site);
+			REQUIRE( it != clusters[label_and_sites.first].end() );
+		}
+	}
+
+	std::unordered_map<unsigned, std::vector<unsigned>> clusters2;
+	lattice.IndexClusters(clusters2);
+
+	for (auto& label_and_sites : clusters2) {
+		std::cout << label_and_sites.first << " : (";
+		for (auto& site : label_and_sites.second) {
+			std::cout << site << ", ";
+		}
+		std::cout << ")" << "\n";
 	}
 }
 
