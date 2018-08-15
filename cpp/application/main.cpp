@@ -47,7 +47,8 @@ int main(/*int argc, char** argv*/) {
 		// final_sizes_file.open(final_sizes_filename, std::ios_base::app);
 		// dimensions_file.open(dimension_filename, std::ios_base::app);
 
-		unsigned max_length_exponent = 6;
+		// unsigned max_length_exponent = 6;
+		unsigned max_length_exponent = 3;
 
 		std::vector<unsigned> max_loop_lengths;
 		max_loop_lengths.reserve(max_length_exponent);
@@ -94,8 +95,7 @@ int main(/*int argc, char** argv*/) {
 			std::unordered_map<unsigned, unsigned> side_length_and_num_occupied;
 			lattice.GetBoxDimension(blocks, side_length_and_num_occupied, largest_worm);
 
-			// std::cout << "Box dimensions:" << "\n";
-			std::cerr << "\n" << "L=" << length << ":\n";
+			std::cerr << "L=" << length << ":\n";
 			for (auto& sl_and_no : side_length_and_num_occupied) {
 				std::cerr << sl_and_no.first << " ";
 				std::cerr << sl_and_no.second << "\n";

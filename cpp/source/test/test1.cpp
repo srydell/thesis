@@ -114,16 +114,6 @@ TEST_CASE( "8x8 blocks are the correct size", "[ClusterDimension]" ) {
 	INFO( "Block with size 2 has all the indices sorted two and two" );
 	std::vector<unsigned> block_2 = {0, 1, 8, 9, 16, 17, 24, 25, 2, 3, 10, 11, 18, 19, 26, 27, 32, 33, 40, 41, 48, 49, 56, 57, 34, 35, 42, 43, 50, 51, 58, 59, 4, 5, 12, 13, 20, 21, 28, 29, 6, 7, 14, 15, 22, 23, 30, 31, 36, 37, 44, 45, 52, 53, 60, 61, 38, 39, 46, 47, 54, 55, 62, 63};
 	REQUIRE( blocks[2] == block_2 );
-
-	// std::cout << "The final blocks for 8x8 graph are as:" << "\n";
-	// for (auto& block : blocks) {
-	// 	std::cout << "Block with side_length: ";
-	// 	std::cout << block.first << "\n";
-	// 	for (auto& site : block.second) {
-	// 		std::cout << site << ", ";
-	// 	}
-	// 	std::cout << "\n";
-	// }
 }
 
 TEST_CASE( "4x4 blocks box dimension test", "[ClusterDimension]" ) {
@@ -204,10 +194,7 @@ TEST_CASE( "N-dimensional Site calculates correct 2D/3D neighbours", "[Site]" ) 
 	Site s_1 = Site(index_1, length_1, dimension_1);
 	std::vector<unsigned> correct_neighbours_1 = {12, 14, 3, 11};
 
-	std::cout << "Site: " << s_1.GetIndex() << " has neighbours:" << "\n";
 	for (auto& n : s_1.neighbours) {
-		std::cout << "	" << n.first << "\n";
-
 		auto it = std::find(correct_neighbours_1.begin(), correct_neighbours_1.end(), n.first);
 		REQUIRE( it != correct_neighbours_1.end() );
 	}
@@ -218,10 +205,7 @@ TEST_CASE( "N-dimensional Site calculates correct 2D/3D neighbours", "[Site]" ) 
 	Site s_2 = Site(index_2, length_2, dimension_2);
 	std::vector<unsigned> correct_neighbours_2 = {2, 0, 7, 15, 19, 51};
 
-	std::cout << "Site: " << s_2.GetIndex() << " has neighbours:" << "\n";
 	for (auto& n : s_2.neighbours) {
-		std::cout << "	" << n.first << "\n";
-
 		auto it = std::find(correct_neighbours_2.begin(), correct_neighbours_2.end(), n.first);
 		REQUIRE( it != correct_neighbours_2.end() );
 	}
@@ -321,14 +305,6 @@ TEST_CASE( "HoskenKopelman algorithm finds all 3D clusters", "[HK]" ) {
 
 	std::unordered_map<unsigned, std::vector<unsigned>> clusters2;
 	lattice.IndexClusters(clusters2);
-
-	for (auto& label_and_sites : clusters2) {
-		std::cout << label_and_sites.first << " : (";
-		for (auto& site : label_and_sites.second) {
-			std::cout << site << ", ";
-		}
-		std::cout << ")" << "\n";
-	}
 }
 
 TEST_CASE( "Hosken Kopelman algorithm gives the same as brute force solution", "[HK]" ) {
