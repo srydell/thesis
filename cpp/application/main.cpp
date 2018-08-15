@@ -5,6 +5,8 @@
 #include <fstream>
 #include <iostream>
 #include <string>
+#include <sys/types.h>
+#include <unistd.h>
 #include <unordered_map>
 
 int main(/*int argc, char** argv*/) {
@@ -58,7 +60,7 @@ int main(/*int argc, char** argv*/) {
 			// Create a new graph
 			unsigned length = std::pow(2, i);
 			unsigned long seed = rand();
-			Graph lattice(dimension, length, seed);
+			Graph lattice(dimension, length, seed + getpid());
 		
 			// std::cout << "Seed is: " << seed << "\n";
 
