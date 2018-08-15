@@ -47,7 +47,8 @@ int main(/*int argc, char** argv*/) {
 		// final_sizes_file.open(final_sizes_filename, std::ios_base::app);
 		// dimensions_file.open(dimension_filename, std::ios_base::app);
 
-		unsigned max_length_exponent = 6;
+		//unsigned max_length_exponent = 6;
+		unsigned max_length_exponent = 3;
 
 		std::vector<unsigned> max_loop_lengths;
 		max_loop_lengths.reserve(max_length_exponent);
