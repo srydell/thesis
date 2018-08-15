@@ -60,7 +60,6 @@ void Graph::HKIndex(std::unordered_map<unsigned, std::vector<unsigned>> &cluster
 			}
 		}
 	}
-	PrintClusters(clusters);
 }
 
 /**
