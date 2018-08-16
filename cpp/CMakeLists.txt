@@ -24,11 +24,6 @@ else()
     add_compile_options(-W -Wall -Werror)
 endif()
 
-# Add all source files from source
-file(GLOB SOURCES "source/*.cpp")
-file(GLOB HEADERS "source/*.h")
-set(CATCH_DIR external/catch2)
-
 # Set IsingWorm executable
 add_executable(IsingWorm application/main.cpp)
 target_include_directories(IsingWorm PRIVATE source)
@@ -53,6 +48,7 @@ add_library(Ising
 )
 
 # Set testing of source files
+set(CATCH_DIR external/catch2)
 add_executable(Testing ${CATCH_DIR}/catch.hpp source/test/test1.cpp)
 target_include_directories(Testing PRIVATE source)
 
