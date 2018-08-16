@@ -30,54 +30,41 @@ file(GLOB HEADERS "source/*.h")
 set(CATCH_DIR external/catch2)
 
 # Set IsingWorm executable
-add_executable(IsingWorm ${SOURCES} ${HEADERS} application/main.cpp)
+add_executable(IsingWorm application/main.cpp)
 target_include_directories(IsingWorm PRIVATE source)
+target_link_libraries(IsingWorm PRIVATE Graph)
+target_link_libraries(IsingWorm PRIVATE Ising)
+
+add_library(Graph
+	source/Graph.cpp
+	source/Graph.h
+	source/IndexCluster.cpp
+	source/HKIndex.cpp
+	source/Site.cpp
+	source/Site.h
+	source/Percolation.cpp
+	source/ClusterDimension.cpp
+	source/utils.h
+)
+
+add_library(Ising
+	source/IsingWorm.cpp
+	source/IsingWorm.h
+)
 
 # Set testing of source files
-add_executable(Testing ${SOURCES} ${HEADERS} ${CATCH_DIR}/catch.hpp source/test/test1.cpp)
+add_executable(Testing ${CATCH_DIR}/catch.hpp source/test/test1.cpp)
 target_include_directories(Testing PRIVATE source)
 
 # Define Catch as a library
 add_library(Catch INTERFACE)
 target_include_directories(Catch INTERFACE ${CATCH_DIR})
 target_link_libraries(Testing PRIVATE Catch)
+target_link_libraries(Testing PRIVATE Graph)
+target_link_libraries(Testing PRIVATE Ising)
 
 enable_testing()
 
 # Add test to ctest
 #             Name            HowToRun
 add_test(NAME Testing COMMAND Testing)
-
-
-# TODO: Fix this please, future Simon you are my only hope
-# # This is how it should look
-# # In each mitttest.cmake, include everything after -------------
-# # include(tests/test1/mitttest.cmake)
-
-# # -------------
-# # Include testing library
-# set(CATCH2_FOLDER external/catch2)
-# set(TEST_NAME my_test)
-# add_library(Catch INTERFACE)
-# target_include_directories(Catch INTERFACE ${CATCH2_FOLDER})
-
-# # Find all test files in test directory
-# file(GLOB_RECURSE TEST_SOURCES "test/*.cpp")
-# file(GLOB_RECURSE TEST_HEADERS "test/*.h")
-# # Cannot use the globs from SOURCES & HEADERS since main.cpp has a main() function (Can only have one per executable)
-# add_executable(${TEST_NAME} ${TEST_SOURCES} ${TEST_HEADERS} "source/Site.cpp" "source/Site.h" "source/Graph.h" "source/Graph.cpp" "source/IsingWorm.h" "source/IsingWorm.cpp")
-
-# # Link to Catch
-# target_link_libraries(${TEST_NAME} PRIVATE Catch)
-# # Include from source directory
-# target_include_directories(${TEST_NAME} PRIVATE source)
-# # Set C++ standard
-# target_compile_features(${TEST_NAME} PRIVATE cxx_std_14)
-
-# # target_include_directories(${TEST_NAME} PUBLIC source)
-
-# enable_testing()
-# add_test(NAME Testing COMMAND ${TEST_NAME})
-
-# # add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND} DEPENDS my_test)
-# add_dependencies(${TEST_NAME} ${PROJECT_NAME})
