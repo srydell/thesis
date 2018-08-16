@@ -24,12 +24,6 @@ else()
     add_compile_options(-W -Wall -Werror)
 endif()
 
-# Set IsingWorm executable
-add_executable(IsingWorm application/main.cpp)
-target_include_directories(IsingWorm PRIVATE source)
-target_link_libraries(IsingWorm PRIVATE Graph)
-target_link_libraries(IsingWorm PRIVATE Ising)
-
 add_library(Graph
 	source/Graph.cpp
 	source/Graph.h
@@ -41,11 +35,19 @@ add_library(Graph
 	source/ClusterDimension.cpp
 	source/utils.h
 )
+target_include_directories(Graph PRIVATE source)
 
 add_library(Ising
 	source/IsingWorm.cpp
 	source/IsingWorm.h
 )
+target_include_directories(Ising PRIVATE source)
+
+# Set IsingWorm executable
+add_executable(IsingWorm application/main.cpp)
+target_include_directories(IsingWorm PRIVATE source)
+target_link_libraries(IsingWorm PRIVATE Graph)
+target_link_libraries(IsingWorm PRIVATE Ising)
 
 # Set testing of source files
 set(CATCH_DIR external/catch2)
