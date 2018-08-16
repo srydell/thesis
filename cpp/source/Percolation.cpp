@@ -1,7 +1,8 @@
 #include "Graph.h"
+#include <cmath>
 
 /**
-* @brief: Loop through every cluster and see if there are two or more sites that are on different borders
+* @brief: Loop through every cluster and add any percolating cluster indices to percolating_indices
 *
 * @param: std::unordered_map<unsigned, std::vector<unsigned>> const &clusters
 *       : std::vector<unsigned> &percolating_indices
@@ -10,11 +11,58 @@
 */
 void Graph::GetPercolatingIndices(std::unordered_map<unsigned, std::vector<unsigned>> const &clusters, std::vector<unsigned> &percolating_indices) {
 	for (auto& index_and_cluster : clusters) {
+
+		// std::cout << "\n\nOn index: " << index_and_cluster.first << "\n";
+
 		// Stores which borders this cluster has been on
-		std::vector<bool> on_borders(2 * mDimension, 0);
 		for (auto& site : index_and_cluster.second) {
-			auto xyz = GetxyzConversion(site);
-			percolating_indices.push_back(site);
+
+			// std::cout << "On site: " << site << "\n";
+
+			std::vector<unsigned> neighbours;
+			GetLinkedNeighbours(site, neighbours);
+
+			// If a neighbour to site is in perc_neighbours,
+			// then the cluster is percolating
+			std::vector<unsigned> perc_neighbours;
+			perc_neighbours.reserve(mDimension);
+			// perc_0 = site + (L-1) * L^0
+			// perc_1 = site + (L-1) * L^1
+			// ...
+			// perc_(d-1) = site + (L-1) * L^(d-1)
+			// NOTE: This only adds one direction per dimension (+x, +y, +z, ...)
+			//       But since site -> neighbour => neighbour -> site
+			//       It is ensured to find all percolating clusters
+
+			// std::cout << "If percolating, it should have one of: " << "\n";
+
+			for (unsigned i = 0; i < mDimension; ++i) {
+				perc_neighbours.push_back(site + (mLength - 1) * std::pow(mLength, i));
+
+				// std::cout << site + (mLength - 1) * std::pow(mLength, i) << ", ";
+
+			}
+
+			// std::cout << "as a neighbour" << "\n";
+
+			bool perc_cluster = 0;
+			for (auto& neighbour : neighbours) {
+				if (IsInVector(neighbour, perc_neighbours)) {
+
+					// std::cout << "Found neighbour: " << neighbour << " in perc_neighbours." << "\n";
+
+					perc_cluster = 1;
+					break;
+				}
+			}
+
+			if (perc_cluster) {
+
+				// std::cout << "Therefore adding index: " << index_and_cluster.first << " to percolating_indices." << "\n";
+
+				percolating_indices.push_back(index_and_cluster.first);
+				break;
+			}
 		}
 	}
 }
