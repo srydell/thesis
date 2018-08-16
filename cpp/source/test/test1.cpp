@@ -17,8 +17,8 @@ TEST_CASE( "All neighbours are neighbours to each other", "[Graph]" ) {
 	int nulltime = time(nullptr);
 	srand((unsigned)nulltime);
 
-	unsigned long mSeed = rand();
-	Graph lattice = Graph(dimension, length, mSeed);
+	unsigned long seed = rand();
+	Graph lattice = Graph(dimension, length, seed);
 
 	lattice.SwitchLinkBetween(0, 1);
 	lattice.SwitchLinkBetween(13, 1);
@@ -46,9 +46,9 @@ TEST_CASE( "4x4 blocks are the correct size", "[ClusterDimension]" ) {
 	unsigned length = 4;
 	int nulltime = time(nullptr);
 	srand((unsigned)nulltime);
-	unsigned long mSeed = rand();
+	unsigned long seed = rand();
 
-	Graph lattice = Graph(dimension, length, mSeed);
+	Graph lattice = Graph(dimension, length, seed);
 	std::unordered_map<unsigned, std::vector<unsigned>> blocks;
 
 	lattice.DivideGraph(blocks);
@@ -81,9 +81,9 @@ TEST_CASE( "8x8 blocks are the correct size", "[ClusterDimension]" ) {
 	unsigned length = 8;
 	int nulltime = time(nullptr);
 	srand((unsigned)nulltime);
-	unsigned long mSeed = rand();
+	unsigned long seed = rand();
 
-	Graph lattice = Graph(dimension, length, mSeed);
+	Graph lattice = Graph(dimension, length, seed);
 	std::unordered_map<unsigned, std::vector<unsigned>> blocks;
 
 	lattice.DivideGraph(blocks);
@@ -121,9 +121,9 @@ TEST_CASE( "4x4 blocks box dimension test", "[ClusterDimension]" ) {
 	unsigned length = 4;
 	int nulltime = time(nullptr);
 	srand((unsigned)nulltime);
-	unsigned long mSeed = rand();
+	unsigned long seed = rand();
 
-	Graph lattice = Graph(dimension, length, mSeed);
+	Graph lattice = Graph(dimension, length, seed);
 	std::unordered_map<unsigned, std::vector<unsigned>> blocks;
 
 	// Create a cluster
@@ -142,14 +142,14 @@ TEST_CASE( "4x4 blocks box dimension test", "[ClusterDimension]" ) {
 	// lattice.GetBoxDimension(blocks, box_dimensions);
 }
 
-TEST_CASE( "4x4x4 blocks are the correct size", "[ClusterDimension3D]" ) {
+TEST_CASE( "4x4x4 blocks are the correct size", "[ClusterDimension]" ) {
 	unsigned dimension = 3;
 	unsigned length = 4;
 	int nulltime = time(nullptr);
 	srand((unsigned)nulltime);
-	unsigned long mSeed = rand();
+	unsigned long seed = rand();
 
-	Graph lattice = Graph(dimension, length, mSeed);
+	Graph lattice = Graph(dimension, length, seed);
 	std::unordered_map<unsigned, std::vector<unsigned>> blocks;
 
 	lattice.DivideGraph(blocks);
@@ -217,8 +217,8 @@ TEST_CASE( "HoskenKopelman algorithm finds all 2D clusters", "[HK]" ) {
 	int nulltime = time(nullptr);
 	srand((unsigned)nulltime);
 
-	unsigned long mSeed = rand();
-	Graph lattice = Graph(dimension, length, mSeed);
+	unsigned long seed = rand();
+	Graph lattice = Graph(dimension, length, seed);
 
 	// Cluster 1
 	lattice.SwitchLinkBetween(0, 1);
@@ -254,8 +254,8 @@ TEST_CASE( "HoskenKopelman algorithm finds all 3D clusters", "[HK]" ) {
 	int nulltime = time(nullptr);
 	srand((unsigned)nulltime);
 
-	unsigned long mSeed = rand();
-	Graph lattice = Graph(dimension, length, mSeed);
+	unsigned long seed = rand();
+	Graph lattice = Graph(dimension, length, seed);
 
 	// Cluster 1
 	lattice.SwitchLinkBetween(0, 1);
@@ -313,8 +313,8 @@ TEST_CASE( "Hosken Kopelman algorithm gives the same as brute force solution", "
 	int nulltime = time(nullptr);
 	srand((unsigned)nulltime);
 
-	unsigned long mSeed = rand();
-	Graph lattice = Graph(dimension, length, mSeed);
+	unsigned long seed = rand();
+	Graph lattice = Graph(dimension, length, seed);
 
 	// Cluster 1
 	lattice.SwitchLinkBetween(0, 1);
@@ -346,4 +346,95 @@ TEST_CASE( "Hosken Kopelman algorithm gives the same as brute force solution", "
 			REQUIRE( it != bf_solution.end() );
 		}
 	}
+}
+
+TEST_CASE( "GetPercolatingIndices finds all 3D percolating clusters", "[Perc]" ) {
+	unsigned dimension = 3;
+	unsigned length = 4;
+	int nulltime = time(nullptr);
+	srand((unsigned)nulltime);
+
+	unsigned long seed = rand();
+	Graph lattice = Graph(dimension, length, seed);
+
+	// Cluster 1 (Percolating)
+	lattice.SwitchLinkBetween(0, 1);
+	lattice.SwitchLinkBetween(5, 1);
+	lattice.SwitchLinkBetween(5, 21);
+	lattice.SwitchLinkBetween(25, 21);
+	lattice.SwitchLinkBetween(25, 26);
+	lattice.SwitchLinkBetween(30, 26);
+	lattice.SwitchLinkBetween(30, 18);
+	lattice.SwitchLinkBetween(19, 18);
+	lattice.SwitchLinkBetween(19, 35);
+	lattice.SwitchLinkBetween(34, 35);
+	lattice.SwitchLinkBetween(34, 33);
+	lattice.SwitchLinkBetween(32, 33);
+	lattice.SwitchLinkBetween(32, 16);
+	lattice.SwitchLinkBetween(0, 16);
+
+	// Cluster 2
+	lattice.SwitchLinkBetween(41, 45);
+	lattice.SwitchLinkBetween(45, 61);
+	lattice.SwitchLinkBetween(61, 57);
+	lattice.SwitchLinkBetween(57, 41);
+
+	// Cluster 3
+	lattice.SwitchLinkBetween(42, 43);
+	lattice.SwitchLinkBetween(47, 43);
+	lattice.SwitchLinkBetween(46, 47);
+	lattice.SwitchLinkBetween(42, 46);
+
+	// Cluster 4 (Percolating)
+	lattice.SwitchLinkBetween(52, 53);
+	lattice.SwitchLinkBetween(54, 53);
+	lattice.SwitchLinkBetween(54, 55);
+	lattice.SwitchLinkBetween(52, 55);
+
+	std::unordered_map<unsigned, std::vector<unsigned>> clusters;
+	lattice.HKIndex(clusters);
+
+	std::vector<unsigned> perc_indices;
+	lattice.GetPercolatingIndices(clusters, perc_indices);
+
+	auto it1 = std::find(perc_indices.begin(), perc_indices.end(), 1);
+	REQUIRE( it1 != perc_indices.end() );
+
+	auto it4 = std::find(perc_indices.begin(), perc_indices.end(), 4);
+	REQUIRE( it4 != perc_indices.end() );
+}
+
+TEST_CASE( "GetPercolatingIndices finds all 2D percolating clusters", "[Perc]" ) {
+	unsigned dimension = 2;
+	unsigned length = 4;
+	int nulltime = time(nullptr);
+	srand((unsigned)nulltime);
+
+	unsigned long seed = rand();
+	Graph lattice = Graph(dimension, length, seed);
+
+	// Cluster 1 (Percolating)
+	lattice.SwitchLinkBetween(0, 1);
+	lattice.SwitchLinkBetween(1, 13);
+	lattice.SwitchLinkBetween(13, 14);
+	lattice.SwitchLinkBetween(10, 14);
+	lattice.SwitchLinkBetween(10, 6);
+	lattice.SwitchLinkBetween(7, 6);
+	lattice.SwitchLinkBetween(7, 3);
+	lattice.SwitchLinkBetween(0, 3);
+
+	// Cluster 2
+	lattice.SwitchLinkBetween(4, 5);
+	lattice.SwitchLinkBetween(9, 5);
+	lattice.SwitchLinkBetween(9, 8);
+	lattice.SwitchLinkBetween(4, 8);
+
+	std::unordered_map<unsigned, std::vector<unsigned>> clusters;
+	lattice.HKIndex(clusters);
+
+	std::vector<unsigned> perc_indices;
+	lattice.GetPercolatingIndices(clusters, perc_indices);
+
+	auto it1 = std::find(perc_indices.begin(), perc_indices.end(), 1);
+	REQUIRE( it1 != perc_indices.end() );
 }
