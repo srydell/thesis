@@ -17,9 +17,9 @@
 */
 template<typename T1, typename T2>
 T1 GetMaximumMapIndex(std::unordered_map<T1, T2>& map) {
-	T1 max_index;
 	// Start with the smallest value possible
-	T2 max_value = std::numeric_limits<T1>::min();
+	T1 max_index = std::numeric_limits<T1>::min();
+	T2 max_value = std::numeric_limits<T2>::min();
 	for (auto& index_and_value : map) {
 		if (max_value < index_and_value.second) {
 			// This is the new maximum
