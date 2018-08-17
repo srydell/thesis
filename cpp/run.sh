@@ -20,9 +20,7 @@ if [[ "$1" == build ]]; then
 	# Build the makefiles using g++
 	#+Clang seem to not like some of the design choices of Catch2
 	compiler=$(command -v g++)
-	cd build || exit
-	cmake -DCMAKE_CXX_COMPILER="$compiler" --config Release ..
-	cd - || exit
+	cmake -H. -Bbuild -DCMAKE_CXX_COMPILER="$compiler" -DCMAKE_BUILD_TYPE="Release"
 
 	# Regenerate the doxygen documentation
 	doxygen &> /dev/null
