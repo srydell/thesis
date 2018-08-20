@@ -8,8 +8,8 @@ Date last modified:  Jun 29, 2018
 Python Version:      3.6
 '''
 
-import matplotlib.pyplot as plt
 import numpy as np
+import matplotlib.pyplot as plt
 
 with open("./final_sizes.txt") as f:
     max_size = 0

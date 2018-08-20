@@ -22,7 +22,7 @@ size_conversions = {32: 1/2, 16: 1/4, 8: 1/8, 4: 1/16, 2: 1/32}
 
 # Will store size : number of occupied boxes
 size_and_boxes = {}
-with open(f"./box_size_occupied.txt") as f:
+with open(f"./data/box_size_occupied.txt") as f:
     for line in f.readlines():
         # NOTE: size here is the actual length of the side (64, 32, ...)
         size, box = [int(data) for data in line.strip().split()]
@@ -47,6 +47,7 @@ for size in size_and_boxes:
     for num_occupied in size_and_boxes[size]:
         # D_H = log(n(s)) / log(1 / s)
         dimension = -1 * math.log(num_occupied) / math.log(size)
+        print(dimension)
         eta = 2 - dimension
 
         # Populate size_and_eta
