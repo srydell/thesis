@@ -17,8 +17,8 @@ rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
 #rc('font',**{'family':'serif','serif':['Palatino']})
 rc('text', usetex=True)
 
-files = ["./avg_sizes.txt", "./avg_tanh_sizes.txt", "./final_sizes.txt"]
-files = ["./final_sizestesting.txt"]
+files = ["./data/avg_sizes.txt", "./data/avg_tanh_sizes.txt", "./data/final_sizes.txt"]
+files = ["./data/final_sizes.txt"]
 for n, filename in enumerate(files):
     with open(filename) as f:
         max_size = 0
@@ -56,7 +56,6 @@ for n, filename in enumerate(files):
         x.append(system_sizes[k])
 
 
-    
     gn = GN_temp()
     gn.setup(y, x, np.array([10.0, 1.0]))
     parameters = gn.optimize(100)

@@ -47,7 +47,6 @@ for size in size_and_boxes:
     for num_occupied in size_and_boxes[size]:
         # D_H = log(n(s)) / log(1 / s)
         dimension = -1 * math.log(num_occupied) / math.log(size)
-        print(dimension)
         eta = 2 - dimension
 
         # Populate size_and_eta
@@ -69,6 +68,8 @@ for size in [1/2, 1/4, 1/8, 1/16, 1/32]:
 
     # Calculate the standard deviation
     # std_dev = sqrt(((sample1 - average)^2 + ... + (sampleN - average)^2)/N)
+    print(size_and_eta[size])
+    input()
     std_average.append(np.std(size_and_eta[size]))
 
 # Plot the average as a line
@@ -93,5 +94,5 @@ plt.ylabel(r"$\eta$")
 
 plt.legend()
 plt.tight_layout()
-plt.savefig("box_dimension_for_64x64Ising.png", bbox_inches='tight')
-# plt.show()
+# plt.savefig("box_dimension_for_64x64Ising.png", bbox_inches='tight')
+plt.show()

@@ -9,7 +9,7 @@ Python Version:      3.7
 '''
 
 import re
-from math import log
+import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import rc
 
@@ -58,26 +58,43 @@ def process_file(filename):
                 out_dict[current_system_size].append([box_linear_size, number_occupied_boxes])
     return out_dict
 
-def clean_processed_data(data_dict, exclude_rel_size):
-    """Modify data_dict to remove the data points where <box_linear_size> == <system_linear_size> or <box_linear_size> == <system_linear_size> / 2
+def clean_processed_data(data_dict, size_of_interest, exclude_rel_size):
+    """Modify data_dict to remove the data points where
+       <system_linear_size> != size_of_interest
+       <box_linear_size> == <system_linear_size> * exclude_rel_size
 
     :data_dict: dict - {<system_linear_size>:
                        [[<box_linear_size>, <number_occupied_boxes>], ...], ...}
+    :size_of_interest: Int - Remove every system_linear_size except this one
     :exclude_rel_size: 1xn array - Relative box sizes to remove. e.g [1, 1/2, 1/4, ...]
     :returns: None
     """
+    sizes_to_remove = [size for size in data_dict if size != size_of_interest]
+    for size in sizes_to_remove:
+        data_dict.pop(size)
+
     for system_linear_size in data_dict:
         for relsize in exclude_rel_size:
             # Remove all boxes with relative size relsize
-            data_dict[system_linear_size] = [blsize_numocc for blsize_numocc in data_dict[system_linear_size]\
-                                             if blsize_numocc[0] != system_linear_size * relsize]
+            data_dict[system_linear_size] =\
+                     [blsize_numocc for blsize_numocc in data_dict[system_linear_size]\
+                                    if blsize_numocc[0] != system_linear_size * relsize]
+
+    # Ensure that if data_dict contains any <system_linear_size>: [], remove them
+    empty_keys = []
+    for system_linear_size in data_dict:
+        if not data_dict[system_linear_size]:
+            empty_keys.append(system_linear_size)
+
+    for key in empty_keys:
+        data_dict.pop(key)
 
 def calc_hausdorff_dimension(data_dict):
     """Modify data_dict to contain hausdorff dimension
        Assumed input format of data_dict:
-           {<system_linear_size>: [[<box_linear_size>, <number_occupied_boxes>], ...], ...}
+           {<system_linear_size>: [[<box_linear_size>, <number_occupied_boxes>], ...]}
        After modifying:
-           {<system_linear_size>: [[<box_relative_size>, <hausdorff_dimension>], ...], ...}
+           {<system_linear_size>: [[<box_relative_size>, <hausdorff_dimension>], ...]}
 
        NOTE: hausdorff_dim = log(number_occupied_boxes) / log(1 / box_relative_size)
              Where box_relative_size is the relative size to the system_linear_size
@@ -88,28 +105,61 @@ def calc_hausdorff_dimension(data_dict):
     """
     for system_linear_size in data_dict:
         # Will replace data_dict[system_linear_size]
-        haus_dims = []
+        box_and_haus_dims = []
         # size_and_occ = [box_linear_size, number_occupied_boxes]
         for size_and_occ in data_dict[system_linear_size]:
             number_occupied_boxes = size_and_occ[1]
             box_relative_size = size_and_occ[0] / system_linear_size
 
-            hausdorff_dim = log(number_occupied_boxes) / log(1 / box_relative_size)
+            hausdorff_dim = np.log(number_occupied_boxes) / np.log(1 / box_relative_size)
 
-            haus_dims.append([box_relative_size, hausdorff_dim])
+            box_and_haus_dims.append([box_relative_size, hausdorff_dim])
 
-        data_dict[system_linear_size] = haus_dims
+        data_dict[system_linear_size] = box_and_haus_dims
+
+def plot_error_bars(data_dict, system_linear_size):
+    """Plot error bars from data_dict[system_linear_size]
+
+    :data_dict: dict -
+           {<system_linear_size>: [[<box_relative_size>, <hausdorff_dimension>], ...]}
+    :system_linear_size: Int - Which size to plot
+    :returns: None
+    """
+    average_dh = []
+    std_average = []
+    # box_relative_size
+    brl = []
+    # Calculate average hausdorff dimension for each system_size
+    for brs_and_dh in data_dict[system_linear_size]:
+        dhs = []
+        for brs_and_dh in data_dict[system_size]:
+            dhs.append(brs_and_dh[1])
+            if brs_and_dh[0] not in brl:
+                brl.append(brs_and_dh[0])
+
+        average_dh.append(np.average(dhs))
+
+        # Calculate the standard deviation
+        # std_dev = sqrt(((sample1 - average)^2 + ... + (sampleN - average)^2)/N)
+        std_average.append(np.std(dhs))
+
+    plt.errorbar(brl, average_dh, yerr=std_average,\
+        ecolor='gray', elinewidth=2, fmt='k.', linestyle="None",\
+        capsize=3, capthick=2, label=r"$\bar D_H \pm \sigma_{D_H}$")
 
 def plot_boxsize_vs_hausdorff(data_dict, savefig=False):
-    """Create one plot for each key in data_dict
+    """Plot data from data_dict[system_linear_size]
 
-    :data_dict: dict
+    :data_dict: dict -
+           {<system_linear_size>: [[<box_relative_size>, <hausdorff_dimension>], ...]}
     :savefig: Bool - if True, save figures to ./plots
     :returns: None
     """
     colors = ["#966842", "#f44747", "#eedc31", "#7fdb6a", "#0e68ce"]
+    color_counter = 0
+
+    # NOTE: There should only be one system_linear_size here
     for system_linear_size in data_dict:
-        color_counter = 0
         # Used for xticks
         found_box_sizes = []
         for boxsize_and_hdim in data_dict[system_linear_size]:
@@ -122,11 +172,11 @@ def plot_boxsize_vs_hausdorff(data_dict, savefig=False):
             plt.xlabel("Relative size of box division")
             plt.ylabel(r"$D_H$")
 
-            plt.scatter(boxsize_and_hdim[0], boxsize_and_hdim[1], c="#000000", s=10)
+            plt.scatter(boxsize_and_hdim[0], boxsize_and_hdim[1], c="#555555", s=2)
 
             # New color every box size
-            color_counter += 1
-            color_counter %= len(colors)
+            # color_counter += 1
+            # color_counter %= len(colors)
 
         # labels = [r"$\frac{1}{4}$", ...]
         labels = [bsize.as_integer_ratio() for bsize in found_box_sizes]
@@ -136,9 +186,10 @@ def plot_boxsize_vs_hausdorff(data_dict, savefig=False):
                 labels,\
                 fontsize=14)
 
-        if system_linear_size == 128:
-            # pass
-            plt.show()
+        # plt.legend()
+
+        # NOTE: This is the size that will be plotted
+        # plt.show()
         if savefig:
             sls = system_linear_size
             plt.savefig(f"./plots/box_dimension_for_{sls}x{sls}x{sls}Ising.png",\
@@ -147,9 +198,20 @@ def plot_boxsize_vs_hausdorff(data_dict, savefig=False):
 if __name__ == '__main__':
     simulation_data = process_file("./data/box_size128x128x128.txt")
 
+    # Which system size to plot
+    size_to_plot = 128
     # NOTE: exclude_rel_size must at least contain 1 since x / log(1) is undefined
-    clean_processed_data(simulation_data, exclude_rel_size=[1, 1/2])
+    clean_processed_data(simulation_data, size_to_plot, exclude_rel_size=[1, 1/2])
 
     calc_hausdorff_dimension(simulation_data)
 
-    plot_boxsize_vs_hausdorff(simulation_data)
+    # plot_error_bars(simulation_data, size_to_plot)
+
+    plot_boxsize_vs_hausdorff(simulation_data, size_to_plot)
+
+    # Calculate the average hausdorff dimension
+    d_hs = []
+    for box_and_dh in simulation_data[128]:
+        if box_and_dh[0] == 1/64:
+            d_hs.append(box_and_dh[1])
+    print(np.average(d_hs))
