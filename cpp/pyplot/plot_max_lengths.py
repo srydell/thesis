@@ -127,7 +127,7 @@ def plot_syssize_vs_fit(data_dict):
     # colors = ["#966842", "#f44747", "#eedc31", "#7fdb6a", "#0e68ce"]
     plt.plot(xdata, fit_function(xdata, *opt_parameters), c="#0e68ce", label=fr"$\propto L^{{ {opt_parameters[1]:.4f} }}$")
 
-    print(opt_parameters[1])
+    print(f"D_H = {opt_parameters[1]:.6}")
 
 if __name__ == '__main__':
     simulation_data = process_file("./data/loop_lengths128x128x128.txt")
