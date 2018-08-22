@@ -199,7 +199,7 @@ if __name__ == '__main__':
     simulation_data = process_file("./data/box_size128x128x128.txt")
 
     size_to_plot = 128
-    clean_processed_data(simulation_data, size_to_plot, exclude_rel_size=[1/2, 1/4])
+    clean_processed_data(simulation_data, size_to_plot, exclude_rel_size=[1/2, 1/4, 1/8, 1/16, 1/32])
 
     calc_hausdorff_dimension(simulation_data)
 
