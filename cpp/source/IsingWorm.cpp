@@ -162,11 +162,8 @@ void UpdateLoopLengths(std::unordered_map<unsigned, unsigned> &loop_lengths, std
 void IsingSimulation(Graph & lattice, std::unordered_map<unsigned, unsigned> &correlation_func, unsigned length, double K) {
 	// Get the first site for this simulation
 	unsigned first_site = lattice.GetRandomSite();
-	unsigned *null = nullptr;
 	// Get some random neighbour to form the first link
-	unsigned current_site = lattice.GetRandomNeighbour(first_site, null);
-	// Track the previous site to avoid that the current turns 180 degrees
-	unsigned previous_site = first_site;
+	unsigned current_site = lattice.GetRandomNeighbour(first_site);
 	// Form the first link
 	lattice.SwitchLinkBetween(first_site, current_site);
 
@@ -175,8 +172,7 @@ void IsingSimulation(Graph & lattice, std::unordered_map<unsigned, unsigned> &co
 
 	bool loop_formed = 0;
 	while (!loop_formed) {
-		// previous_site is passed as a pointer since when null, no site is excepted from being chosen
-		unsigned next_site = lattice.GetRandomNeighbour(current_site, &previous_site);
+		unsigned next_site = lattice.GetRandomNeighbour(current_site);
 
 		// std::cout << "Next site is: " << next_site << "\n";
 
@@ -188,7 +184,6 @@ void IsingSimulation(Graph & lattice, std::unordered_map<unsigned, unsigned> &co
 
 			// Flip the weight between currentSite and nextSite
 			lattice.SwitchLinkBetween(current_site, next_site);
-			previous_site = current_site;
 			current_site = next_site;
 			// If we have found a loop
 			if (next_site == first_site) {

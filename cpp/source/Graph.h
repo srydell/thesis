@@ -14,7 +14,7 @@ public:
 	// Functions
 	long double GetRandomNum();
 	bool GetLink(unsigned site0, unsigned site1);
-	unsigned GetRandomNeighbour(unsigned site, unsigned* exceptSite);
+	unsigned GetRandomNeighbour(unsigned site);
 	unsigned GetRandomSite();
 	void FindIndices(std::unordered_map<unsigned, std::vector<unsigned>> &clusters, std::vector<unsigned> &local_cluster, std::vector<unsigned> &indices);
 	void GetLinkedNeighbours(unsigned site, std::vector<unsigned> &linked_neighbours);
