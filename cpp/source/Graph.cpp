@@ -128,8 +128,10 @@ void Graph::GetLinkedNeighbours(unsigned site, std::vector<unsigned> &linked_nei
 unsigned Graph::GetRandomNeighbour(unsigned site) {
 	// rand_num is in (0, 1)
 	double rand_num = GetRandomNum();
+
 	// Check if site is in mGraph
 	if (IsInGraph(site)) {
+
 		// size - less_neighbours since we have some except_site that can not be chosen
 		double prob_of_choosing_site = 1.0 / mGraph[site].neighbours.size();
 		// Will be added to prob_of_choosing_site until a site is chosen or we run out of sites to choose from
@@ -143,17 +145,11 @@ unsigned Graph::GetRandomNeighbour(unsigned site) {
 			// Else we go to next site
 			prob_of_choosing_site += prob_increase_per_site;
 		}
-	} else {
-		// Error handling for site not in mGraph
-		std::stringstream ss;
-		ss << "Call to Graph::GetRandomNeighbour failed since "
-			<< site << " is not in the graph." << "\n";
-		throw ss.str();
 	}
-	// Error handling for unknown error
+	// Error handling for site not in mGraph
 	std::stringstream ss;
-	ss << "Call to Graph::GetRandomNeighbour failed by an unknown error\n"
-		<< "Parameters - site: " << site << "\n";
+	ss << "Call to Graph::GetRandomNeighbour failed since "
+		<< site << " is not in the graph." << "\n";
 	throw ss.str();
 }
 

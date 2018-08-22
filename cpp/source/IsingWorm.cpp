@@ -163,8 +163,12 @@ long double IsingSimulation(Graph & lattice, double K) {
 	// Get the first site for this simulation
 	unsigned first_site = lattice.GetRandomSite();
 
+	std::cout << "Got the first site: " << first_site << "\n";
+
 	// Get some random neighbour to form the first link
 	unsigned current_site = lattice.GetRandomNeighbour(first_site);
+
+	std::cout << "Got the neighbour: " << current_site << "\n";
 
 	// Form the first link
 	lattice.SwitchLinkBetween(first_site, current_site);
@@ -176,21 +180,21 @@ long double IsingSimulation(Graph & lattice, double K) {
 	while (!loop_formed) {
 		unsigned next_site = lattice.GetRandomNeighbour(current_site);
 
-		// std::cout << "Next site is: " << next_site << "\n";
+		std::cout << "Next site is: " << next_site << "\n";
 
 		auto rand_num = lattice.GetRandomNum();
 		if (IsAccepted(K, lattice.GetLink(current_site, next_site), rand_num)) {
 			num_steps++;
 
-			// std::cout << "Got accepted!" << "\n";
-			// std::cout << "Switch link between sites: " << current_site << " and " << next_site << "\n";
+			std::cout << "Got accepted!" << "\n";
+			std::cout << "Switch link between sites: " << current_site << " and " << next_site << "\n";
 
 			// Flip the weight between currentSite and nextSite
 			lattice.SwitchLinkBetween(current_site, next_site);
 			current_site = next_site;
 			// If we have found a loop
 			if (next_site == first_site) {
-				// std::cout << "Found a loop!" << "\n";
+				std::cout << "Found a loop!" << "\n==========================\n\n";
 				loop_formed = 1;
 
 			}
