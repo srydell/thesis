@@ -125,14 +125,14 @@ def plot_syssize_vs_fit(data_dict):
     # Used for plotting against the fitted function
     xdata = np.linspace(min(system_sizes), max(system_sizes), 50)
     # colors = ["#966842", "#f44747", "#eedc31", "#7fdb6a", "#0e68ce"]
-    plt.plot(xdata, fit_function(xdata, *opt_parameters), c="#0e68ce", label=fr"$\propto L^{{ {opt_parameters[1]:.4f} }}$")
+    plt.loglog(xdata, fit_function(xdata, *opt_parameters), c="#0e68ce", label=fr"$\propto L^{{ {opt_parameters[1]:.4f} }}$")
 
     print(f"D_H = {opt_parameters[1]:.6}")
 
 if __name__ == '__main__':
     simulation_data = process_file("./data/loop_lengths128x128x128.txt")
 
-    clean_processed_data(simulation_data, exclude_system_size=[])
+    clean_processed_data(simulation_data, exclude_system_size=[4, 8])
 
     plot_syssize_vs_looplength(simulation_data)
 
