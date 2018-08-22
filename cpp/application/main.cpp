@@ -32,7 +32,7 @@ int main(/*int argc, char** argv*/) {
 		} else {
 			T = 4.515;
 		}
-		double J = 0.5;
+		double J = 1;
 		double K = J/T;
 
 		int nulltime = time(nullptr);
@@ -41,9 +41,9 @@ int main(/*int argc, char** argv*/) {
 		// Create data files
 		
 		std::ofstream susceptibility_file;
-		std::string susceptibility_filename = "box_size_occupied";
 		std::stringstream ss;
-		ss <<  "box_size_occupied" << getpid() << ".txt";
+		ss <<  "susceptibility" << getpid() << ".txt";
+		std::string susceptibility_filename = ss.str();
 		susceptibility_file.open(susceptibility_filename, std::ios_base::app);
 
 		// unsigned max_length_exponent = 8;
@@ -79,6 +79,9 @@ int main(/*int argc, char** argv*/) {
 				// std::cout << "Worm number:" << j << "\n";
 
 				num_steps += IsingSimulation(lattice, K);
+				// std::cout << "Required number of steps: " << num_steps << "\n";
+				// std::string s;
+				// std::cin >> s;
 			}
 		
 			// Update indexing
