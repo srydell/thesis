@@ -125,72 +125,23 @@ void Graph::GetLinkedNeighbours(unsigned site, std::vector<unsigned> &linked_nei
 *
 * @return: unsigned
 */
-unsigned Graph::GetRandomNeighbour(unsigned site, unsigned* except_site) {
+unsigned Graph::GetRandomNeighbour(unsigned site) {
+	// rand_num is in (0, 1)
 	double rand_num = GetRandomNum();
 	// Check if site is in mGraph
 	if (IsInGraph(site)) {
-	
-		// If rand_num is less than prob_of_choosing_site, the corresponding site is chosen
-		bool less_neighbours = (except_site) ? 1 : 0;
 		// size - less_neighbours since we have some except_site that can not be chosen
-		double prob_of_choosing_site = 1.0 / (mGraph[site].neighbours.size() - less_neighbours);
+		double prob_of_choosing_site = 1.0 / mGraph[site].neighbours.size();
 		// Will be added to prob_of_choosing_site until a site is chosen or we run out of sites to choose from
 		double prob_increase_per_site = prob_of_choosing_site;
 
-		// Check if passed null pointer
-		if (except_site) {
-			// Check that except_site is in mGraph[site].neighbours
-			if (AreNeighbours(site, *except_site)) {
-
-				// Add the site index if it is not except_site
-				for (auto index_and_value : mGraph[site].neighbours) {
-					// Make sure we do not return except_site
-					if (index_and_value.first != *except_site) {
-
-						// Check if we should choose this site
-						if (rand_num < prob_of_choosing_site) {
-							return index_and_value.first;
-						// Else we go to next site
-						} else {
-							prob_of_choosing_site += prob_increase_per_site;
-						}
-					}
-				}
-				// Error handling for Deafult: Unknown error
-				// Something went wrong. Should have returned some site.
-				std::stringstream ss;
-				ss << "Call to Graph::GetRandomNeighbour failed somehow.\n"
-					<< "Input was: "
-					<< "Site: " << site << ", except_site: " << *except_site << ", rand_num: " << rand_num << "\n"
-					<< "prob_of_choosing_site: " << prob_of_choosing_site << "\n";
-				throw ss.str();
-
-			} else {
-				// Error handling for siteX and siteY not neighbours
-				std::stringstream ss;
-				ss << "Call to Graph::GetRandomNeighbour failed since input site "
-					<< site << " and except_site " << *except_site << " are not in neighbours." << "\n";
-				throw ss.str();
+		for (auto index_and_value : mGraph[site].neighbours) {
+			// Check if we should choose this site
+			if (rand_num < prob_of_choosing_site) {
+				return index_and_value.first;
 			}
-		} else {
-			// Here we know that except_site is a null pointer
-			for (auto index_and_value : mGraph[site].neighbours) {
-				// Check if we should choose this site
-				if (rand_num < prob_of_choosing_site) {
-					return index_and_value.first;
-				// Else we go to next site
-				} else {
-					prob_of_choosing_site += prob_increase_per_site;
-				}
-			}
-			// Error handling for Deafult: Unknown error
-			// Something went wrong. Should have returned some site.
-			std::stringstream ss;
-			ss << "Call to Graph::GetRandomNeighbour failed somehow.\n"
-				<< "Input was: "
-				<< "Site: " << site << ", except_site: " << *except_site << ", rand_num: " << rand_num << "\n"
-				<< "prob_of_choosing_site: " << prob_of_choosing_site << "\n";
-			throw ss.str();
+			// Else we go to next site
+			prob_of_choosing_site += prob_increase_per_site;
 		}
 	} else {
 		// Error handling for site not in mGraph
@@ -199,6 +150,11 @@ unsigned Graph::GetRandomNeighbour(unsigned site, unsigned* except_site) {
 			<< site << " is not in the graph." << "\n";
 		throw ss.str();
 	}
+	// Error handling for unknown error
+	std::stringstream ss;
+	ss << "Call to Graph::GetRandomNeighbour failed by an unknown error\n"
+		<< "Parameters - site: " << site << "\n";
+	throw ss.str();
 }
 
 /**

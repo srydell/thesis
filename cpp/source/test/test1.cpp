@@ -11,6 +11,92 @@
 #include <unordered_map>
 #include <vector>
 
+TEST_CASE( "All sites coming from GetRandomNeighbour are neighbours to input", "[Graph]" ) {
+	unsigned dimension = 2;
+	unsigned length = 4;
+	int nulltime = time(nullptr);
+	srand((unsigned)nulltime);
+
+	unsigned long seed = rand();
+	Graph lattice = Graph(dimension, length, seed);
+
+	for (int tries = 0; tries < 1000; ++tries) {
+		for (unsigned i = 0; i < std::pow(length, dimension); ++i) {
+			unsigned neighbour = lattice.GetRandomNeighbour(i);
+		
+			// See if neighbour is actually a neighbour to i
+			if (i == 0) {
+				bool is_neighbour =
+					(neighbour == 1)
+					|| (neighbour == 3)
+					|| (neighbour == 4)
+					|| (neighbour == 12);
+				REQUIRE( is_neighbour );
+			} else if (i == 3) {
+				bool is_neighbour =
+					(neighbour == 0)
+					|| (neighbour == 2)
+					|| (neighbour == 7)
+					|| (neighbour == 15);
+				REQUIRE( is_neighbour );
+			} else if (i == 15) {
+				bool is_neighbour =
+					(neighbour == 12)
+					|| (neighbour == 14)
+					|| (neighbour == 3)
+					|| (neighbour == 11);
+				REQUIRE( is_neighbour );
+			} else if (i == 12) {
+				bool is_neighbour =
+					(neighbour == 13)
+					|| (neighbour == 15)
+					|| (neighbour == 0)
+					|| (neighbour == 8);
+				REQUIRE( is_neighbour );
+			// Bottom row
+			} else if (i > 0 && i < length-1) {
+				bool is_neighbour =
+					(neighbour == (i + 1))
+					|| (neighbour == (i - 1))
+					|| (neighbour == (i + length))
+					|| (neighbour == (i + length * (length-1)));
+				REQUIRE( is_neighbour );
+			// Left middle two rows
+			} else if(i == 4 || i == 8) {
+				bool is_neighbour =
+					(neighbour == (i + 1))
+					|| (neighbour == (i + length - 1))
+					|| (neighbour == (i + length))
+					|| (neighbour == (i - length));
+				REQUIRE( is_neighbour );
+			// Right middle two rows
+			} else if(i == 7 || i == 11) {
+				bool is_neighbour =
+					(neighbour == (i - length + 1))
+					|| (neighbour == (i - 1))
+					|| (neighbour == (i + length))
+					|| (neighbour == (i - length));
+				REQUIRE( is_neighbour );
+			// Top middle two sites
+			} else if(i == 13 || i == 14) {
+				bool is_neighbour =
+					(neighbour == (i + 1))
+					|| (neighbour == (i - 1))
+					|| (neighbour == (i - length * 3))
+					|| (neighbour == (i - length));
+				REQUIRE( is_neighbour );
+			} else {
+				bool is_neighbour =
+					(neighbour == (i + 1))
+					|| (neighbour == (i - 1))
+					|| (neighbour == (i + length))
+					|| (neighbour == (i - length));
+				REQUIRE( is_neighbour );
+			}
+		}
+	}
+}
+
 TEST_CASE( "All neighbours are neighbours to each other", "[Graph]" ) {
 	unsigned dimension = 2;
 	unsigned length = 4;
