@@ -2,3 +2,5 @@
 build/*
 build/latex/*
 build/html/*
+shell/
+old_index/

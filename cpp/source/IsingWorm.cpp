@@ -149,7 +149,7 @@ void UpdateLoopLengths(std::unordered_map<unsigned, unsigned> &loop_lengths, std
 }
 
 /**
-* @brief: Run the simulation until at least one loop is formed
+* @brief: Run the simulation until at least one loop is formed and return the number of steps taken
 *
 * @param: Graph &lattice
 *       : std::vector<unsigned> correlation_func
@@ -157,18 +157,20 @@ void UpdateLoopLengths(std::unordered_map<unsigned, unsigned> &loop_lengths, std
 *       : unsigned length
 *       : double K
 *
-* @return: void
+* @return: long double
 */
-void IsingSimulation(Graph & lattice, std::unordered_map<unsigned, unsigned> &correlation_func, unsigned length, double K) {
+long double IsingSimulation(Graph & lattice, double K) {
 	// Get the first site for this simulation
 	unsigned first_site = lattice.GetRandomSite();
+
 	// Get some random neighbour to form the first link
 	unsigned current_site = lattice.GetRandomNeighbour(first_site);
+
 	// Form the first link
 	lattice.SwitchLinkBetween(first_site, current_site);
 
-	// Initialize the correlation function
-	UpdateCorrelationFunction(current_site, first_site, length, correlation_func);
+	// Store the total number of accepted steps
+	long double num_steps = 1.0;
 
 	bool loop_formed = 0;
 	while (!loop_formed) {
@@ -178,6 +180,7 @@ void IsingSimulation(Graph & lattice, std::unordered_map<unsigned, unsigned> &co
 
 		auto rand_num = lattice.GetRandomNum();
 		if (IsAccepted(K, lattice.GetLink(current_site, next_site), rand_num)) {
+			num_steps++;
 
 			// std::cout << "Got accepted!" << "\n";
 			// std::cout << "Switch link between sites: " << current_site << " and " << next_site << "\n";
@@ -191,7 +194,7 @@ void IsingSimulation(Graph & lattice, std::unordered_map<unsigned, unsigned> &co
 				loop_formed = 1;
 
 			}
-			UpdateCorrelationFunction(first_site, next_site, length, correlation_func);
 		}
 	}
+	return num_steps;
 }
