@@ -202,3 +202,17 @@ long double IsingSimulation(Graph & lattice, double K) {
 	}
 	return num_steps;
 }
+
+/**
+* @brief: Run warm_up_runs number of updates and throw them away
+*
+* @param: int warm_up_runs
+*       : Graph& lattice
+*
+* @return: void
+*/
+void WarmUp(int warm_up_runs, Graph& lattice, double K) {
+	for (int i = 0; i < warm_up_runs; ++i) {
+		IsingSimulation(lattice, K);
+	}
+}
