@@ -1,0 +1,11 @@
+\section{Error Estimation}
+\label{sec:ErrorEst}
+
+In this thesis a number of error estimation techniques were used to know how much data was needed for each measurement. In this section the techniques will be described intuitively.
+
+\subsection{Bootstrap}
+\label{subsec:Bootstrap}
+
+Bootstrap is a resampling method to examine a probability distribution. In this thesis it was used to estimate the error propagation of parameters in curve fitting.
+
+Given a set $\bm x$ of $N$ measurements from an unknown distribution $\hat \phi$, some statistical calculation of interest can be done as $\theta = s(\bm x)$. A resampling $\bm x_0$ of $\bm x$ comprised of $N$ random measurements from $\bm x$ (where one measurement can be included several times), can then be used to calculate $\theta^*_0 = s(\bm x_0)$. Repeating this $N_B$ times gives an estimate $\theta^* = (\theta^*_0, \theta^*_1, ..., \theta^*_{N_B})$ of the distribution $\hat \theta$. Assuming $N_B$ is large then, by the central limit theorem, $\hat \theta$ is a normal distribution with some standard deviation $\sigma_\theta$ that can be used as an error estimation for $\theta$.
