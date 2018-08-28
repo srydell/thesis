@@ -132,26 +132,33 @@ def plot_error_bars(data_dict):
             # Append the D_H to the correct relative box size
             brs_dhs[brs_and_dh[0]].append(brs_and_dh[1])
 
+        min_rel_box_size = min(brs_dhs.keys())
         average_dh = []
         std_average = []
         for rel_box in brs_dhs:
+            # NOTE: The best approximation in the box model is always the smallest box
+            if rel_box == min_rel_box_size:
+                best_avg_hdim = np.average(brs_dhs[rel_box])
+                best_std_hdim = np.std(brs_dhs[rel_box])
+
             average_dh.append(np.average(brs_dhs[rel_box]))
 
             # Calculate the standard deviation
             # std_dev = sqrt(((sample1 - average)^2 + ... + (sampleN - average)^2)/N)
             std_average.append(np.std(brs_dhs[rel_box]))
 
-        print(f"D_H = {min(average_dh):.5} +- {max(std_average):.2}")
+        print(f"D_H = {best_avg_hdim:.5} +- {best_std_hdim:.2}")
 
         plt.errorbar(list(brs_dhs.keys()), average_dh, yerr=std_average,\
             ecolor='gray', elinewidth=2, fmt='k.', linestyle="None",\
             capsize=3, capthick=2, label=r"$\bar D_H \pm \sigma_{D_H}$")
 
-def plot_boxsize_vs_hausdorff(data_dict, savefig=False):
+def plot_boxsize_vs_hausdorff(data_dict, plot_scatter=False, savefig=False):
     """Plot data from data_dict[system_linear_size]
 
     :data_dict: dict -
            {<system_linear_size>: [[<box_relative_size>, <hausdorff_dimension>], ...]}
+    :plot_scatter: Bool - if True, plot all data points with plt.scatter
     :savefig: Bool - if True, save figures to ./plots
     :returns: None
     """
@@ -166,17 +173,18 @@ def plot_boxsize_vs_hausdorff(data_dict, savefig=False):
             if not boxsize_and_hdim[0] in found_box_sizes:
                 found_box_sizes.append(boxsize_and_hdim[0])
 
-            # Set labels
-            plt.title(r"Box dimension calculation on a ${}^3$ Ising lattice"\
-                    .format(int(system_linear_size)))
-            plt.xlabel("Relative size of box division")
-            plt.ylabel(r"$D_H$")
-
-            plt.scatter(boxsize_and_hdim[0], boxsize_and_hdim[1], c="#555555", s=2)
+            if plot_scatter:
+                plt.scatter(boxsize_and_hdim[0], boxsize_and_hdim[1], c="#555555", s=2)
 
             # New color every box size
             # color_counter += 1
             # color_counter %= len(colors)
+
+        # Set labels
+        plt.title(r"Box dimension calculation on a ${}^3$ Ising lattice"\
+                .format(int(system_linear_size)))
+        plt.xlabel("Relative size of box division")
+        plt.ylabel(r"$D_H$")
 
         # labels = [r"$\frac{1}{4}$", ...]
         labels = [bsize.as_integer_ratio() for bsize in found_box_sizes]
@@ -189,21 +197,21 @@ def plot_boxsize_vs_hausdorff(data_dict, savefig=False):
 
         plt.legend()
 
-        plt.show()
         if savefig:
             sls = system_linear_size
             plt.savefig(f"./plots/box_dimension_for_{sls}x{sls}x{sls}Ising.png",\
                         bbox_inches='tight')
+        plt.show()
 
 if __name__ == '__main__':
-    simulation_data = process_file("./data/box_size128x128x128.txt")
+    simulation_data = process_file("./data/box_size128x128.txt")
 
     size_to_plot = 128
-    clean_processed_data(simulation_data, size_to_plot, exclude_rel_size=[1/2, 1/4, 1/8, 1/16, 1/32])
+    clean_processed_data(simulation_data, size_to_plot, exclude_rel_size=[1/2, 1/4])
 
     calc_hausdorff_dimension(simulation_data)
 
     plot_error_bars(simulation_data)
 
     # plt.show() called here
-    plot_boxsize_vs_hausdorff(simulation_data)
+    plot_boxsize_vs_hausdorff(simulation_data, savefig=False)
