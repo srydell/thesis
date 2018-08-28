@@ -10,5 +10,6 @@ void UpdateCorrelationFunction(unsigned site0, unsigned site1, unsigned length, 
 void UpdateLoopLengths(std::unordered_map<unsigned, unsigned> &loop_lengths, std::unordered_map<unsigned, std::vector<unsigned>> &clusters, Graph &lattice);
 double GetAverageLoopLength(std::vector<unsigned> &loop_lengths, double const &K);
 long double IsingSimulation(Graph & lattice, double K);
+void WarmUp(int warm_up_runs, Graph& lattice, double K);
 
 #endif
