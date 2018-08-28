@@ -70,7 +70,7 @@ def plot_syssize_vs_looplength(data_dict):
     for system_linear_size in data_dict:
         color_counter = 0
         # Set labels
-        plt.title("Maximum loop length on a 3D Ising lattice")
+        plt.title("Maximum loop length on a 2D Ising lattice")
         plt.xlabel("Linear system size")
         plt.ylabel("Loop length")
 
@@ -130,7 +130,7 @@ def plot_syssize_vs_fit(data_dict):
     print(f"D_H = {opt_parameters[1]:.6}")
 
 if __name__ == '__main__':
-    simulation_data = process_file("./data/loop_lengths128x128x128.txt")
+    simulation_data = process_file("./data/loop_lengths128x128.txt")
 
     clean_processed_data(simulation_data, exclude_system_size=[4, 8])
 
@@ -139,9 +139,9 @@ if __name__ == '__main__':
     plot_syssize_vs_fit(simulation_data)
 
     plt.legend()
-    plt.show()
 
     savefig=False
     if savefig:
-        plt.savefig(f"./plots/maximum_loop_length_for_3D_Ising.png",\
+        plt.savefig(f"./plots/maximum_loop_length_for_2D_Ising.png",\
                     bbox_inches='tight')
+    plt.show()
