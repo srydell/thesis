@@ -7,6 +7,28 @@
 #include <ostream>
 #include <unordered_map>
 #include <vector>
+#include <fstream>
+#include <sstream>
+#include <sys/types.h>
+#include <unistd.h>
+#include <string>
+
+/**
+* @brief: Appends the current PID to the filename provided and returns the opened file stream in append mode
+*
+* @param: std::string& filename
+*
+* @return: decltype(auto)
+*/
+template<typename TString>
+decltype(auto) GetUniqueFile(const TString& filename) {
+	std::ofstream file;
+	std::stringstream ss;
+	ss <<  filename << getpid();
+	std::string filename_pid = ss.str();
+	file.open(filename_pid, std::ios_base::app);
+	return file;
+}
 
 /**
 * @brief: Return the index of type T1 that correspond to the maximum value of type T2
