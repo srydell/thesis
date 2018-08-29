@@ -132,7 +132,7 @@ def plot_syssize_vs_fit(data_dict):
 if __name__ == '__main__':
     simulation_data = process_file("./data/loop_lengths128x128.txt")
 
-    clean_processed_data(simulation_data, exclude_system_size=[4, 8])
+    clean_processed_data(simulation_data, exclude_system_size=[])
 
     plot_syssize_vs_looplength(simulation_data)
 
