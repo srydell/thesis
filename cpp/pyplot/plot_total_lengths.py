@@ -1,10 +1,10 @@
 '''
-Brief:               Plot susceptibility
+Brief:               Plot total lengths of all loops ~ Energy
 
 File name:           plot_sizes.py
 Author:              Simon Rydell
-Date created:        Aug 24, 2018
-Date last modified:  Aug 25, 2018
+Date created:        Aug 29, 2018
+Date last modified:  Aug 29, 2018
 Python Version:      3.7
 '''
 
@@ -21,15 +21,15 @@ def process_file(filename):
     """Go through filename and split it into arrays
        Assumes that the file is organized as:
 
-       <susceptibility00> <max_loop_length01> ...
-       <susceptibility10> <max_loop_length11> ...
+       <total_loop_length00> <total_loop_length01> ...
+       <total_loop_length10> <total_loop_length11> ...
        ...
 
        Where the system_linear_size is 2, 4, 8, ... on each line
 
     :filename: String - Valid path to a file containing the abow
     :returns: dict - {<system_linear_size0>:
-                      [<susceptibility00>, <max_loop_length10, ...], ...}
+                      [<total_loop_length00>, <total_loop_length10, ...], ...}
     """
     out_dict = {}
     with open(filename) as data_file:
@@ -70,7 +70,7 @@ def plot_hist_of_error(data_dict):
     for system_size in data_dict:
         plt.hist(data_dict[system_size])
         plt.title(rf"Error distribution for ${system_size}^2$ Ising lattice")
-        plt.xlabel("Susceptibility")
+        plt.xlabel("total_loop_length")
         plt.ylabel("Number of counts")
         plt.show()
         # Clear figure
@@ -97,25 +97,25 @@ def plot_syssize_vs_looplength(data_dict):
     plt.xticks(list(data_dict.keys()),\
             list(data_dict.keys()),)
 
-def fit_function(x, a, eta):
+def fit_function(x, a, exponent):
     """Function to fit against
-    y = a * x^(2 - eta) + c
+    y = a * x^(exponent) + c
 
     :x: Float - Known data
     :a: Float - Unknown data
-    :eta: Float - Unknown data
+    :exponent: Float - Unknown data
     :returns: Float
     """
-    return a * np.power(x, 2 - eta)
+    return a * np.power(x, exponent)
 
 def plot_setup():
     """Set titles, {x,y}labels etc.
     :returns: None
     """
     # Set labels
-    plt.title("Susceptibility on a 2D Ising lattice")
+    plt.title("Total loop length on a 2D Ising lattice")
     plt.xlabel("Linear system size")
-    plt.ylabel("Susceptibility")
+    plt.ylabel("Total loop length")
 
 def bootstrap(fit_func, xdata, ydata, iterations=100):
     """Perform bootstrap resampling and get the average and standard deviation from the optimal parameters
@@ -156,7 +156,7 @@ def plot_syssize_vs_fit(data_dict):
     """
 
     system_sizes = []
-    susceptibility = []
+    total_loop_length = []
     # avg_syssize = []
     # avg_susc = []
     for system_size in data_dict:
@@ -164,36 +164,37 @@ def plot_syssize_vs_fit(data_dict):
         #     avg_syssize.append(system_size)
         #     avg_susc.append(np.average(data_dict[system_size]))
 
-        # Ensure there are as many system_size points as susceptibility
+        # Ensure there are as many system_size points as total_loop_length
         ss = [system_size]*len(data_dict[system_size])
         for size in ss:
             system_sizes.append(size)
 
         for susc in data_dict[system_size]:
-            susceptibility.append(susc)
+            total_loop_length.append(susc)
 
     # xdata
     system_sizes = np.array(system_sizes)
     # ydata
-    susceptibility = np.array(susceptibility)
+    total_loop_length = np.array(total_loop_length)
 
-    stderr_pars = bootstrap(fit_function, system_sizes, susceptibility, 100)
+    stderr_pars = bootstrap(fit_function, system_sizes, total_loop_length, 100)
     opt_pars = list(stderr_pars.keys())
 
     # Used for plotting against the fitted function
     xdata = np.linspace(min(system_sizes), max(system_sizes), 50)
     # colors = ["#966842", "#f44747", "#eedc31", "#7fdb6a", "#0e68ce"]
     plt.loglog(xdata, fit_function(xdata, *opt_pars),\
-            c="#0e68ce", label=fr"$\propto L^{{ 2 - {opt_pars[1]:.2f} \pm {stderr_pars[opt_pars[1]]:.3f}  }}$")
-    plt.loglog(xdata, fit_function(xdata, *[0.51, .25]),\
-            c="#7fdb6a", label=r"$\propto L^{{ 2 - \eta_{Ising} }}$")
-    plt.loglog(xdata, fit_function(xdata, *[0.35, 0]),\
-            c="#f44747", label=r"$\propto L^{{ 2 }}$")
+            c="#0e68ce",\
+            label=fr"$\propto L^{{ {opt_pars[1]:.2f} \pm {stderr_pars[opt_pars[1]]:.3f}  }}$")
+    # plt.loglog(xdata, fit_function(xdata, *[0.51, .25]),\
+    #         c="#7fdb6a", label=r"$\propto L^{{ 2 - \eta_{Ising} }}$")
+    # plt.loglog(xdata, fit_function(xdata, *[0.35, 0]),\
+    #         c="#f44747", label=r"$\propto L^{{ 2 }}$")
 
-    print(f"eta = {opt_pars[1]:.6} +- {stderr_pars[opt_pars[1]]:.4}")
+    print(f"exponent = {opt_pars[1]:.6} +- {stderr_pars[opt_pars[1]]:.4}")
 
 if __name__ == '__main__':
-    simulation_data = process_file("./data/susceptibility.txt")
+    simulation_data = process_file("./data/total_loop_length.txt")
     clean_processed_data(simulation_data, exclude_system_size=[])
 
     # plot_hist_of_error(simulation_data)
@@ -206,6 +207,6 @@ if __name__ == '__main__':
 
     savefig = False
     if savefig:
-        plt.savefig(f"./plots/susceptibility128x128Ising.png",\
+        plt.savefig(f"./plots/total_loop_length128x128Ising.png",\
                     bbox_inches='tight')
     plt.show()
