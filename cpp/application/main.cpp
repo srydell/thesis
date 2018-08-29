@@ -34,8 +34,8 @@ int main(/*int argc, char** argv*/) {
 		auto susceptibility_file = GetUniqueFile("susceptibility");
 		auto worm_distribution_file = GetUniqueFile("worm_distribution");
 
-		// unsigned max_length_exponent = 3;
-		unsigned max_length_exponent = 8;
+		unsigned max_length_exponent = 4;
+		// unsigned max_length_exponent = 8;
 
 		// Run the simulation for each size 
 		// 1 run takes about 22 seconds
@@ -107,7 +107,7 @@ int main(/*int argc, char** argv*/) {
 
 				worm_distribution_file << "L=" << length << ":\n";
 				for (auto& index_and_ll : loop_lengths) {
-					worm_distribution_file << index_and_ll.second;
+					worm_distribution_file << index_and_ll.second << " ";
 				}
 				worm_distribution_file << "\n";
 
