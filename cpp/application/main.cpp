@@ -32,7 +32,7 @@ int main(/*int argc, char** argv*/) {
 
 		// Create data files
 		auto susceptibility_file = GetUniqueFile("susceptibility");
-		auto total_worm_length_file = GetUniqueFile("total_worm_length");
+		auto worm_distribution_file = GetUniqueFile("worm_distribution");
 
 		// unsigned max_length_exponent = 3;
 		unsigned max_length_exponent = 8;
@@ -104,20 +104,19 @@ int main(/*int argc, char** argv*/) {
 
 				// susc = 1 / T * sum_i(g(i)) = 1 / T * ((step taken)/(worms started))
 				susceptibility.push_back(num_steps / (num_worms_started * T));
-				
-				unsigned total_length = 0;
-				for (auto& index_and_llength : loop_lengths) {
-					total_length += index_and_llength.second;
+
+				worm_distribution_file << "L=" << length << ":\n";
+				for (auto& index_and_ll : loop_lengths) {
+					worm_distribution_file << index_and_ll.second;
 				}
-				total_worm_length.push_back(total_length);
+				worm_distribution_file << "\n";
+
 			}
 			write_container(max_loop_lengths, std::cout, ' ');
 			write_container(susceptibility, susceptibility_file, ' ');
-			write_container(total_worm_length, total_worm_length_file, ' ');
 			// Make a new row for the next run
 			std::cout << '\n';
 			susceptibility_file << '\n';
-			total_worm_length_file << '\n';
 
 			// This will store the average loop length according to Mats' notes
 			// double average_loop_length = GetAverageLoopLength(loop_lengths, K);
