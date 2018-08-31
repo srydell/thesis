@@ -117,11 +117,9 @@ void Graph::GetLinkedNeighbours(unsigned site, std::vector<unsigned> &linked_nei
 }
 
 /**
-* @brief: Return a neighbour to site that is not except_site.
-*         If except_site is a null pointer, it is interpreted that any neighbour will do
+* @brief: Return a random neighbour to site
 *
 * @param: unsigned site
-*       : unsigned* except_site
 *
 * @return: unsigned
 */
@@ -132,7 +130,6 @@ unsigned Graph::GetRandomNeighbour(unsigned site) {
 	// Check if site is in mGraph
 	if (IsInGraph(site)) {
 
-		// size - less_neighbours since we have some except_site that can not be chosen
 		double prob_of_choosing_site = 1.0 / mGraph[site].neighbours.size();
 		// Will be added to prob_of_choosing_site until a site is chosen or we run out of sites to choose from
 		double prob_increase_per_site = prob_of_choosing_site;
