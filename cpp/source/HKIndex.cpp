@@ -16,7 +16,7 @@ void Graph::HKIndex(std::unordered_map<unsigned, std::vector<unsigned>> &cluster
 
 	// Used to avoid indexing a cluster twice
 	auto visited_clusters = std::make_unique<std::vector<bool>>(std::pow(mLength, mDimension), 0);
-	
+
 	for (Site &site : mGraph) {
 		// Initialize neighbours
 		std::vector<unsigned> neighbours;
