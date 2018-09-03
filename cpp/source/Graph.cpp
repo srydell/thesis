@@ -10,10 +10,10 @@
 /**
 * @brief: Constructor of Graph. Populate mGraph with all neighbours according to periodic boundary conditions.
 *
-* @param: unsigned dim
-*       : unsigned len
+* @param: int dim
+*       : int len
 */
-Graph::Graph(unsigned dimension, unsigned length, unsigned long seed) {
+Graph::Graph(int dimension, int length, int long seed) {
 	this->mDimension = dimension;
 	this->mLength = length;
 	this->mSeed = seed;
@@ -21,7 +21,7 @@ Graph::Graph(unsigned dimension, unsigned length, unsigned long seed) {
 	// Initialize the vector with a reserve of length^dimension
 	mGraph.reserve(std::pow(length, dimension));
 
-	for (unsigned index = 0; index < std::pow(length,dimension); ++index) {
+	for (int index = 0; index < std::pow(length,dimension); ++index) {
 		// emplace_back to avoid copying the Site after creation
 		mGraph.emplace_back(index, length, dimension);
 	}
@@ -32,7 +32,7 @@ Graph::Graph(unsigned dimension, unsigned length, unsigned long seed) {
 	// TODO: Check if this functionality is useful: knowing exactly which sites are on the border
 	// Here is only how many there are but which could be implemented somewhere
 	//
-	// std::vector<unsigned> border_values;
+	// std::vector<int> border_values;
 	// // Reserve number of sites on the border
 	// if (dimension == 2) {
 	// 	border_values.reserve(4 * (length - 1));
@@ -45,18 +45,18 @@ Graph::Graph(unsigned dimension, unsigned length, unsigned long seed) {
 /**
 * @brief: Change value between site0 and site1 in mGraph so that 0 <-> 1
 *
-* @param: unsigned site0
-*       : unsigned site1
+* @param: int site0
+*       : int site1
 *
 * @return: void
 */
-void Graph::SwitchLinkBetween(unsigned site0, unsigned site1) {
+void Graph::SwitchLinkBetween(int site0, int site1) {
 	// Check if sites are in mGraph
 	if (IsInGraph(site0) && IsInGraph(site1)) {
 
 		// Check if siteX is a neighbour to siteY
 		// Will be:
-		//     pair<unsigned, bool> - If found
+		//     pair<int, bool> - If found
 		//     neighbours.end()     - If not found
 
 		// Get the ends of the list to check links against
@@ -93,11 +93,11 @@ void Graph::SwitchLinkBetween(unsigned site0, unsigned site1) {
 /**
 * @brief: Populate linked_neighbours with all neighbours to site that has a value that is not 0.
 *
-* @param: unsigned site
+* @param: int site
 *
 * @return: void
 */
-void Graph::GetLinkedNeighbours(unsigned site, std::vector<unsigned> &linked_neighbours) {
+void Graph::GetLinkedNeighbours(int site, std::vector<int> &linked_neighbours) {
 	// Check if site is in mGraph
 	if (IsInGraph(site)) {
 		// Add the site index if the link value is not 0
@@ -119,11 +119,11 @@ void Graph::GetLinkedNeighbours(unsigned site, std::vector<unsigned> &linked_nei
 /**
 * @brief: Return a random neighbour to site
 *
-* @param: unsigned site
+* @param: int site
 *
-* @return: unsigned
+* @return: int
 */
-unsigned Graph::GetRandomNeighbour(unsigned site) {
+int Graph::GetRandomNeighbour(int site) {
 	// rand_num is in (0, 1)
 	double rand_num = GetRandomNum();
 
@@ -153,12 +153,12 @@ unsigned Graph::GetRandomNeighbour(unsigned site) {
 /**
 * @brief: Check mGraph if site has neighbour
 *
-* @param: unsigned site
-*       : unsigned neighbour
+* @param: int site
+*       : int neighbour
 *
 * @return: bool
 */
-bool Graph::AreNeighbours(unsigned site0, unsigned site1) {
+bool Graph::AreNeighbours(int site0, int site1) {
 	// Try to find siteX in neighbours of siteY
 	auto link0To1 = mGraph[site0].neighbours.find(site1);
 	auto link1To0 = mGraph[site1].neighbours.find(site0);
@@ -176,12 +176,13 @@ bool Graph::AreNeighbours(unsigned site0, unsigned site1) {
 /**
 * @brief: Check if site can be found in mGraph
 *
-* @param: unsigned site
+* @param: int site
 *
 * @return: bool
 */
-bool Graph::IsInGraph(unsigned site) {
-	if (site < mGraph.size())
+bool Graph::IsInGraph(int site) {
+	size_t temp_site = site;
+	if (temp_site < mGraph.size())
 		return 1;
 	else
 		return 0;
@@ -212,7 +213,7 @@ void Graph::PrintGraph() {
 *
 * @param: 
 *
-* @return: unsigned long
+* @return: int long
 */
 long double Graph::GetRandomNum(){
 	return mUniformDist(mRng);
@@ -223,11 +224,11 @@ long double Graph::GetRandomNum(){
 *
 * @param: 
 *
-* @return: unsigned
+* @return: int
 */
-unsigned Graph::GetRandomSite() {
+int Graph::GetRandomSite() {
 	double rand_num = GetRandomNum();
-	unsigned site_index = std::round(rand_num * (mGraph.size() - 1));
+	int site_index = std::round(rand_num * (mGraph.size() - 1));
 
 	return site_index;
 }
@@ -235,12 +236,12 @@ unsigned Graph::GetRandomSite() {
 /**
 * @brief: Return the link between site0 and site1 if it exists. Otherwise throw std::string error.
 *
-* @param: unsigned site0
-*       : unsigned site1
+* @param: int site0
+*       : int site1
 *
 * @return: bool
 */
-bool Graph::GetLink(unsigned site0, unsigned site1) {
+bool Graph::GetLink(int site0, int site1) {
 	if (IsInGraph(site0) && IsInGraph(site1)) {
 		if (AreNeighbours(site1, site0)) {
 			return mGraph[site0].neighbours[site1];
@@ -263,14 +264,14 @@ bool Graph::GetLink(unsigned site0, unsigned site1) {
 /**
 * @brief: Creates a vector from index with x, y, z, ... depending on dimension of the graph
 *
-* @param: unsigned index
+* @param: int index
 *
-* @return: std::vector<unsigned>
+* @return: std::vector<int>
 */
-std::vector<unsigned> Graph::GetxyzConversion(unsigned index) {
-	std::vector<unsigned> xyz;
+std::vector<int> Graph::GetxyzConversion(int index) {
+	std::vector<int> xyz;
 	xyz.reserve(mDimension);
-	for (unsigned i = 0; i < mDimension; ++i) {
+	for (int i = 0; i < mDimension; ++i) {
 		xyz[i] = index % mLength;
 		index = std::floor(index / mLength);
 	}

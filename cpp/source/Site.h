@@ -7,17 +7,17 @@
 class Site {
 public:
 	// Constructor/destructor
-	Site(unsigned index, unsigned length, unsigned dimension);
+	Site(int index, int length, int dimension);
 
 	// Fields
-	std::unordered_map<unsigned, bool> neighbours;
-	unsigned GetIndex();
+	std::unordered_map<int, bool> neighbours;
+	int GetIndex();
 private:
-	unsigned mRootIndex;
+	int mRootIndex;
 
 	// Functions
-	void AddNeighbours(unsigned length, unsigned dimension);
-	unsigned CalcIndexFromVector(std::vector<unsigned>& xyz, unsigned length);
+	void AddNeighbours(int length, int dimension);
+	int CalcIndexFromVector(std::vector<int>& xyz, int length);
 };
 
 #endif

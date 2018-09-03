@@ -7,23 +7,23 @@
 /**
 * @brief: Index clusters according to a modified Hoshen Kopelman algorithm
 *
-* @param: std::unordered_map<unsigned, std::vector<unsigned>> &clusters
+* @param: std::unordered_map<int, std::vector<int>> &clusters
 *
 * @return: void
 */
-void Graph::HKIndex(std::unordered_map<unsigned, std::vector<unsigned>> &clusters) {
-	unsigned largest_label = 0;
+void Graph::HKIndex(std::unordered_map<int, std::vector<int>> &clusters) {
+	int largest_label = 0;
 
 	// Used to avoid indexing a cluster twice
 	auto visited_clusters = std::make_unique<std::vector<bool>>(std::pow(mLength, mDimension), 0);
 
 	for (Site &site : mGraph) {
 		// Initialize neighbours
-		std::vector<unsigned> neighbours;
+		std::vector<int> neighbours;
 		GetLinkedNeighbours(site.GetIndex(), neighbours);
 
 		// Used to store site + neighbours if there are any neighbours
-		std::vector<unsigned> local_cluster;
+		std::vector<int> local_cluster;
 
 		// std::cout << "Handling site : " << site.GetIndex() << "\n";
 
@@ -40,7 +40,7 @@ void Graph::HKIndex(std::unordered_map<unsigned, std::vector<unsigned>> &cluster
 				(*visited_clusters)[site.GetIndex()] = 1;
 
 				// Go in all directions
-				for (unsigned &neighbour : neighbours) {
+				for (int &neighbour : neighbours) {
 
 					// std::cout << "Found neighbour : " << neighbour << "\n";
 
@@ -65,13 +65,13 @@ void Graph::HKIndex(std::unordered_map<unsigned, std::vector<unsigned>> &cluster
 /**
 * @brief: Add neighbour to local_cluster if it is not labeled in visited_clusters, then call itself on each of neighbours neighbours
 *
-* @param: unsigned neighbour
-*       : std::vector<unsigned> &local_cluster
+* @param: int neighbour
+*       : std::vector<int> &local_cluster
 *       : std::unique_ptr<std::vector<bool>>& visited_clusters
 *
 * @return: void
 */
-void Graph::Union(unsigned neighbour, unsigned largest_label, std::vector<unsigned> &local_cluster, std::unique_ptr<std::vector<bool>> &visited_clusters) {
+void Graph::Union(int neighbour, int largest_label, std::vector<int> &local_cluster, std::unique_ptr<std::vector<bool>> &visited_clusters) {
 
 	// std::cout << "\nCall to Union with parameters:" << "\n";
 	// std::cout << "neighbour: " << neighbour << "\n";
@@ -86,7 +86,7 @@ void Graph::Union(unsigned neighbour, unsigned largest_label, std::vector<unsign
 		(*visited_clusters)[neighbour] = 1;
 		local_cluster.push_back(neighbour);
 
-		std::vector<unsigned> neighbours_to_neighbour;
+		std::vector<int> neighbours_to_neighbour;
 		GetLinkedNeighbours(neighbour, neighbours_to_neighbour);
 
 		// std::cout << "Found neighbours to neighbour: " << neighbour << "\n";

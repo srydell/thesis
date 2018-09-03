@@ -5,7 +5,7 @@
 #include <unordered_map>
 
 // Constructor of Site
-Site::Site(unsigned index, unsigned length, unsigned dimension) {
+Site::Site(int index, int length, int dimension) {
 	// The index of this site
 	this->mRootIndex = index;
 	// Populate the neighbours unordered_map
@@ -15,12 +15,12 @@ Site::Site(unsigned index, unsigned length, unsigned dimension) {
 /**
 * @brief: Create the neighbours to site according to periodic boundary conditions
 *
-* @param: unsigned length
-*       : unsigned dimension
+* @param: int length
+*       : int dimension
 *
 * @return: void
 */
-void Site::AddNeighbours(unsigned length, unsigned dimension) {
+void Site::AddNeighbours(int length, int dimension) {
 	// --- 2D ---
 	// x + y * L = N
 	//
@@ -32,10 +32,10 @@ void Site::AddNeighbours(unsigned length, unsigned dimension) {
 	bool startingWeight = 0;
 
 	// Find the (x, y, z, ...) vector corresponding to the given index (mRootIndex)
-	std::vector<unsigned> xyz;
+	std::vector<int> xyz;
 	xyz.reserve(dimension);
 	auto temp_index = mRootIndex;
-	for (unsigned i = 0; i < dimension; ++i) {
+	for (int i = 0; i < dimension; ++i) {
 
 		// std::cout << "Xyz index: " << i << "\n";
 		// std::cout << "Adding: temp_index % length : " << temp_index << " % " << length << " : " << temp_index % length << "\n";
@@ -102,11 +102,11 @@ void Site::AddNeighbours(unsigned length, unsigned dimension) {
 /**
 * @brief: Calculate the index corresponding to the values in xyz = (x_0, x_1, ..., x_N)
 *
-* @param: std::vector<unsigned>& xyz
+* @param: std::vector<int>& xyz
 *
-* @return: unsigned
+* @return: int
 */
-unsigned Site::CalcIndexFromVector(std::vector<unsigned>& xyz, unsigned length) {
+int Site::CalcIndexFromVector(std::vector<int>& xyz, int length) {
 	// index = x_0 + L * x_1 + L^2 * x_2 + ...
 	auto index = 0;
 	auto exponent = 0;
@@ -123,8 +123,8 @@ unsigned Site::CalcIndexFromVector(std::vector<unsigned>& xyz, unsigned length) 
 *
 * @param: 
 *
-* @return: unsigned
+* @return: int
 */
-unsigned Site::GetIndex() {
+int Site::GetIndex() {
 	return mRootIndex;
 }

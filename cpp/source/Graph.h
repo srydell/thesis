@@ -9,56 +9,56 @@
 class Graph {
 public:
 	// Constructor
-	Graph(unsigned dimension, unsigned length, unsigned long seed);
+	Graph(int dimension, int length, int long seed);
 
 	// Functions
 	long double GetRandomNum();
-	bool GetLink(unsigned site0, unsigned site1);
-	unsigned GetRandomNeighbour(unsigned site);
-	unsigned GetRandomSite();
-	void FindIndices(std::unordered_map<unsigned, std::vector<unsigned>> &clusters, std::vector<unsigned> &local_cluster, std::vector<unsigned> &indices);
-	void GetLinkedNeighbours(unsigned site, std::vector<unsigned> &linked_neighbours);
+	bool GetLink(int site0, int site1);
+	int GetRandomNeighbour(int site);
+	int GetRandomSite();
+	void FindIndices(std::unordered_map<int, std::vector<int>> &clusters, std::vector<int> &local_cluster, std::vector<int> &indices);
+	void GetLinkedNeighbours(int site, std::vector<int> &linked_neighbours);
 	void PrintGraph();
-	void PrintClusters(std::unordered_map<unsigned, std::vector<unsigned>> &to_print);
-	void SwitchLinkBetween(unsigned site0, unsigned site1);
-	std::vector<unsigned> GetxyzConversion(unsigned index);
-	void GetPercolatingIndices(std::unordered_map<unsigned, std::vector<unsigned>> const &clusters, std::vector<unsigned> &percolating_indices);
+	void PrintClusters(std::unordered_map<int, std::vector<int>> &to_print);
+	void SwitchLinkBetween(int site0, int site1);
+	std::vector<int> GetxyzConversion(int index);
+	void GetPercolatingIndices(std::unordered_map<int, std::vector<int>> const &clusters, std::vector<int> &percolating_indices);
 
 	// IndexClusters
-	void IndexClusters(std::unordered_map<unsigned, std::vector<unsigned>> &clusters);
+	void IndexClusters(std::unordered_map<int, std::vector<int>> &clusters);
 
 	// Hoshen Kopelman
-	void HKIndex(std::unordered_map<unsigned, std::vector<unsigned>> &clusters);
+	void HKIndex(std::unordered_map<int, std::vector<int>> &clusters);
 
 	// ClusterDimension
-	void DivideGraph(std::unordered_map<unsigned, std::vector<unsigned>>& blocks);
-	void GetBoxDimension(std::unordered_map<unsigned, std::vector<unsigned>>& blocks, std::unordered_map<unsigned, unsigned>& num_occupied_and_sidelength, std::vector<unsigned>& structure);
+	void DivideGraph(std::unordered_map<int, std::vector<int>>& blocks);
+	void GetBoxDimension(std::unordered_map<int, std::vector<int>>& blocks, std::unordered_map<int, int>& num_occupied_and_sidelength, std::vector<int>& structure);
 private:
 	// Fields
 	std::vector<Site> mGraph;
 	// Related to random numbers
 	//Initialize with non-deterministic seeds
-	unsigned long mSeed;
+	int long mSeed;
 	//Mersenne Twister: Good quality random number generator
 	std::mt19937 mRng; 
 	// Type of random number distribution
 	std::uniform_real_distribution<double> mUniformDist{std::uniform_real_distribution<double>(0.0, 1.0)};
-	unsigned mLength;
-	unsigned mDimension;
+	int mLength;
+	int mDimension;
 
-	bool AreNeighbours(unsigned site0, unsigned site1);
-	bool IsInGraph(unsigned site);
-	bool IsInVector(unsigned item, std::vector<unsigned> &vector_to_search);
-	bool AllHaveIndex(unsigned index, std::vector<unsigned> &indices_to_search);
-	void MoveToIndex(unsigned smallest_index, std::vector<unsigned> &local_cluster, std::unordered_map<unsigned, std::vector<unsigned>> &clusters);
+	bool AreNeighbours(int site0, int site1);
+	bool IsInGraph(int site);
+	bool IsInVector(int item, std::vector<int> &vector_to_search);
+	bool AllHaveIndex(int index, std::vector<int> &indices_to_search);
+	void MoveToIndex(int smallest_index, std::vector<int> &local_cluster, std::unordered_map<int, std::vector<int>> &clusters);
 
 	// ClusterDimension
-	void DivideGraphRec(std::unordered_map<unsigned, std::vector<unsigned>>& blocks, unsigned side_length, unsigned start, unsigned system_size);
-	void AppendCurrentBox(unsigned start, unsigned side_length, std::vector<unsigned>& current_box);
-	void NextToAdd(std::vector<unsigned>& to_add, unsigned side_length);
+	void DivideGraphRec(std::unordered_map<int, std::vector<int>>& blocks, int side_length, int start, int system_size);
+	void AppendCurrentBox(int start, int side_length, std::vector<int>& current_box);
+	void NextToAdd(std::vector<int>& to_add, int side_length);
 
 	// Hoshen Kopelman
-	void Union(unsigned neighbour, unsigned largest_label, std::vector<unsigned> &local_cluster, std::unique_ptr<std::vector<bool>> &visited_clusters);
+	void Union(int neighbour, int largest_label, std::vector<int> &local_cluster, std::unique_ptr<std::vector<bool>> &visited_clusters);
 };
 
 #endif

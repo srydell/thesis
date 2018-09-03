@@ -8,15 +8,15 @@
 /**
 * @brief: Loop through and index every connected site in graph. Add them to clusters as site : [neighbour0, neighbour1,...]
 *
-* @param : std::unordered_map<unsigned, std::vector<unsigned>> &clusters
+* @param : std::unordered_map<int, std::vector<int>> &clusters
 *
 * @return: void
 */
-void Graph::IndexClusters(std::unordered_map<unsigned, std::vector<unsigned>> &clusters) {
-	unsigned largest_index = 0;
+void Graph::IndexClusters(std::unordered_map<int, std::vector<int>> &clusters) {
+	int largest_index = 0;
 	bool index_has_changed = 1;
 
-	// unsigned num_loops = 0;
+	// int num_loops = 0;
 
 	while (index_has_changed) {
 		index_has_changed = 0;
@@ -25,11 +25,11 @@ void Graph::IndexClusters(std::unordered_map<unsigned, std::vector<unsigned>> &c
 
 		for (Site site : mGraph) {
 			// Initialize neighbours
-			std::vector<unsigned> neighbours;
+			std::vector<int> neighbours;
 			GetLinkedNeighbours(site.GetIndex(), neighbours);
 
 			// Used to store site + neighbours if there are any neighbours
-			std::vector<unsigned> local_cluster;
+			std::vector<int> local_cluster;
 
 			// std::cout << "Handling site : " << site.GetIndex() << "\n";
 
@@ -39,7 +39,7 @@ void Graph::IndexClusters(std::unordered_map<unsigned, std::vector<unsigned>> &c
 				// local_cluster should be [current_site, neighbour0, neighbour1, ...]
 				// Add the current site
 				local_cluster.push_back(site.GetIndex());
-				for (unsigned neighbour : neighbours) {
+				for (int neighbour : neighbours) {
 
 					// std::cout << "Found neighbour : " << neighbour << "\n";
 
@@ -57,7 +57,7 @@ void Graph::IndexClusters(std::unordered_map<unsigned, std::vector<unsigned>> &c
 				// Populate indices with the indices of the sites in local_cluster.
 				// These are found in clusters.
 				// If not indexed before, indices has size = 0.
-				std::vector<unsigned> indices;
+				std::vector<int> indices;
 				FindIndices(clusters, local_cluster, indices);
 
 				// If no sites were indexed before
@@ -84,7 +84,7 @@ void Graph::IndexClusters(std::unordered_map<unsigned, std::vector<unsigned>> &c
 				// Here at least one of the sites are indexed
 
 				// Get the smallest index that will be the index of the whole local_clusters
-				unsigned smallest_index = *std::min_element(indices.begin(), indices.end());
+				int smallest_index = *std::min_element(indices.begin(), indices.end());
 
 				// std::cout << "Smallest index is : " << smallest_index << "\n";
 				// std::cout << "local_cluster size is : " << local_cluster.size() << "\n";
@@ -100,7 +100,7 @@ void Graph::IndexClusters(std::unordered_map<unsigned, std::vector<unsigned>> &c
 					// std::cout << "All do not have smallest index. Smallest_index : " <<
 					// 	smallest_index << "\n";
 					// std::cout << "indices : ";
-					// for (unsigned i : indices) {
+					// for (int i : indices) {
 					// 	std::cout << i << " ";
 					// }
 					// std::cout << "\n";
@@ -137,17 +137,17 @@ void Graph::IndexClusters(std::unordered_map<unsigned, std::vector<unsigned>> &c
 /**
 * @brief: Loop over the sites in local_cluster and populate indices if the site can be found under some index in clusters
 *
-* @param: std::unordered_map<unsigned, std::vector<unsigned>> &clusters
-*       : std::vector<unsigned> &local_cluster
-*       : std::vector<unsigned> &indices
+* @param: std::unordered_map<int, std::vector<int>> &clusters
+*       : std::vector<int> &local_cluster
+*       : std::vector<int> &indices
 *
 * @return: void
 */
-void Graph::FindIndices(std::unordered_map<unsigned, std::vector<unsigned>> &clusters, std::vector<unsigned> &local_cluster, std::vector<unsigned> &indices) {
+void Graph::FindIndices(std::unordered_map<int, std::vector<int>> &clusters, std::vector<int> &local_cluster, std::vector<int> &indices) {
 	// Loop over all index : [site0, site1, ...] in clusters
 	for (auto index_and_sites : clusters) {
 		// Loop over all sites for that index in clusters
-		for (unsigned site : index_and_sites.second) {
+		for (int site : index_and_sites.second) {
 
 			if (IsInVector(site, local_cluster)) {
 				// Found site in local_cluster, so add the corresponding index
@@ -160,25 +160,25 @@ void Graph::FindIndices(std::unordered_map<unsigned, std::vector<unsigned>> &clu
 /**
 * @brief: Returns 1 if item can be found in vector_to_search
 *
-* @param: std::vector<unsigned> vector_to_search
-*       : unsigned item
+* @param: std::vector<int> vector_to_search
+*       : int item
 *
 * @return: bool
 */
-bool Graph::IsInVector(unsigned item, std::vector<unsigned> &vector_to_search) {
+bool Graph::IsInVector(int item, std::vector<int> &vector_to_search) {
 	return std::find(vector_to_search.begin(), vector_to_search.end(), item) != vector_to_search.end();
 }
 
 /**
 * @brief: Loop through indices_to_search and check if all have index
 *
-* @param: unsigned index
-*       : std::vector<unsigned> &indices_to_search
+* @param: int index
+*       : std::vector<int> &indices_to_search
 *
 * @return: bool
 */
-bool Graph::AllHaveIndex(unsigned index, std::vector<unsigned> &indices_to_search) {
-	for (unsigned i : indices_to_search) {
+bool Graph::AllHaveIndex(int index, std::vector<int> &indices_to_search) {
+	for (int i : indices_to_search) {
 		if (i != index) {
 			return 0;
 		}
@@ -190,16 +190,16 @@ bool Graph::AllHaveIndex(unsigned index, std::vector<unsigned> &indices_to_searc
 * @brief: Move all sites in local_cluster to smallest_index in clusters.
 *         Remove all the occurances of the sites in other indices
 *
-* @param: unsigned smallest_index
-*       : std::vector<unsigned> &local_cluster
-*       : std::unordered_map<unsigned, std::vector<unsigned>> &clusters
+* @param: int smallest_index
+*       : std::vector<int> &local_cluster
+*       : std::unordered_map<int, std::vector<int>> &clusters
 *
 * @return: void
 */
-void Graph::MoveToIndex(unsigned smallest_index, std::vector<unsigned> &local_cluster, std::unordered_map<unsigned, std::vector<unsigned>> &clusters) {
+void Graph::MoveToIndex(int smallest_index, std::vector<int> &local_cluster, std::unordered_map<int, std::vector<int>> &clusters) {
 	// std::cout << "MoveToIndex called" << "\n";
 	// Add the sites to smallest_index in clusters
-	for (unsigned site_in_local_cluster : local_cluster) {
+	for (int site_in_local_cluster : local_cluster) {
 		// If site_in_local_cluster is not already in clusters for smallest_index
 		if (!IsInVector(site_in_local_cluster, clusters[smallest_index])) {
 			// Add the site
@@ -208,12 +208,12 @@ void Graph::MoveToIndex(unsigned smallest_index, std::vector<unsigned> &local_cl
 	}
 
 	// Loop through and record any sites from cluster indices that are not smallest_index
-	std::unordered_map<unsigned, std::vector<unsigned>> indices_and_sites_to_remove;
+	std::unordered_map<int, std::vector<int>> indices_and_sites_to_remove;
 	for (auto index_and_sites : clusters) {
 
 		// If it is not the smallest index we want to look for the sites in local_cluster so we can remove them
 		if (index_and_sites.first != smallest_index) {
-			for (unsigned local_site : local_cluster) {
+			for (int local_site : local_cluster) {
 				auto begin = index_and_sites.second.begin();
 				auto end = index_and_sites.second.end();
 				// Check if local_site is in this index
@@ -231,7 +231,7 @@ void Graph::MoveToIndex(unsigned smallest_index, std::vector<unsigned> &local_cl
 
 	// Now actually remove the sites
 	for (auto index_and_sites : indices_and_sites_to_remove) {
-		for (unsigned site : index_and_sites.second) {
+		for (int site : index_and_sites.second) {
 			// std::cout << "Want to delete site: " << site << "\n";
 			auto start = clusters[index_and_sites.first].begin();
 			auto end = clusters[index_and_sites.first].end();
@@ -249,13 +249,13 @@ void Graph::MoveToIndex(unsigned smallest_index, std::vector<unsigned> &local_cl
 }
 
 /**
-* @brief: Pretty print an unordered_map<unsigned, vector<unsigned>>
+* @brief: Pretty print an unordered_map<int, vector<int>>
 *
-* @param: std::unordered_map<unsigned, std::vector<unsigned>> &to_print
+* @param: std::unordered_map<int, std::vector<int>> &to_print
 *
 * @return: void
 */
-void Graph::PrintClusters(std::unordered_map<unsigned, std::vector<unsigned>> &to_print) {
+void Graph::PrintClusters(std::unordered_map<int, std::vector<int>> &to_print) {
 	std::stringstream ss;
 	for (auto value_and_vector : to_print) {
 		auto size = value_and_vector.second.size();

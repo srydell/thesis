@@ -8,14 +8,14 @@
 * @brief: Set the absolute difference in x value between site0 and site1 as a key if it doesn't already exist.
 *         Then add +1 to the corresponding value.
 *
-* @param: unsigned site0
-*       : unsigned site1
-*       : unsigned length
-*       : std::unordered_map<unsigned, unsigned> &correlation_func
+* @param: int site0
+*       : int site1
+*       : int length
+*       : std::unordered_map<int, int> &correlation_func
 *
 * @return: void
 */
-void UpdateCorrelationFunction(unsigned site0, unsigned site1, unsigned length, std::unordered_map<unsigned, unsigned> &correlation_func) {
+void UpdateCorrelationFunction(int site0, int site1, int length, std::unordered_map<int, int> &correlation_func) {
     // # add +1 to G(i-i0) for the open path from i0 to i
     // # NOTE: This has to be the absolute value,
     // #       otherwise it will be skewed toward the side with the largest number of sites.
@@ -24,8 +24,8 @@ void UpdateCorrelationFunction(unsigned site0, unsigned site1, unsigned length, 
 	// std::cout << "Site input: " << site0 << ", " << site1 << "\n";
 
 	// Get the x values for each site
-	unsigned x_0 = site0 % length;
-	unsigned x_1 = site1 % length;
+	int x_0 = site0 % length;
+	int x_1 = site1 % length;
 
 	// std::cout << "x value for site " << site0 << " is " << x_0 << "\n";
 	// std::cout << "x value for site " << site1 << " is " << x_1 << "\n";
@@ -51,8 +51,8 @@ void UpdateCorrelationFunction(unsigned site0, unsigned site1, unsigned length, 
 * @brief: Check if the link between current_site and next_site in gitter is accepted
 *
 * @param: double K
-*       : unsigned current_site
-*       : unsigned next_site
+*       : int current_site
+*       : int next_site
 *       : bool link_between
 *       : bool random_num
 *
@@ -75,12 +75,12 @@ bool IsAccepted(double K, bool link_between, long double &random_num) {
 *         ----------------------
 *           \sum { tanh^l(K) }
 *
-* @param: std::unordered_map<unsigned, unsigned> &loop_lengths
+* @param: std::unordered_map<int, int> &loop_lengths
 *       : double const &K
 *
 * @return: double
 */
-double GetAverageLoopLength(std::unordered_map<unsigned, unsigned> &loop_lengths, double const &K) {
+double GetAverageLoopLength(std::unordered_map<int, int> &loop_lengths, double const &K) {
 	// TODO: Test this function
 
 	//    \sum { l * tanh^l(K) }
@@ -103,26 +103,26 @@ double GetAverageLoopLength(std::unordered_map<unsigned, unsigned> &loop_lengths
 /**
 * @brief: For each cluster in clusters, find the length of that loop
 *
-* @param: std::unordered_map<unsigned, unsigned> &loop_lengths
-*       : std::unordered_map<unsigned, std::vector<unsigned> &clusters
+* @param: std::unordered_map<int, int> &loop_lengths
+*       : std::unordered_map<int, std::vector<int> &clusters
 *       : Graph &lattice
 *
 * @return: void
 */
-void UpdateLoopLengths(std::unordered_map<unsigned, unsigned> &loop_lengths, std::unordered_map<unsigned, std::vector<unsigned>> &clusters, Graph &lattice) {
+void UpdateLoopLengths(std::unordered_map<int, int> &loop_lengths, std::unordered_map<int, std::vector<int>> &clusters, Graph &lattice) {
 	//TODO: Test this function
 
 	// std::cout << "Call to UpdateLoopLengths" << "\n";
 
 	// Will be used to measure the length of all links from site
-	std::vector<unsigned> linked_neighbours;
+	std::vector<int> linked_neighbours;
 	for (auto index_and_sites : clusters) {
 		// Start each cluster with zero length
-		unsigned current_length = 0;
+		int current_length = 0;
 
 		// std::cout << "On index: " << index_and_sites.first << "\n";
 
-		for (unsigned site : index_and_sites.second) {
+		for (int site : index_and_sites.second) {
 			// Find the number of links going through site
 			// NOTE: This will be double counting since if
 			//       site0 is a linked neighbour to site1
@@ -152,21 +152,21 @@ void UpdateLoopLengths(std::unordered_map<unsigned, unsigned> &loop_lengths, std
 * @brief: Run the simulation until at least one loop is formed and return the number of steps taken
 *
 * @param: Graph &lattice
-*       : std::vector<unsigned> correlation_func
-*       : std::vector<unsigned>> dimensions
-*       : unsigned length
+*       : std::vector<int> correlation_func
+*       : std::vector<int>> dimensions
+*       : int length
 *       : double K
 *
 * @return: long double
 */
 long double IsingSimulation(Graph & lattice, double K) {
 	// Get the first site for this simulation
-	unsigned first_site = lattice.GetRandomSite();
+	int first_site = lattice.GetRandomSite();
 
 	// std::cout << "Got the first site: " << first_site << "\n";
 
 	// Get some random neighbour to form the first link
-	unsigned current_site = lattice.GetRandomNeighbour(first_site);
+	int current_site = lattice.GetRandomNeighbour(first_site);
 
 	// std::cout << "Got the neighbour: " << current_site << "\n";
 
@@ -178,7 +178,7 @@ long double IsingSimulation(Graph & lattice, double K) {
 
 	bool loop_formed = 0;
 	while (!loop_formed) {
-		unsigned next_site = lattice.GetRandomNeighbour(current_site);
+		int next_site = lattice.GetRandomNeighbour(current_site);
 
 		// std::cout << "Next site is: " << next_site << "\n";
 
