@@ -12,7 +12,7 @@
 
 int main(/*int argc, char** argv*/) {
 	try {
-		// Bond strength
+		std::ios_base::sync_with_stdio(false);
 		// Temperature
 		// Critical temperature for Ising
 		// T_2D = 2 / (ln(1 + sqrt(2)))
@@ -24,6 +24,7 @@ int main(/*int argc, char** argv*/) {
 		} else {
 			T = 4.515;
 		}
+		// Bond strength
 		double J = 1;
 		double K = J/T;
 
@@ -41,15 +42,6 @@ int main(/*int argc, char** argv*/) {
 		// 1 run takes about 22 seconds
 		int num_sim = 1;
 		for (int multiplier = 0; multiplier < num_sim; ++multiplier) {
-			std::vector<unsigned> max_loop_lengths;
-			max_loop_lengths.reserve(max_length_exponent);
-
-			std::vector<long double> susceptibility;
-			susceptibility.reserve(max_length_exponent);
-
-			std::vector<long int> total_worm_length;
-			total_worm_length.reserve(max_length_exponent);
-
 			// How many different sizes of the simulation should run (L = 2^i)
 			for (unsigned i = 2; i < max_length_exponent; ++i) {
 				// Create a new graph
@@ -58,12 +50,6 @@ int main(/*int argc, char** argv*/) {
 				Graph lattice(dimension, length, seed + getpid());
 
 				// std::cout << "Seed is: " << seed << "\n";
-			
-				// This will store {Cluster index: Loop lengths}
-				std::unordered_map<unsigned, unsigned> loop_lengths;
-
-				// Initialize the clusters map
-				std::unordered_map<unsigned, std::vector<unsigned>> clusters;
 
 				int num_worms_started = 10000;
 
@@ -73,53 +59,77 @@ int main(/*int argc, char** argv*/) {
 				// Store how many total steps are accepted
 				long double num_steps = 0.0;
 
-				// Run the simulation until it hopefully goes to equilibrium
+				std::vector<long double> susceptibility;
+				susceptibility.reserve(max_length_exponent);
+
+				// NOTE: This is for the data file to mats
+				std::vector<long int> total_worm_length;
+				total_worm_length.reserve(max_length_exponent);
+
+				std::vector<unsigned> max_loop_lengths;
+				max_loop_lengths.reserve(max_length_exponent);
+
+				// Run the simulation until it hopefully reaches equilibrium
 				for (int j = 0; j < num_worms_started; ++j) {
 					num_steps += IsingSimulation(lattice, K);
 				}
 
-				// Update indexing
-				lattice.HKIndex(clusters);
+				for (int extra_measurements = 0; extra_measurements < 100; ++extra_measurements) {
+					// How many new worms started before next measurement
+					int refresh_state = 50;
+					WarmUp(refresh_state, lattice, K);
 
-				UpdateLoopLengths(loop_lengths, clusters, lattice);
+					// Measure for susceptibility for refresh_state number of worms
+					for (int ref = 0; ref < refresh_state; ++ref) {
+						num_steps += IsingSimulation(lattice, K);
+						num_worms_started++;
+					}
+					// This will store {Cluster index: [sites_in_cluster]}
+					std::unordered_map<unsigned, std::vector<unsigned>> clusters;
+					lattice.HKIndex(clusters);
 
-				// Find the sites corresponding to the largest worm
-				std::vector<unsigned> largest_worm = clusters[GetMaximumMapIndex(loop_lengths)];
+					// This will store {Cluster index: Loop lengths}
+					std::unordered_map<unsigned, unsigned> loop_lengths;
+					UpdateLoopLengths(loop_lengths, clusters, lattice);
 
-				// Split up the graph in boxes of decreasing sizes
-				std::unordered_map<unsigned, std::vector<unsigned>> blocks;
-				lattice.DivideGraph(blocks);
+					// Find the sites corresponding to the largest worm
+					std::vector<unsigned> largest_worm = clusters[GetMaximumMapIndex(loop_lengths)];
 
-				std::unordered_map<unsigned, unsigned> side_length_and_num_occupied;
-				lattice.GetBoxDimension(blocks, side_length_and_num_occupied, largest_worm);
+					// Split up the graph into boxes of decreasing sizes
+					std::unordered_map<unsigned, std::vector<unsigned>> blocks;
+					lattice.DivideGraph(blocks);
+					
+					std::unordered_map<unsigned, unsigned> side_length_and_num_occupied;
+					lattice.GetBoxDimension(blocks, side_length_and_num_occupied, largest_worm);
 
-				std::cerr << "L=" << length << ":\n";
-				for (auto& sl_and_no : side_length_and_num_occupied) {
-					std::cerr << sl_and_no.first << " ";
-					std::cerr << sl_and_no.second << "\n";
+					std::cerr << "L=" << length << ":\n";
+					for (auto& sl_and_no : side_length_and_num_occupied) {
+						std::cerr << sl_and_no.first << " ";
+						std::cerr << sl_and_no.second << "\n";
+					}
+
+					// After num_simulations the max length has converged and we can append it
+					max_loop_lengths.push_back(loop_lengths[GetMaximumMapIndex(loop_lengths)]);
+
+					// susc = 1 / T * sum_i(g(i)) = 1 / T * ((step taken)/(worms started))
+					susceptibility.push_back(num_steps / (num_worms_started * T));
+
+					worm_distribution_file << "L=" << length << ":\n";
+					for (auto& index_and_ll : loop_lengths) {
+						worm_distribution_file << index_and_ll.second << " ";
+					}
+					worm_distribution_file << "\n";
 				}
-
-				// After num_simulations the max length has converged and we can append it
-				max_loop_lengths.push_back(loop_lengths[GetMaximumMapIndex(loop_lengths)]);
-
-				// susc = 1 / T * sum_i(g(i)) = 1 / T * ((step taken)/(worms started))
-				susceptibility.push_back(num_steps / (num_worms_started * T));
-
-				worm_distribution_file << "L=" << length << ":\n";
-				for (auto& index_and_ll : loop_lengths) {
-					worm_distribution_file << index_and_ll.second << " ";
-				}
-				worm_distribution_file << "\n";
-
+				// NOTE: This now writes at every change of length scales,
+				//       requiring some preprocessing to fix into:
+				//       susc(L=4) susc(8) susc(16) ...
+				//       susc(L=4) susc(8) susc(16) ...
+				write_container(max_loop_lengths, std::cout, ' ');
+				write_container(susceptibility, susceptibility_file, ' ');
+				// Make a new row for the next run
+				std::cout << '\n';
+				susceptibility_file << '\n';
 			}
-			write_container(max_loop_lengths, std::cout, ' ');
-			write_container(susceptibility, susceptibility_file, ' ');
-			// Make a new row for the next run
-			std::cout << '\n';
-			susceptibility_file << '\n';
-
-			// This will store the average loop length according to Mats' notes
-			// double average_loop_length = GetAverageLoopLength(loop_lengths, K);
 		}
 	} catch(std::string& error) {
 		std::cout << error << "\n";
