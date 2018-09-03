@@ -9,14 +9,14 @@
 * @brief: Divide the mGraph into blocks recursively for fractal dimension analysis
 *         by calling DivideGraphRec with correct input
 *
-* @param: std::unordered_map<unsigned, std::vector<unsigned>>& blocks
+* @param: std::unordered_map<int, std::vector<int>>& blocks
 *
-* @return: std::unordered_map<unsigned, std::vector<unsigned>>
+* @return: std::unordered_map<int, std::vector<int>>
 */
-void Graph::DivideGraph(std::unordered_map<unsigned, std::vector<unsigned>>& blocks){
+void Graph::DivideGraph(std::unordered_map<int, std::vector<int>>& blocks){
 	// blocks will be divided but each side_length will still have all the sites
 	// (only in a different order where every side_length^mDimension number of sites is one block)
-	unsigned l = mLength;
+	int l = mLength;
 	while (l >= 2) {
 		blocks[l].reserve(std::pow(mLength, mDimension));
 		l = l/2;
@@ -30,14 +30,14 @@ void Graph::DivideGraph(std::unordered_map<unsigned, std::vector<unsigned>>& blo
 *         start is the starting index of the current block
 *         system_size is the linear size of the total system
 *
-* @param: std::unordered_map<unsigned, std::vector<unsigned>>& blocks
-*         unsigned side_length
-*         unsigned start
-*         unsigned system_size
+* @param: std::unordered_map<int, std::vector<int>>& blocks
+*         int side_length
+*         int start
+*         int system_size
 *
 * @return: void
 */
-void Graph::DivideGraphRec(std::unordered_map<unsigned, std::vector<unsigned>>& blocks, unsigned side_length, unsigned start, unsigned system_size){
+void Graph::DivideGraphRec(std::unordered_map<int, std::vector<int>>& blocks, int side_length, int start, int system_size){
 
 	// std::cout << "\n";
 	// std::cout << "Call to DivideGraphRec with parameters:" << "\n";
@@ -65,14 +65,14 @@ void Graph::DivideGraphRec(std::unordered_map<unsigned, std::vector<unsigned>>& 
 		//               start + [perm(1, 1, 1, ..., 1)] .* side_length/2 * [1, system_size, ..., system_size^n]
 		// }
 		// where .* is matrix multiplication and perm(...) is all the permutations of ...
-		std::vector<unsigned> starts;
-		std::vector<unsigned> ground_level_perm(mDimension, 0);
+		std::vector<int> starts;
+		std::vector<int> ground_level_perm(mDimension, 0);
 		// perm_counter will keep track on which index should flip to a 1 in the next round in perm(1, 1, 0, ..., 0)
-		unsigned perm_counter = 0;
+		int perm_counter = 0;
 		// There are 2^dimension starting points at each division
-		unsigned num_starts = 0;
+		int num_starts = 0;
 		while (num_starts < std::pow(2, mDimension)) {
-			std::vector<unsigned> all_permutations;
+			std::vector<int> all_permutations;
 			// Populate all_permutations
 			GetPermutations(ground_level_perm, all_permutations);
 
@@ -83,7 +83,7 @@ void Graph::DivideGraphRec(std::unordered_map<unsigned, std::vector<unsigned>>& 
 			// }
 			// std::cout << ")";
 			// std::cout << "\nAnd got permutations:" << "\n";
-			// unsigned test_counter = 0;
+			// int test_counter = 0;
 			// for (auto& test_p : all_permutations) {
 			// 	if (test_counter % ground_level_perm.size() == 0) {
 			// 		std::cout << "\n";
@@ -94,9 +94,9 @@ void Graph::DivideGraphRec(std::unordered_map<unsigned, std::vector<unsigned>>& 
 			// std::cout << "\n";
 			// // ------------ /TEST BLOCK ------------
 
-			unsigned next_start = start;
+			int next_start = start;
 			// Track what side_length^dimension_counter / 2 we are on
-			unsigned dimension_counter = 0;
+			int dimension_counter = 0;
 			for (auto& perm_value : all_permutations) {
 				// Perform the matrix multiplication
 				dimension_counter++;
@@ -132,7 +132,8 @@ void Graph::DivideGraphRec(std::unordered_map<unsigned, std::vector<unsigned>>& 
 			// std::cout << "Flipping index: " << perm_counter << " in ground_level_perm." << "\n";
 			// std::cout << "\n\n================================\n\n";
 
-			if (perm_counter < ground_level_perm.size()) {
+			size_t temp_counter = perm_counter;
+			if (temp_counter < ground_level_perm.size()) {
 				// Get the next set of permutations
 				ground_level_perm.at(perm_counter) = 1;
 				perm_counter++;
@@ -156,15 +157,15 @@ void Graph::DivideGraphRec(std::unordered_map<unsigned, std::vector<unsigned>>& 
 * @brief: Append all the sites in the current block corresponding to the inputs to blocks
 *         NOTE: side_length here is the side_length of the current block and not of the whole system
 *
-* @param: unsigned start
-*       : unsigned side_length
-*       : unsigned system_size
-*       : unsigned dimension
-*       : std::vector<unsigned>& blocks
+* @param: int start
+*       : int side_length
+*       : int system_size
+*       : int dimension
+*       : std::vector<int>& blocks
 *
 * @return: void
 */
-void Graph::AppendCurrentBox(unsigned start, unsigned side_length, std::vector<unsigned>& current_box) {
+void Graph::AppendCurrentBox(int start, int side_length, std::vector<int>& current_box) {
 
 	// std::cout << "Call to AppendCurrentBox with inputs:" << "\n";
 	// std::cout << "start: " << start << "\n";
@@ -180,11 +181,11 @@ void Graph::AppendCurrentBox(unsigned start, unsigned side_length, std::vector<u
     // Each element of to_add goes from 0 to side_length-1
     // When to_add[0] gets to side_length-1, to_add[1] goes from 0 to 1,
     // when to_add[1] gets to side_length-1, to_add[2] goes from 0 to 1 and so on.
-	std::vector<unsigned> to_add(mDimension, 0);
+	std::vector<int> to_add(mDimension, 0);
 
 	// base_directions = [1, L, L^2, ..., L^(d-1)]
-	std::vector<unsigned> base_directions;
-	for (unsigned exponent = 0; exponent < mDimension; ++exponent) {
+	std::vector<int> base_directions;
+	for (int exponent = 0; exponent < mDimension; ++exponent) {
 		base_directions.emplace_back(std::pow(mLength, exponent));
 	}
 
@@ -204,7 +205,7 @@ void Graph::AppendCurrentBox(unsigned start, unsigned side_length, std::vector<u
 
 	// std::cout << "Resulted in adding the site: " << start << "\n";
 
-	while ( !(std::all_of(to_add.begin(), to_add.end(), [&](unsigned i){return i == (side_length-1);})) ) {
+	while ( !(std::all_of(to_add.begin(), to_add.end(), [&](int i){return i == (side_length-1);})) ) {
 		// Get the next values to add
 		NextToAdd(to_add, side_length);
 
@@ -217,8 +218,8 @@ void Graph::AppendCurrentBox(unsigned start, unsigned side_length, std::vector<u
 		// Calculate the next site that is within the box
 		// site_in_box = start + i * system_size + j * system_size^2 + ... + w * system_size^(dimension-1)
 		// where [i, j, ..., w] all are integers in the range 0 -> (side_length-1)
-		unsigned site_in_box = start;
-		for (unsigned i = 0; i < mDimension; ++i) {
+		int site_in_box = start;
+		for (int i = 0; i < mDimension; ++i) {
 			site_in_box += to_add[i] * base_directions[i];
 		}
 
@@ -243,13 +244,13 @@ void Graph::AppendCurrentBox(unsigned start, unsigned side_length, std::vector<u
 *             [0,             side_length-1, 0, ..., 0] -> [1, side_length-1, 0, 0, ..., 0]
 *             [side_length-1, side_length-1, 0, ..., 0] -> [0, 0,             1, 0, ..., 0]
 *
-* @param: std::vector<unsigned>& to_add
-*       : unsigned side_length
+* @param: std::vector<int>& to_add
+*       : int side_length
 *
 * @return: void
 */
-void Graph::NextToAdd(std::vector<unsigned>& to_add, unsigned side_length) {
-	for (unsigned i = 0; i < to_add.size(); ++i) {
+void Graph::NextToAdd(std::vector<int>& to_add, int side_length) {
+	for (size_t i = 0; i < to_add.size(); ++i) {
 		// Add one to first value if that value is less than side_length-1,
 		// else set that value to zero until a value is encountered that is less than side_length-1 and add 1 to that
 		if (to_add[i] == (side_length-1)) {
@@ -267,13 +268,13 @@ void Graph::NextToAdd(std::vector<unsigned>& to_add, unsigned side_length) {
 *         Where s = size and N_s is the number of occupied blocks for that size
 *         structure is a collection of sites that should be examined as a fractal object
 *
-* @param: unordered_map<unsigned std::vector<unsigned>>& blocks
-*         std::unordered_map<unsigned, unsigned>& sidelength_and_numoccupied
-*         std::vector<unsigned>& structure
+* @param: unordered_map<int std::vector<int>>& blocks
+*         std::unordered_map<int, int>& sidelength_and_numoccupied
+*         std::vector<int>& structure
 *
 * @return: void
 */
-void Graph::GetBoxDimension(std::unordered_map<unsigned, std::vector<unsigned>>& blocks, std::unordered_map<unsigned, unsigned>& sidelength_and_numoccupied, std::vector<unsigned>& structure) {
+void Graph::GetBoxDimension(std::unordered_map<int, std::vector<int>>& blocks, std::unordered_map<int, int>& sidelength_and_numoccupied, std::vector<int>& structure) {
 
 	// std::cout << "\nCall to GetBoxDimension" << "\n";
 
@@ -281,8 +282,8 @@ void Graph::GetBoxDimension(std::unordered_map<unsigned, std::vector<unsigned>>&
 
 		// std::cout << "Examining side length: " << side_length_and_sites.first << "\n";
 
-		unsigned num_occupied = 0;
-		unsigned index = 0;
+		int num_occupied = 0;
+		int index = 0;
 		bool occupied = 0;
 		for (auto& site : side_length_and_sites.second) {
 			// Keep track of how far we've gone
@@ -293,7 +294,7 @@ void Graph::GetBoxDimension(std::unordered_map<unsigned, std::vector<unsigned>>&
 
 			// If current box not already occupied
 			if (!occupied) {
-				std::vector<unsigned> neighbours;
+				std::vector<int> neighbours;
 				GetLinkedNeighbours(site, neighbours);
 				for (auto& neighbour : neighbours) {
 					// The site is occupied if it and its connected neighbour are both in structure
@@ -311,7 +312,7 @@ void Graph::GetBoxDimension(std::unordered_map<unsigned, std::vector<unsigned>>&
 			}
 
 			// Check if we have a new box
-			unsigned num_sites_in_box = std::pow(side_length_and_sites.first, mDimension);
+			int num_sites_in_box = std::pow(side_length_and_sites.first, mDimension);
 			if (index % num_sites_in_box == 0) {
 
 				// std::cout << "Setting occupied to 0 since: index % num_sites_in_box == 0: " << index << " % " << num_sites_in_box << "\n";

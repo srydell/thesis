@@ -4,12 +4,12 @@
 /**
 * @brief: Loop through every cluster and add any percolating cluster indices to percolating_indices
 *
-* @param: std::unordered_map<unsigned, std::vector<unsigned>> const &clusters
-*       : std::vector<unsigned> &percolating_indices
+* @param: std::unordered_map<int, std::vector<int>> const &clusters
+*       : std::vector<int> &percolating_indices
 *
 * @return: void
 */
-void Graph::GetPercolatingIndices(std::unordered_map<unsigned, std::vector<unsigned>> const &clusters, std::vector<unsigned> &percolating_indices) {
+void Graph::GetPercolatingIndices(std::unordered_map<int, std::vector<int>> const &clusters, std::vector<int> &percolating_indices) {
 	for (auto& index_and_cluster : clusters) {
 
 		// std::cout << "\n\nOn index: " << index_and_cluster.first << "\n";
@@ -19,12 +19,12 @@ void Graph::GetPercolatingIndices(std::unordered_map<unsigned, std::vector<unsig
 
 			// std::cout << "On site: " << site << "\n";
 
-			std::vector<unsigned> neighbours;
+			std::vector<int> neighbours;
 			GetLinkedNeighbours(site, neighbours);
 
 			// If a neighbour to site is in perc_neighbours,
 			// then the cluster is percolating
-			std::vector<unsigned> perc_neighbours;
+			std::vector<int> perc_neighbours;
 			perc_neighbours.reserve(mDimension);
 			// perc_0 = site + (L-1) * L^0
 			// perc_1 = site + (L-1) * L^1
@@ -36,7 +36,7 @@ void Graph::GetPercolatingIndices(std::unordered_map<unsigned, std::vector<unsig
 
 			// std::cout << "If percolating, it should have one of: " << "\n";
 
-			for (unsigned i = 0; i < mDimension; ++i) {
+			for (int i = 0; i < mDimension; ++i) {
 				perc_neighbours.push_back(site + (mLength - 1) * std::pow(mLength, i));
 
 				// std::cout << site + (mLength - 1) * std::pow(mLength, i) << ", ";
