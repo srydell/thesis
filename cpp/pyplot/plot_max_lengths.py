@@ -140,7 +140,7 @@ if __name__ == '__main__':
 
     plt.legend()
 
-    savefig=False
+    savefig=True
     if savefig:
         plt.savefig(f"./plots/maximum_loop_length_for_2D_Ising.png",\
                     bbox_inches='tight')

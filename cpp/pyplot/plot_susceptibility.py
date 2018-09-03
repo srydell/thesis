@@ -204,7 +204,7 @@ if __name__ == '__main__':
 
     plt.legend()
 
-    savefig = True
+    savefig = False
     if savefig:
         plt.savefig(f"./plots/susceptibility128x128Ising.png",\
                     bbox_inches='tight')
