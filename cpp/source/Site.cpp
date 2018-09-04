@@ -4,7 +4,6 @@
 #include <vector>
 #include <unordered_map>
 
-// Constructor of Site
 Site::Site(int index, int length, int dimension) {
 	// The index of this site
 	this->mRootIndex = index;

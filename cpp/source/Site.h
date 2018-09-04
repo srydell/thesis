@@ -6,7 +6,6 @@
 
 class Site {
 public:
-	// Constructor/destructor
 	Site(int index, int length, int dimension);
 
 	// Fields
