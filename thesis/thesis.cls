@@ -436,9 +436,9 @@
     \noindent\if@isbn%
       ISBN~\@isbn \\[\smallskipamount]
     \fi%
-      TRITA-\@trita \\
-      ISSN~\@issn \\
-      ISRN~\@isrn \\[1.5em]
+      TRITA-\@trita \\[1.5em]
+%      ISSN~\@issn \\
+%      ISRN~\@isrn \\
     %%\fi%
     \@copyrightline \\
     %\copyright \space \@author , \  \@date \\%[1.5em]

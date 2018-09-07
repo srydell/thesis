@@ -37,32 +37,41 @@ add_library(Graph
 )
 target_include_directories(Graph PRIVATE source)
 
+add_library(IsingGraphUtils
+	source/IsingGraphUtils.cpp
+)
+
 add_library(Ising
 	source/IsingWorm.cpp
 	source/IsingWorm.h
 )
 target_include_directories(Ising PRIVATE source)
 
+# IsingWorm will link to this
+add_library(IsingGraph INTERFACE)
+target_link_libraries(IsingGraph INTERFACE 
+	Graph
+	IsingGraphUtils
+	Ising
+)
+
 # Set IsingWorm executable
 add_executable(IsingWorm application/main.cpp)
 target_include_directories(IsingWorm PRIVATE source)
-target_link_libraries(IsingWorm PRIVATE Graph)
-target_link_libraries(IsingWorm PRIVATE Ising)
+target_link_libraries(IsingWorm PRIVATE IsingGraph)
 
 # Set testing of source files
 set(CATCH_DIR external/catch2)
-add_executable(Testing ${CATCH_DIR}/catch.hpp source/test/test1.cpp)
-target_include_directories(Testing PRIVATE source)
-
-# Define Catch as a library
 add_library(Catch INTERFACE)
 target_include_directories(Catch INTERFACE ${CATCH_DIR})
+
+# Set Testing executable
+add_executable(Testing ${CATCH_DIR}/catch.hpp source/test/test1.cpp)
+target_include_directories(Testing PRIVATE source)
 target_link_libraries(Testing PRIVATE Catch)
-target_link_libraries(Testing PRIVATE Graph)
-target_link_libraries(Testing PRIVATE Ising)
+target_link_libraries(Testing PRIVATE IsingGraph)
 
 enable_testing()
-
 # Add test to ctest
 #             Name            HowToRun
 add_test(NAME Testing COMMAND Testing)
