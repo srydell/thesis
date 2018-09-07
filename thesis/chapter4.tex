@@ -24,9 +24,11 @@ Everyone agrees that the dimension of a point is zero, and that of a smooth line
 % TODO: Add this reference to Nonlinear dynamics and chaos with applications to physics, biology, chemistry, and engineering by Steven H. Strogatz
 % TODO: Add a plot of the Koch curve.
 
-The situation is more complex when examining fractals. Take for example the Koch curve, it starts out as a line segment of length $L_0$, and successively adds a `bump', making the total length $L_1 = 4/3 \cdot L_0$. Continuing this trend gives for the $n$th iteration a line length of $L_n = {(4 / 3)}^n \cdot L_0$, and so for the final fractal the length is infinite. Now any two point on the curve has a distance of infinity between them, so parametrization is impossible, but the area is still finite, so the dimension should be somewhere between one and two.
+The situation is more complex when examining fractals. Take for example the Koch curve, it starts out as a line segment of length $L_0$, and successively adds a `bump', making the total length $L_1 = 4/3 \cdot L_0$. Iterating $n$ times gives a line length of $L_n = {(4 / 3)}^n \cdot L_0$, and so the final fractal length is infinite.
 
-A useful concept here is the similarity dimension, defined by the scaling of each iteration. If $m$ is the number of similar elements after an iteration and $r$ is the scaling factor, the dimension is defined as $m = r^d$, or equivalently
+Any two point on the final curve has a distance of infinity between them, so parametrization is impossible. But the area is still finite, so the dimension should intuitively be somewhere between one and two.
+
+A useful concept here is the similarity dimension, defined by the scaling of each iteration. If $m$ is the number of similar elements after an iteration and $r$ is the scaling factor, the dimension is defined by $m = r^d$, or equivalently
 
 \begin{equation}
 	d = \frac{\ln m}{\ln r}
@@ -43,6 +45,13 @@ So for the Koch curve, each segment is divided into fourths with each having one
 
 % TODO: Add illustration of graph division here
 
+\begin{figure}[h!]
+    \centering
+        \includegraphics[width=0.6\textwidth]{figures/graphDividing.png}
+    \caption{One step in the graph dividing algorithm where $l_i = 4$. $e^0_i$ and $e^1_i$ are drawn from site $s_i$ and summed permutations of these will give the starts for the next boxes. The next iteration of boxes are shown via the dividing dotted lines.}
+    \label{fig:graphdividingalgo}
+\end{figure}
+
 In order to calculate the box dimension the lattice needs to be divided into boxes of decreasing size. A step by step instruction of a graph dividing algorithm is provided below, and an implementation in pseudocode is available in the Appendix at Section \ref{sec:pseudocodeboxdivisionalgo}.
 
 For brevity some abbreviations are introduced.
@@ -51,7 +60,7 @@ For brevity some abbreviations are introduced.
     \begin{aligned}
         d =& \ \text{dimension} &\quad l_i =& \ \text{side length of the current box}\\
 %
-        l_0 =& \ \text{side length of the} &\quad e_j^i =& \ \text{vector of length } l_i / 2 \\
+        l_0 =& \ \text{side length of the} &\quad e_i^j =& \ \text{vector of length } l_i / 2 \\
 %
              & \ \text{smallest box allowed} & & \text{ in the }j\text{'th direction} \\
 %
@@ -68,15 +77,15 @@ For brevity some abbreviations are introduced.
 %
     \begin{enumerate}[label=(\roman*)]
 %
-        \item Form the matrix $E^i = (e_0^i, e_1^i, \  \ldots, e_d^i)^T$
+        \item Form the matrix $E = (e_i^0, e_i^1, \  \ldots, e_i^d)^T$
 %
-        \item For all vectors $v_k$ in perm$(0, 0, \ \ldots , 0)$, perm$(1, 0, \ \ldots , 0)$, \\ \ldots, perm$(1, 1, \ \ldots , 1)$, create the new start $s^i_k$ as $$s^i_k = v_k E^i$$
+        \item For all vectors $v_k$ in perm$(0, 0, \ \ldots , 0)$, perm$(1, 0, \ \ldots , 0)$, \\ \ldots, perm$(1, 1, \ \ldots , 1)$, create the new start $s_k$ as $$s_k = v_k E$$
 %
     \end{enumerate}
 %
-    \item For each start $s_k^i$:
+    \item For each start $s_k$:
     \begin{enumerate}[label=(\roman*)]
-        \item $s_i = s^i_k$, $l_i = l_i / 2$
+        \item $s_i = s_k$, $l_i = l_i / 2$
         \item Go to 1.
     \end{enumerate}
 %

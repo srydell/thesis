@@ -1,5 +1,4 @@
 #include "Graph.h"
-#include "Site.h"
 #include "utils.h"
 #include <cmath>
 #include <iostream>
@@ -10,8 +9,9 @@
 /**
 * @brief: Constructor of Graph. Populate mGraph with all neighbours according to periodic boundary conditions.
 *
-* @param: int dim
-*       : int len
+* @param: int dimension
+*       : int length
+*       : int long seed
 */
 Graph::Graph(int dimension, int length, int long seed) {
 	this->mDimension = dimension;
@@ -28,66 +28,6 @@ Graph::Graph(int dimension, int length, int long seed) {
 
 	//Mersenne Twister: Good quality random number generator
 	mRng.seed(mSeed);
-
-	// TODO: Check if this functionality is useful: knowing exactly which sites are on the border
-	// Here is only how many there are but which could be implemented somewhere
-	//
-	// std::vector<int> border_values;
-	// // Reserve number of sites on the border
-	// if (dimension == 2) {
-	// 	border_values.reserve(4 * (length - 1));
-	// } else if (dimension == 3) {
-	// 	border_values.reserve((6 * length * length) - (12 * length) + 8);
-	// }
-
-}
-
-/**
-* @brief: Change value between site0 and site1 in mGraph so that 0 <-> 1
-*
-* @param: int site0
-*       : int site1
-*
-* @return: void
-*/
-void Graph::SwitchLinkBetween(int site0, int site1) {
-	// Check if sites are in mGraph
-	if (IsInGraph(site0) && IsInGraph(site1)) {
-
-		// Check if siteX is a neighbour to siteY
-		// Will be:
-		//     pair<int, bool> - If found
-		//     neighbours.end()     - If not found
-
-		// Get the ends of the list to check links against
-		// auto end0 = mGraph[site0].neighbours.end();
-		// auto end1 = mGraph[site1].neighbours.end();
-
-		// auto link1 = mGraph[site1].neighbours.find(site0);
-		if (AreNeighbours(site0, site1)) {
-			// Get the link weights
-			auto link0 = mGraph[site0].neighbours[site1];
-			auto link1 = mGraph[site1].neighbours[site0];
-
-			// Switch the links
-			mGraph[site0].neighbours[site1] = link0 ? 0 : 1;
-			mGraph[site1].neighbours[site0] = link1 ? 0 : 1;
-
-		} else {
-			// Error handling for siteX and siteY not neighbours
-			std::stringstream ss;
-			ss << "Call to Graph::SwitchLinkBetween failed since "
-				<< site0 << " and " << site1 << " are not in neighbours." << "\n";
-			throw ss.str();
-		}
-
-	} else {
-		// Error handling for site not in mGraph
-		std::stringstream ss;
-		ss << "Call to Graph::SwitchLinkBetween failed since "
-			<< site0 << " and/or " << site1 << " are not in mGraph." << "\n";
-		throw ss.str();
-	}
 }
 
 /**
@@ -101,7 +41,7 @@ void Graph::GetLinkedNeighbours(int site, std::vector<int> &linked_neighbours) {
 	// Check if site is in mGraph
 	if (IsInGraph(site)) {
 		// Add the site index if the link value is not 0
-		for (auto index_and_value : mGraph[site].neighbours) {
+		for (auto& index_and_value : mGraph[site].neighbours) {
 			if (index_and_value.second != 0) {
 				linked_neighbours.push_back(index_and_value.first);
 			}
@@ -198,9 +138,9 @@ bool Graph::IsInGraph(int site) {
 void Graph::PrintGraph() {
 	std::stringstream ss;
 	ss << "\nSite : { (n0, link0) (n0, link0)... }\n";
-	for (Site site : mGraph) {
+	for (auto& site : mGraph) {
 		ss << site.GetIndex() << " : { ";
-		for (auto neighbour : site.neighbours) {
+		for (auto& neighbour : site.neighbours) {
 			ss << "(" << neighbour.first << ", " << neighbour.second << ") ";
 		}
 		ss << "}\n";
@@ -231,34 +171,6 @@ int Graph::GetRandomSite() {
 	int site_index = std::round(rand_num * (mGraph.size() - 1));
 
 	return site_index;
-}
-
-/**
-* @brief: Return the link between site0 and site1 if it exists. Otherwise throw std::string error.
-*
-* @param: int site0
-*       : int site1
-*
-* @return: bool
-*/
-bool Graph::GetLink(int site0, int site1) {
-	if (IsInGraph(site0) && IsInGraph(site1)) {
-		if (AreNeighbours(site1, site0)) {
-			return mGraph[site0].neighbours[site1];
-		} else {
-			// Error handling for site1 not neighbour to site0
-			std::stringstream ss;
-			ss << "Call to Graph::GetLink failed since "
-				<< site1 << " is not a neighbour to " << site0 << "\n";
-			throw ss.str();
-		}
-	} else {
-		// Error handling for site0 not in mGraph
-		std::stringstream ss;
-		ss << "Call to Graph::GetLink failed since one of "
-			<< site0 << " and " << site1 << " is not in mGraph" << "\n";
-		throw ss.str();
-	}
 }
 
 /**
