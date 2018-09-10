@@ -9,7 +9,7 @@ public:
 	Site(int index, int length, int dimension);
 
 	// Fields
-	std::unordered_map<int, bool> neighbours;
+	std::unordered_map<int, int> neighbours;
 	int GetIndex();
 private:
 	int mRootIndex;

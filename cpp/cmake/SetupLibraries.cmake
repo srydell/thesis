@@ -31,18 +31,31 @@ target_link_libraries(IsingGraph INTERFACE
 )
 
 add_library(XYGraphUtils
-	source/xy/XYGraphUtils.cpp
+	source/xy/xyGraphUtils.cpp
 	source/xy/Site.cpp
 )
 target_include_directories(XYGraphUtils PRIVATE source)
 
 add_library(XY
+	source/xy/xyHelpers.cpp
+	source/xy/xyHelpers.h
 	source/xy/xyWorm.cpp
 	source/xy/xyWorm.h
 )
 target_include_directories(XY PRIVATE source source/xy)
 
+# XYWorm will link to this
+add_library(XYGraph INTERFACE)
+target_link_libraries(XYGraph INTERFACE 
+	Graph
+	XYGraphUtils
+	XY
+)
 
 # Set testing of source files
 add_library(Catch INTERFACE)
 target_include_directories(Catch INTERFACE external/catch2)
+
+add_library(MainTest source/test/mainTest.cpp)
+target_include_directories(MainTest PRIVATE external/catch2)
+target_link_libraries(MainTest PRIVATE Catch)

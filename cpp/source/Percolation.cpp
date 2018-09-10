@@ -37,7 +37,7 @@ void Graph::GetPercolatingIndices(std::unordered_map<int, std::vector<int>> cons
 			// std::cout << "If percolating, it should have one of: " << "\n";
 
 			for (int i = 0; i < mDimension; ++i) {
-				perc_neighbours.push_back(site + (mLength - 1) * std::pow(mLength, i));
+				perc_neighbours.push_back(std::abs(site) + (mLength - 1) * std::pow(mLength, i));
 
 				// std::cout << site + (mLength - 1) * std::pow(mLength, i) << ", ";
 
@@ -47,7 +47,7 @@ void Graph::GetPercolatingIndices(std::unordered_map<int, std::vector<int>> cons
 
 			bool perc_cluster = 0;
 			for (auto& neighbour : neighbours) {
-				if (IsInVector(neighbour, perc_neighbours)) {
+				if (IsInVector(std::abs(neighbour), perc_neighbours)) {
 
 					// std::cout << "Found neighbour: " << neighbour << " in perc_neighbours." << "\n";
 

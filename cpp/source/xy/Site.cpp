@@ -1,8 +1,8 @@
 #include "Site.h"
 #include <cmath>
 #include <iostream>
-#include <vector>
 #include <unordered_map>
+#include <vector>
 
 Site::Site(int index, int length, int dimension) {
 	// The index of this site
@@ -28,7 +28,7 @@ void Site::AddNeighbours(int length, int dimension) {
 	//
 	// --- General ---
 	// x + y * L + z * L^2 + ... = N
-	bool startingWeight = 0;
+	int startingWeight = 0;
 
 	// Find the (x, y, z, ...) vector corresponding to the given index (mRootIndex)
 	std::vector<int> xyz;
@@ -78,9 +78,9 @@ void Site::AddNeighbours(int length, int dimension) {
 			// - direction is within the graph
 			x_i--;
 
-			// std::cout << "x_i on the - border. Adding: " << CalcIndexFromVector(xyz, length) << "\n";
+			// std::cout << "x_i on the - border. Adding: " << -1 * CalcIndexFromVector(xyz, length) << "\n";
 
-			neighbours.insert({CalcIndexFromVector(xyz, length), startingWeight});
+			neighbours.insert({-1 * CalcIndexFromVector(xyz, length), startingWeight});
 			// Make sure xyz is returned to its original state
 			x_i++;
 		} else {
@@ -89,9 +89,9 @@ void Site::AddNeighbours(int length, int dimension) {
 			auto x_old = x_i;
 			x_i = length - 1;
 
-			// std::cout << "x_i not on the - border. Adding: " << CalcIndexFromVector(xyz, length) << "\n";
+			// std::cout << "x_i not on the - border. Adding: " << -1 * CalcIndexFromVector(xyz, length) << "\n";
 
-			neighbours.insert({CalcIndexFromVector(xyz, length), startingWeight});
+			neighbours.insert({-1 * CalcIndexFromVector(xyz, length), startingWeight});
 			// Make sure xyz is returned to its original state
 			x_i = x_old;
 		}

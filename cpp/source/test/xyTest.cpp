@@ -1,5 +1,3 @@
-#define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() - only do this in one cpp file
-
 #include "Graph.h"
 #include "Site.h"
 #include "catch.hpp"
@@ -10,122 +8,6 @@
 #include <sstream>
 #include <unordered_map>
 #include <vector>
-
-TEST_CASE( "All sites coming from GetRandomNeighbour are neighbours to input", "[Graph]" ) {
-	int dimension = 2;
-	int length = 4;
-	int nulltime = time(nullptr);
-	srand((unsigned)nulltime);
-
-	int long seed = rand();
-	Graph lattice = Graph(dimension, length, seed);
-
-	for (int tries = 0; tries < 1000; ++tries) {
-		for (int i = 0; i < std::pow(length, dimension); ++i) {
-			int neighbour = lattice.GetRandomNeighbour(i);
-		
-			// See if neighbour is actually a neighbour to i
-			if (i == 0) {
-				bool is_neighbour =
-					(neighbour == 1)
-					|| (neighbour == 3)
-					|| (neighbour == 4)
-					|| (neighbour == 12);
-				REQUIRE( is_neighbour );
-			} else if (i == 3) {
-				bool is_neighbour =
-					(neighbour == 0)
-					|| (neighbour == 2)
-					|| (neighbour == 7)
-					|| (neighbour == 15);
-				REQUIRE( is_neighbour );
-			} else if (i == 15) {
-				bool is_neighbour =
-					(neighbour == 12)
-					|| (neighbour == 14)
-					|| (neighbour == 3)
-					|| (neighbour == 11);
-				REQUIRE( is_neighbour );
-			} else if (i == 12) {
-				bool is_neighbour =
-					(neighbour == 13)
-					|| (neighbour == 15)
-					|| (neighbour == 0)
-					|| (neighbour == 8);
-				REQUIRE( is_neighbour );
-			// Bottom row
-			} else if (i > 0 && i < length-1) {
-				bool is_neighbour =
-					(neighbour == (i + 1))
-					|| (neighbour == (i - 1))
-					|| (neighbour == (i + length))
-					|| (neighbour == (i + length * (length-1)));
-				REQUIRE( is_neighbour );
-			// Left middle two rows
-			} else if(i == 4 || i == 8) {
-				bool is_neighbour =
-					(neighbour == (i + 1))
-					|| (neighbour == (i + length - 1))
-					|| (neighbour == (i + length))
-					|| (neighbour == (i - length));
-				REQUIRE( is_neighbour );
-			// Right middle two rows
-			} else if(i == 7 || i == 11) {
-				bool is_neighbour =
-					(neighbour == (i - length + 1))
-					|| (neighbour == (i - 1))
-					|| (neighbour == (i + length))
-					|| (neighbour == (i - length));
-				REQUIRE( is_neighbour );
-			// Top middle two sites
-			} else if(i == 13 || i == 14) {
-				bool is_neighbour =
-					(neighbour == (i + 1))
-					|| (neighbour == (i - 1))
-					|| (neighbour == (i - length * 3))
-					|| (neighbour == (i - length));
-				REQUIRE( is_neighbour );
-			} else {
-				bool is_neighbour =
-					(neighbour == (i + 1))
-					|| (neighbour == (i - 1))
-					|| (neighbour == (i + length))
-					|| (neighbour == (i - length));
-				REQUIRE( is_neighbour );
-			}
-		}
-	}
-}
-
-TEST_CASE( "All neighbours are neighbours to each other", "[Graph]" ) {
-	int dimension = 2;
-	int length = 4;
-	int nulltime = time(nullptr);
-	srand((unsigned)nulltime);
-
-	int long seed = rand();
-	Graph lattice = Graph(dimension, length, seed);
-
-	lattice.SwitchLinkBetween(0, 1);
-	lattice.SwitchLinkBetween(13, 1);
-	lattice.SwitchLinkBetween(13, 14);
-	lattice.SwitchLinkBetween(14, 10);
-	lattice.SwitchLinkBetween(6, 10);
-	lattice.SwitchLinkBetween(7, 6);
-	lattice.SwitchLinkBetween(7, 4);
-	lattice.SwitchLinkBetween(0, 4);
-	for (int i = 0; i < std::pow(length, dimension)-1; ++i) {
-		std::vector<int> neighbours;
-		lattice.GetLinkedNeighbours(i, neighbours);
-		for (auto n : neighbours) {
-			// Neighbours to this neighbour
-			std::vector<int> neighbours_to_n;
-			lattice.GetLinkedNeighbours(n, neighbours_to_n);
-			// All neighbours to i also have i as a neighbour
-			REQUIRE( std::find(neighbours_to_n.begin(), neighbours_to_n.end(), i) != neighbours_to_n.end() );
-		}
-	}
-}
 
 TEST_CASE( "4x4 blocks are the correct size", "[ClusterDimension]" ) {
 	int dimension = 2;
@@ -263,22 +145,12 @@ TEST_CASE( "4x4x4 blocks are the correct size", "[ClusterDimension]" ) {
 	REQUIRE( blocks[2] == block_2 );
 }
 
-TEST_CASE( "The template function GetMaximumMapValue finds maximums", "[GetMaximumMapValue]" ) {
-	std::unordered_map<int, int> test_map1 = {{2, 2}, {4, 1}, {100, 200}};
-	std::unordered_map<float, int> test_map2 = {{5.2, 2}, {4.1, 1}, {100.4, 0}};
-	auto max_value1 = GetMaximumMapIndex(test_map1);
-	auto max_value2 = GetMaximumMapIndex(test_map2);
-
-	REQUIRE( max_value1 == 100 );
-	REQUIRE( max_value2 == 5.2f );
-}
-
 TEST_CASE( "N-dimensional Site calculates correct 2D/3D neighbours", "[Site]" ) {
 	int index_1 = 15;
 	int length_1 = 4;
 	int dimension_1 = 2;
 	Site s_1 = Site(index_1, length_1, dimension_1);
-	std::vector<int> correct_neighbours_1 = {12, 14, 3, 11};
+	std::vector<int> correct_neighbours_1 = {12, -14, 3, -11};
 
 	for (auto& n : s_1.neighbours) {
 		auto it = std::find(correct_neighbours_1.begin(), correct_neighbours_1.end(), n.first);
@@ -289,7 +161,7 @@ TEST_CASE( "N-dimensional Site calculates correct 2D/3D neighbours", "[Site]" ) 
 	int length_2 = 4;
 	int dimension_2 = 3;
 	Site s_2 = Site(index_2, length_2, dimension_2);
-	std::vector<int> correct_neighbours_2 = {2, 0, 7, 15, 19, 51};
+	std::vector<int> correct_neighbours_2 = {-2, 0, 7, -15, 19, -51};
 
 	for (auto& n : s_2.neighbours) {
 		auto it = std::find(correct_neighbours_2.begin(), correct_neighbours_2.end(), n.first);
@@ -308,19 +180,19 @@ TEST_CASE( "HoskenKopelman algorithm finds all 2D clusters", "[HK]" ) {
 
 	// Cluster 1
 	lattice.SwitchLinkBetween(0, 1);
-	lattice.SwitchLinkBetween(13, 1);
+	lattice.SwitchLinkBetween(1, 13);
 	lattice.SwitchLinkBetween(13, 14);
 	lattice.SwitchLinkBetween(14, 10);
-	lattice.SwitchLinkBetween(6, 10);
-	lattice.SwitchLinkBetween(7, 6);
+	lattice.SwitchLinkBetween(10, 6);
+	lattice.SwitchLinkBetween(6, 7);
 	lattice.SwitchLinkBetween(7, 3);
-	lattice.SwitchLinkBetween(0, 3);
+	lattice.SwitchLinkBetween(3, 0);
 
 	// Cluster 2
 	lattice.SwitchLinkBetween(4, 5);
-	lattice.SwitchLinkBetween(9, 5);
+	lattice.SwitchLinkBetween(5, 9);
 	lattice.SwitchLinkBetween(9, 8);
-	lattice.SwitchLinkBetween(4, 8);
+	lattice.SwitchLinkBetween(8, 4);
 
 	std::unordered_map<int, std::vector<int>> clusters;
 	lattice.HKIndex(clusters);
