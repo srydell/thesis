@@ -16,7 +16,7 @@ where $J$ is the bond strength and $\langle ij \rangle$ refers to a nearest neig
 A special case of the $n$-vector model is the XY model when $n = 2$. Here the spins are two dimensional rotors as $s_i = (\cos \theta_i, \  \sin \theta_i)$. This yields the Hamiltonian
 
 \begin{equation}
-    H = - J \sum_{\langle ij \rangle} s_i \cdot s_j =  - J \sum_{\langle ij \rangle} \cos(\theta_i - \theta_j)
+    H = - J \sum_{\langle ij \rangle} \cos(\theta_i - \theta_j)
 \end{equation}
 
 The partition function is therefore
@@ -43,7 +43,7 @@ where $I_\gamma(\alpha)$ is the modified Bessel function. Using that $e^{\sum_i 
     Z &= \prod_i \int \frac{\mathrm d \theta_i}{2 \pi} \sum_{J_{\langle ij \rangle} = -\infty}^{\infty} \prod_{b = \langle ij \rangle} I_{J_{\langle ij \rangle}} ( K ) e^{iK J_{\langle ij \rangle} (\theta_i - \theta_j)} \\
 \label{eq:xypart2}
 % 
-    &= \sum_{J_b} \left ( \prod_b I_{J_b} \right ) \prod_i \left ( \int \frac{\mathrm d \theta_i}{2 \pi} e^{i N_i (\theta_i - \theta_j)} \right )
+    &=  \prod_i \sum_{J_b} \left ( \int \frac{\mathrm d \theta_i}{2 \pi} e^{i N_i (\theta_i - \theta_j)} \right ) \left ( \prod_b I_{J_b} \right ) 
 \end{align}
 
 Where in the last step, $\prod_{\langle ij \rangle} e^{iKJ_{\langle ij \rangle} (\theta_i - \theta_j)} = e^{iN_i (\theta_i - \theta_j)}$. $N_i$ is therefore the sum of $J$ for the nearest neighbours of site $i$. Noting that
@@ -117,7 +117,7 @@ where $F' = \partial F / \partial A$. Examining $Z$ from (\ref{eq:xypart2}) with
 \begin{align}
     Z &= \prod_i \int \frac{\mathrm d \theta_i}{2 \pi} \sum_{J_{\langle ij \rangle} = -\infty}^{\infty} \prod_{b = \langle ij \rangle} I_{J_{\langle ij \rangle}} ( K ) e^{iK J_{\langle ij \rangle} (\theta_i - \theta_j + \Phi_\mu)} \\
 %
-    &= \sum_{J_b} \left ( \prod_b I_{J_b} \right ) \prod_i \left ( \int \frac{\mathrm d \theta_i}{2 \pi} e^{i N_i (\theta_i - \theta_j)} \right ) \cdot e^{i K A \frac{1}{L} \sum_i J_{i, i+\mu}}
+    & = \prod_i \sum_{J_b} \left ( \int \frac{\mathrm d \theta_i}{2 \pi} e^{i N_i (\theta_i - \theta_j)} \right ) \left ( \prod_b I_{J_b} \right ) \cdot e^{i K A \frac{1}{L} \sum_i J_{i, i+\mu}} \\
 \label{eq:xypart3}
 \end{align}
 
@@ -140,7 +140,7 @@ Introduce the winding number in the $\mu$ direction as
 \label{eq:defwinding}
 \end{equation}
 
-Intuitively, this describes the net flux in the $\mu$-direction. Given a loop within the bounds of the lattice, the winding number is always zero. This is since an equal amount of flux in $+\mu$ as in $-\mu$ is needed to form a loop. Interestingly, this is not the case for a percolating cluster going, for example, from $-\mu$ to $+\mu$ connecting with periodic boundary conditions. For such a `winding' cluster, the winding number will be $+1$. An example can be seen in figure (\ref{fig:fluxpercolation}).
+Intuitively, this describes the net flux in the $\mu$-direction. Given a loop within the bounds of the lattice, the winding number is always zero. This is since an equal amount of flux in $+\mu$ as in $-\mu$ is needed to form a loop. However, this is not the case for a percolating cluster going, for example, from $-\mu$ to $+\mu$ connecting with periodic boundary conditions. For such a `winding' cluster, the winding number will be $+1$. An example can be seen in figure (\ref{fig:fluxpercolation}).
 
 \begin{figure}[h!]
     \centering
