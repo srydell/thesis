@@ -6,39 +6,27 @@ if ! [[ -d build ]]; then
 fi
 
 function run_project {
-	cd ./build || exit
+	# Regenerate the doxygen documentation
+	doxygen &> /dev/null
 
 	# Run binary build succeeds
-	if make --no-print-directory "$1"; then
-		time ./IsingWorm ;
+	if cmake --build build --target "$1"; then
+		cd ./build || exit
+		time ./"$1" ;
+		cd - || exit
 	fi
-
-	cd - || exit
 }
 
 if [[ "$1" == build ]]; then
+	# Regenerate the doxygen documentation
+	doxygen &> /dev/null
+
 	# Build the makefiles using g++
 	#+Clang seem to not like some of the design choices of Catch2
 	compiler=$(command -v g++)
 	cmake -H. -Bbuild -DCMAKE_CXX_COMPILER="$compiler" -DCMAKE_BUILD_TYPE="Release"
-
-	# Regenerate the doxygen documentation
-	doxygen &> /dev/null
-
-	# Run the code
-	# run_project all
-	exit
 elif [[ "$1" == test ]]; then
-	cd ./build || exit
-
-	# What it is called in the CMakeLists.txt
-	custom_test_name=Testing
-	# Recompile everything if necessary
-	if make $custom_test_name; then
-		# Run the tests
-		# ctest --output-on-failure $custom_test_name
-		./$custom_test_name
-	fi
+	run_project Testing
 else
 	# On clean make, just run the project
 	run_project IsingWorm
