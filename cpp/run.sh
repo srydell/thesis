@@ -26,7 +26,11 @@ if [[ "$1" == build ]]; then
 	compiler=$(command -v g++)
 	cmake -H. -Bbuild -DCMAKE_CXX_COMPILER="$compiler" -DCMAKE_BUILD_TYPE="Release"
 elif [[ "$1" == test ]]; then
-	run_project Testing
+	declare -a tests=("UtilsTest" "IsingTest" "XYTest")
+	for t in "${tests[@]}"
+	do
+		run_project "$t"
+	done
 else
 	# On clean make, just run the project
 	run_project IsingWorm

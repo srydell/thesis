@@ -45,7 +45,7 @@ void Graph::HKIndex(std::unordered_map<int, std::vector<int>> &clusters) {
 					// std::cout << "Found neighbour : " << neighbour << "\n";
 
 					// Add whole cluster to local_cluster one direction at a time
-					Union(neighbour, largest_label, local_cluster, visited_clusters);
+					Union(std::abs(neighbour), largest_label, local_cluster, visited_clusters);
 				}
 
 				// std::cout << "On label: " << largest_label << "\n";
@@ -97,7 +97,7 @@ void Graph::Union(int neighbour, int largest_label, std::vector<int> &local_clus
 
 		for (auto& nn : neighbours_to_neighbour) {
 			// Add whole cluster to local_cluster one direction at a time
-			Union(nn, largest_label, local_cluster, visited_clusters);
+			Union(std::abs(nn), largest_label, local_cluster, visited_clusters);
 		}
 	}
 }

@@ -28,18 +28,9 @@ else()
 endif()
 
 include(SetupLibraries)
+include(SetupTests)
 
 # Set IsingWorm executable
 add_executable(IsingWorm application/main.cpp)
 target_include_directories(IsingWorm PRIVATE source source/Ising)
 target_link_libraries(IsingWorm PRIVATE IsingGraph)
-
-# Set Testing executable
-add_executable(Testing external/catch2/catch.hpp source/test/test1.cpp)
-target_include_directories(Testing PRIVATE source source/Ising)
-target_link_libraries(Testing PRIVATE Catch IsingGraph)
-
-enable_testing()
-# Add test to ctest
-#             Name            HowToRun
-add_test(NAME Testing COMMAND Testing)

@@ -60,9 +60,9 @@ void Graph::SwitchLinkBetween(int site0, int site1) {
 * @param: int site0
 *       : int site1
 *
-* @return: bool
+* @return: int
 */
-bool Graph::GetLink(int site0, int site1) {
+int Graph::GetLink(int site0, int site1) {
 	if (IsInGraph(site0) && IsInGraph(site1)) {
 		if (AreNeighbours(site1, site0)) {
 			return mGraph[site0].neighbours[site1];
@@ -81,3 +81,27 @@ bool Graph::GetLink(int site0, int site1) {
 		throw ss.str();
 	}
 }
+
+/**
+* @brief: Check mGraph if site has neighbour
+*
+* @param: int site
+*       : int neighbour
+*
+* @return: bool
+*/
+bool Graph::AreNeighbours(int site0, int site1) {
+	// Try to find siteX in neighbours of siteY
+	auto link0To1 = mGraph[site0].neighbours.find(site1);
+	auto link1To0 = mGraph[site1].neighbours.find(site0);
+
+	// Find the ends to check agains
+	auto endOf0 = mGraph[site0].neighbours.end();
+	auto endOf1 = mGraph[site1].neighbours.end();
+
+	if ((link0To1 != endOf0) && (link1To0 != endOf1)) {
+		return 1;
+	}
+	return 0;
+}
+

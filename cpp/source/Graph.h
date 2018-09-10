@@ -13,7 +13,7 @@ public:
 
 	// Functions
 	long double GetRandomNum();
-	bool GetLink(int site0, int site1);
+	int GetLink(int site0, int site1);
 	int GetRandomNeighbour(int site);
 	int GetRandomSite();
 	void FindIndices(std::unordered_map<int, std::vector<int>> &clusters, std::vector<int> &local_cluster, std::vector<int> &indices);

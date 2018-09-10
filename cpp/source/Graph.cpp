@@ -74,7 +74,7 @@ int Graph::GetRandomNeighbour(int site) {
 		// Will be added to prob_of_choosing_site until a site is chosen or we run out of sites to choose from
 		double prob_increase_per_site = prob_of_choosing_site;
 
-		for (auto index_and_value : mGraph[site].neighbours) {
+		for (auto& index_and_value : mGraph[site].neighbours) {
 			// Check if we should choose this site
 			if (rand_num < prob_of_choosing_site) {
 				return index_and_value.first;
@@ -88,29 +88,6 @@ int Graph::GetRandomNeighbour(int site) {
 	ss << "Call to Graph::GetRandomNeighbour failed since "
 		<< site << " is not in the graph." << "\n";
 	throw ss.str();
-}
-
-/**
-* @brief: Check mGraph if site has neighbour
-*
-* @param: int site
-*       : int neighbour
-*
-* @return: bool
-*/
-bool Graph::AreNeighbours(int site0, int site1) {
-	// Try to find siteX in neighbours of siteY
-	auto link0To1 = mGraph[site0].neighbours.find(site1);
-	auto link1To0 = mGraph[site1].neighbours.find(site0);
-
-	// Find the ends to check agains
-	auto endOf0 = mGraph[site0].neighbours.end();
-	auto endOf1 = mGraph[site1].neighbours.end();
-
-	if ((link0To1 != endOf0) && (link1To0 != endOf1)) {
-		return 1;
-	}
-	return 0;
 }
 
 /**

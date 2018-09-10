@@ -1,5 +1,6 @@
 #include "Graph.h"
 #include "utils.h"
+#include "xyHelpers.h"
 #include <cmath>
 #include <iostream>
 #include <random>
@@ -7,7 +8,7 @@
 #include <vector>
 
 /**
-* @brief: Change value between site0 and site1 in mGraph so that 0 <-> 1
+* @brief: Change value between site0 and site1 in mGraph so that if positive link ++ otherwise --
 *
 * @param: int site0
 *       : int site1
@@ -15,27 +16,18 @@
 * @return: void
 */
 void Graph::SwitchLinkBetween(int site0, int site1) {
+	// std::cout << "Switching link between: " << site0 << " and " << site1 << "\n";
 	// Check if sites are in mGraph
 	if (IsInGraph(site0) && IsInGraph(site1)) {
-
-		// Check if siteX is a neighbour to siteY
-		// Will be:
-		//     pair<int, bool> - If found
-		//     neighbours.end()     - If not found
-
-		// Get the ends of the list to check links against
-		// auto end0 = mGraph[site0].neighbours.end();
-		// auto end1 = mGraph[site1].neighbours.end();
-
-		// auto link1 = mGraph[site1].neighbours.find(site0);
 		if (AreNeighbours(site0, site1)) {
-			// Get the link weights
-			auto link0 = mGraph[site0].neighbours[site1];
-			auto link1 = mGraph[site1].neighbours[site0];
 
-			// Switch the links
-			mGraph[site0].neighbours[site1] = link0 ? 0 : 1;
-			mGraph[site1].neighbours[site0] = link1 ? 0 : 1;
+			int site0_to_site1_sign = GetSign(mGraph[site0].neighbours, site0, site1, mDimension, mLength);
+			mGraph[site0].neighbours[site0_to_site1_sign * site1]++;
+			mGraph[site1].neighbours[-1 * site0_to_site1_sign * site0]--;
+
+			// std::cout << "Switch between site0: " << site0 << " and site1: " << site1 << "\n";
+			// std::cout << "mGraph[" << site0 << "].neighbours[" << site0_to_site1_sign * site1 << "]++;" << "\n";
+			// std::cout << "mGraph[" << site1 << "].neighbours[" << -1 * site0_to_site1_sign * site0 << "]--;" << "\n\n";
 
 		} else {
 			// Error handling for siteX and siteY not neighbours
@@ -60,12 +52,13 @@ void Graph::SwitchLinkBetween(int site0, int site1) {
 * @param: int site0
 *       : int site1
 *
-* @return: bool
+* @return: int
 */
-bool Graph::GetLink(int site0, int site1) {
+int Graph::GetLink(int site0, int site1) {
 	if (IsInGraph(site0) && IsInGraph(site1)) {
 		if (AreNeighbours(site1, site0)) {
-			return mGraph[site0].neighbours[site1];
+			int sign = GetSign(mGraph[site0].neighbours, site0, site1, mDimension, mLength);
+			return mGraph[site0].neighbours[sign * site1];
 		} else {
 			// Error handling for site1 not neighbour to site0
 			std::stringstream ss;
@@ -77,7 +70,25 @@ bool Graph::GetLink(int site0, int site1) {
 		// Error handling for site0 not in mGraph
 		std::stringstream ss;
 		ss << "Call to Graph::GetLink failed since one of "
-			<< site0 << " and " << site1 << " is not in mGraph" << "\n";
+			<< site0 << " or/and " << site1 << " is not in mGraph" << "\n";
 		throw ss.str();
 	}
+}
+
+/**
+* @brief: Check mGraph if site has neighbour
+*
+* @param: int site
+*       : int neighbour
+*
+* @return: bool
+*/
+bool Graph::AreNeighbours(int site0, int site1) {
+	for (auto& neighbour : mGraph[site0].neighbours) {
+		// Assume here that if site0 has site1 then the other way too
+		if ((neighbour.first == site1) || (neighbour.first == -1 * site1)) {
+			return 1;
+		}
+	}
+	return 0;
 }
