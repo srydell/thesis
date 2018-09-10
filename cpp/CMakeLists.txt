@@ -17,6 +17,9 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 # Useful for linters and autocompletion
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+# Add custom scripts
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+
 # Set warning flags for Windows and Unix
 if(MSVC)
     add_compile_options(/W3 /WX)
@@ -24,52 +27,17 @@ else()
     add_compile_options(-W -Wall -Werror)
 endif()
 
-add_library(Graph
-	source/Graph.cpp
-	source/Graph.h
-	source/IndexCluster.cpp
-	source/HKIndex.cpp
-	source/Site.cpp
-	source/Site.h
-	source/Percolation.cpp
-	source/ClusterDimension.cpp
-	source/utils.h
-)
-target_include_directories(Graph PRIVATE source)
-
-add_library(IsingGraphUtils
-	source/IsingGraphUtils.cpp
-)
-
-add_library(Ising
-	source/IsingWorm.cpp
-	source/IsingWorm.h
-)
-target_include_directories(Ising PRIVATE source)
-
-# IsingWorm will link to this
-add_library(IsingGraph INTERFACE)
-target_link_libraries(IsingGraph INTERFACE 
-	Graph
-	IsingGraphUtils
-	Ising
-)
+include(SetupLibraries)
 
 # Set IsingWorm executable
 add_executable(IsingWorm application/main.cpp)
-target_include_directories(IsingWorm PRIVATE source)
+target_include_directories(IsingWorm PRIVATE source source/Ising)
 target_link_libraries(IsingWorm PRIVATE IsingGraph)
 
-# Set testing of source files
-set(CATCH_DIR external/catch2)
-add_library(Catch INTERFACE)
-target_include_directories(Catch INTERFACE ${CATCH_DIR})
-
 # Set Testing executable
-add_executable(Testing ${CATCH_DIR}/catch.hpp source/test/test1.cpp)
-target_include_directories(Testing PRIVATE source)
-target_link_libraries(Testing PRIVATE Catch)
-target_link_libraries(Testing PRIVATE IsingGraph)
+add_executable(Testing external/catch2/catch.hpp source/test/test1.cpp)
+target_include_directories(Testing PRIVATE source source/Ising)
+target_link_libraries(Testing PRIVATE Catch IsingGraph)
 
 enable_testing()
 # Add test to ctest
