@@ -1,51 +1,9 @@
 #include "Graph.h"
 #include "utils.h"
 #include <iostream>
+#include <algorithm>
 #include <string>
 #include <unordered_map>
-
-/**
-* @brief: Set the absolute difference in x value between site0 and site1 as a key if it doesn't already exist.
-*         Then add +1 to the corresponding value.
-*
-* @param: int site0
-*       : int site1
-*       : int length
-*       : std::unordered_map<int, int> &correlation_func
-*
-* @return: void
-*/
-void UpdateCorrelationFunction(int site0, int site1, int length, std::unordered_map<int, int> &correlation_func) {
-    // # add +1 to G(i-i0) for the open path from i0 to i
-    // # NOTE: This has to be the absolute value,
-    // #       otherwise it will be skewed toward the side with the largest number of sites.
-
-	// std::cout << "Call to UpdateCorrelationFunction" << "\n";
-	// std::cout << "Site input: " << site0 << ", " << site1 << "\n";
-
-	// Get the x values for each site
-	int x_0 = site0 % length;
-	int x_1 = site1 % length;
-
-	// std::cout << "x value for site " << site0 << " is " << x_0 << "\n";
-	// std::cout << "x value for site " << site1 << " is " << x_1 << "\n";
-
-	// Get the absolute number of the difference between the x values
-	int key = (x_0 > x_1) ? x_0 - x_1 : x_1 - x_0;
-
-	// std::cout << "Correlation function is as: " << "\n";
-	// for (auto element : correlation_func) {
-	// 	std::cout << element.first << ": "<< element.second << "\n";
-	// }
-
-	if (MapHasItem(key, correlation_func)) {
-		// std::cout << "Adding +1 to old key: " << key << "\n";
-		correlation_func[key]++;
-	} else {
-		// std::cout << "Adding +1 to new key: " << key << "\n";
-		correlation_func[key] = 1;
-	}
-}
 
 /**
 * @brief: Check if the link between current_site and next_site in gitter is accepted
@@ -53,51 +11,26 @@ void UpdateCorrelationFunction(int site0, int site1, int length, std::unordered_
 * @param: double K
 *       : int current_site
 *       : int next_site
-*       : bool link_between
-*       : bool random_num
+*       : int link_between
+*       : int difference
+*       : long double random_num
 *
 * @return: bool
 */
-bool IsAccepted(double K, bool link_between, long double &random_num) {
+bool IsAccepted(double K, int link_between, int difference, long double &random_num) {
+	// TODO: Make this XY
     // Probability of being accepted
-    auto p = std::pow(std::tanh(K), 1 - link_between);
+	int new_energy = std::pow(link_between + difference, 2);
+	int old_energy = std::pow(link_between, 2);
+	double e = 2.7182818;
+    auto p = std::pow(e, K * (new_energy - old_energy));
+	p = (p < 1) ? p : 1;
 
 	if (random_num < p) {
 		return 1;
 	} else {
 		return 0;
 	}
-}
-
-/**
-* @brief: Get the average loop length weighted with tanh(K)
-*         \sum { l * tanh^l(K) }
-*         ----------------------
-*           \sum { tanh^l(K) }
-*
-* @param: std::unordered_map<int, int> &loop_lengths
-*       : double const &K
-*
-* @return: double
-*/
-double GetAverageLoopLength(std::unordered_map<int, int> &loop_lengths, double const &K) {
-	// TODO: Test this function
-
-	//    \sum { l * tanh^l(K) }
-	double sum_above = 0;
-
-	//    \sum { tanh^l(K) }
-	double sum_below = 0;
-
-	for (auto& index_and_loop_length : loop_lengths) {
-		double tanhK_to_l = std::pow(std::tanh(K), index_and_loop_length.second);
-		sum_above += index_and_loop_length.second * tanhK_to_l;
-		sum_below += tanhK_to_l;
-	}
-	// \sum { l * tanh^l(K) }
-	// ----------------------
-	//   \sum { tanh^l(K) }
-	return sum_above / sum_below;
 }
 
 /**
@@ -152,14 +85,12 @@ void UpdateLoopLengths(std::unordered_map<int, int> &loop_lengths, std::unordere
 * @brief: Run the simulation until at least one loop is formed and return the number of steps taken
 *
 * @param: Graph &lattice
-*       : std::vector<int> correlation_func
-*       : std::vector<int>> dimensions
-*       : int length
 *       : double K
 *
 * @return: long double
 */
-long double IsingSimulation(Graph & lattice, double K) {
+long double XySimulation(Graph & lattice, double K) {
+	// TODO: Fix this to be XY
 	// Get the first site for this simulation
 	int first_site = lattice.GetRandomSite();
 
@@ -182,8 +113,9 @@ long double IsingSimulation(Graph & lattice, double K) {
 
 		// std::cout << "Next site is: " << next_site << "\n";
 
+		// int sign = GetSign(neighbours_to_site0, site0, site1, dimension, length);
 		auto rand_num = lattice.GetRandomNum();
-		if (IsAccepted(K, lattice.GetLink(current_site, next_site), rand_num)) {
+		if (IsAccepted(K, 1, 1, rand_num)) {
 			num_steps++;
 
 			// std::cout << "Got accepted!" << "\n";
@@ -213,6 +145,6 @@ long double IsingSimulation(Graph & lattice, double K) {
 */
 void WarmUp(int warm_up_runs, Graph& lattice, double K) {
 	for (int i = 0; i < warm_up_runs; ++i) {
-		IsingSimulation(lattice, K);
+		XySimulation(lattice, K);
 	}
 }

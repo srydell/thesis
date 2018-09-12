@@ -24,6 +24,9 @@ public:
 	std::vector<int> GetxyzConversion(int index);
 	void GetPercolatingIndices(std::unordered_map<int, std::vector<int>> const &clusters, std::vector<int> &percolating_indices);
 
+	// Only for XY
+	int GetSign(int site0, int site1);
+
 	// IndexClusters
 	void IndexClusters(std::unordered_map<int, std::vector<int>> &clusters);
 

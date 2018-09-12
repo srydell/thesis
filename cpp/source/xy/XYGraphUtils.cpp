@@ -1,11 +1,41 @@
 #include "Graph.h"
 #include "utils.h"
-#include "xyHelpers.h"
 #include <cmath>
 #include <iostream>
 #include <random>
 #include <sstream>
 #include <vector>
+
+/**
+* @brief: Return -1 if -site1 in neighbours to site0 and +1 if +site1
+*
+* @param: int site0
+*         int site1
+*
+* @return: int
+*/
+int Graph::GetSign(int site0, int site1) {
+	// Special case for 0 since it 'does not have a sign'
+	if (site0 == 0) {
+		for (int d = 0; d < mDimension; ++d) {
+			if (site1 == std::pow(mLength, d)) {
+				return +1;
+			} else if (site1 == (mLength - 1) * std::pow(mLength, d)) {
+				return -1;
+			}
+		}
+	}
+	auto neighbours_to_site0 = mGraph[site0].neighbours;
+	for (auto& link : neighbours_to_site0) {
+		if (link.first == site1) {
+			return +1;
+		}
+		if (link.first == -1 * site1) {
+			return -1;
+		}
+	}
+	throw "Found no sign";
+}
 
 /**
 * @brief: Change value between site0 and site1 in mGraph so that if positive link ++ otherwise --
@@ -21,7 +51,7 @@ void Graph::SwitchLinkBetween(int site0, int site1) {
 	if (IsInGraph(site0) && IsInGraph(site1)) {
 		if (AreNeighbours(site0, site1)) {
 
-			int site0_to_site1_sign = GetSign(mGraph[site0].neighbours, site0, site1, mDimension, mLength);
+			int site0_to_site1_sign = GetSign(site0, site1);
 			mGraph[site0].neighbours[site0_to_site1_sign * site1]++;
 			mGraph[site1].neighbours[-1 * site0_to_site1_sign * site0]--;
 
@@ -57,7 +87,7 @@ void Graph::SwitchLinkBetween(int site0, int site1) {
 int Graph::GetLink(int site0, int site1) {
 	if (IsInGraph(site0) && IsInGraph(site1)) {
 		if (AreNeighbours(site1, site0)) {
-			int sign = GetSign(mGraph[site0].neighbours, site0, site1, mDimension, mLength);
+			int sign = GetSign(site0, site1);
 			return mGraph[site0].neighbours[sign * site1];
 		} else {
 			// Error handling for site1 not neighbour to site0
