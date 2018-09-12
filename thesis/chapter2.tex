@@ -40,13 +40,13 @@ Since equation (\ref{eq:xypart1}) is invariant under the transformation $\theta_
 where $I_\gamma(\alpha)$ is the modified Bessel function. Using that $e^{\sum_i x_i} = \prod_i e^{x_i}$
 
 \begin{align}
-    Z &= \prod_i \int \frac{\mathrm d \theta_i}{2 \pi} \sum_{J_{\langle ij \rangle} = -\infty}^{\infty} \prod_{b = \langle ij \rangle} I_{J_{\langle ij \rangle}} ( K ) e^{iK J_{\langle ij \rangle} (\theta_i - \theta_j)} \\
+    Z &= \prod_i \int \frac{\mathrm d \theta_i}{2 \pi} \sum_{J_{\langle ij \rangle} = -\infty}^{\infty} \prod_{b = \langle ij \rangle} I_{J_{\langle ij \rangle}} ( K ) e^{i J_{\langle ij \rangle} (\theta_i - \theta_j)} \\
 \label{eq:xypart2}
 % 
     &=  \prod_i \sum_{J_b} \left ( \int \frac{\mathrm d \theta_i}{2 \pi} e^{i N_i (\theta_i - \theta_j)} \right ) \left ( \prod_b I_{J_b} \right ) 
 \end{align}
 
-Where in the last step, $\prod_{\langle ij \rangle} e^{iKJ_{\langle ij \rangle} (\theta_i - \theta_j)} = e^{iN_i (\theta_i - \theta_j)}$. $N_i$ is therefore the sum of $J$ for the nearest neighbours of site $i$. Noting that
+Where in the last step, $\prod_{\langle ij \rangle} e^{iJ_{\langle ij \rangle} (\theta_i - \theta_j)} = e^{iN_i (\theta_i - \theta_j)}$. $N_i$ is therefore the sum of $J$ for the nearest neighbours of site $i$. Noting that
 
 \begin{equation}
     \int \frac{\mathrm d \theta_i}{2 \pi} e^{i N_i (\theta_i - \theta_j)} = C \delta_{N_i 0}
@@ -115,22 +115,22 @@ F = - T \ln(Z) \Rightarrow F'' = T \left(\left(\frac{Z'}{Z}\right) - \left( \fra
 where $F' = \partial F / \partial A$. Examining $Z$ from (\ref{eq:xypart2}) with the added shift
 
 \begin{align}
-    Z &= \prod_i \int \frac{\mathrm d \theta_i}{2 \pi} \sum_{J_{\langle ij \rangle} = -\infty}^{\infty} \prod_{b = \langle ij \rangle} I_{J_{\langle ij \rangle}} ( K ) e^{iK J_{\langle ij \rangle} (\theta_i - \theta_j + \Phi_\mu)} \\
+    Z &= \prod_i \int \frac{\mathrm d \theta_i}{2 \pi} \sum_{J_{\langle ij \rangle} = -\infty}^{\infty} \prod_{b = \langle ij \rangle} I_{J_{\langle ij \rangle}} ( K ) e^{i J_{\langle ij \rangle} (\theta_i - \theta_j + \Phi_\mu)} \\
 %
-    & = \prod_i \sum_{J_b} \left ( \int \frac{\mathrm d \theta_i}{2 \pi} e^{i N_i (\theta_i - \theta_j)} \right ) \left ( \prod_b I_{J_b} \right ) \cdot e^{i K A \frac{1}{L} \sum_i J_{i, i+\mu}} \\
+    & = \prod_i \sum_{J_b} \left ( \int \frac{\mathrm d \theta_i}{2 \pi} e^{i N_i (\theta_i - \theta_j)} \right ) \left ( \prod_b I_{J_b} \right ) \cdot e^{i A \frac{1}{L} \sum_i J_{i, i+\mu}} \\
 \label{eq:xypart3}
 \end{align}
 
 where in the last step
 
 \begin{align}
-    \prod_i \left (\prod_{\langle ij \rangle} e^{iK J_{\langle ij \rangle} \Phi_\mu} \right) &= \\
+    \prod_i \left (\prod_{\langle ij \rangle} e^{i J_{\langle ij \rangle} \Phi_\mu} \right) &= \\
 %
     \left\{ \text{$\Phi_\mu \neq 0$ only for neighbours in the $\mu$ direction} \right \} &= \\
 %
-    \prod_i \left ( e^{iK J_{i, i+\mu} \Phi_\mu} \right ) &= \\
+    \prod_i \left ( e^{iJ_{i, i+\mu} \Phi_\mu} \right ) &= \\
 %
-    e^{iKA \frac{1}{L} \sum_i J_{i, i+\mu}}
+    e^{iA \frac{1}{L} \sum_i J_{i, i+\mu}}
 \end{align}
 
 Introduce the winding number in the $\mu$ direction as
@@ -152,19 +152,19 @@ Intuitively, this describes the net flux in the $\mu$-direction. Given a loop wi
 Using the definition (\ref{eq:defwinding}) for the winding number in the partition function in equation (\ref{eq:xypart3}) yields
 
 \begin{align}
-    Z &= \sum_{J_b} \left ( \prod_b I_{J_b} \right ) \prod_i \left ( \int \frac{\mathrm d \theta_i}{2 \pi} e^{i N_i (\theta_i - \theta_j)} \right ) \cdot e^{i K A W_\mu} \\
-    &= \sum_{J_b, \ N_i = 0} Z_0 \cdot e^{i K A W_\mu} \\
-    &= \sum_{W_\mu} Z_0 \cdot e^{i K A W_\mu}
+    Z &= \sum_{J_b} \left ( \prod_b I_{J_b} \right ) \prod_i \left ( \int \frac{\mathrm d \theta_i}{2 \pi} e^{i N_i (\theta_i - \theta_j)} \right ) \cdot e^{i A W_\mu} \\
+    &= \sum_{J_b, \ N_i = 0} Z_0 \cdot e^{i A W_\mu} \\
+    &= \sum_{W_\mu} Z_0 \cdot e^{i A W_\mu}
 \end{align}
 
 Using this result in equation (\ref{eq:xyfreeenergy})
 
 \begin{align}
-    \frac{\partial^2 F}{\partial A^2} &= T \left ( \left ( \frac{\sum_{W_\mu} (i K W_\mu) Z_0 e^{iKAW_\mu}}{\sum_{W_\mu} Z_0 e^{iKAW_\mu}} \right )^2 - \frac{\sum_{W_\mu} (- K^2 W_\mu^2) Z_0 e^{iKAW_\mu}}{\sum_{W_\mu} Z_0 e^{iKAW_\mu}} \right ) \\
+    \frac{\partial^2 F}{\partial A^2} &= T \left ( \left ( \frac{\sum_{W_\mu} (i W_\mu) Z_0 e^{iAW_\mu}}{\sum_{W_\mu} Z_0 e^{iAW_\mu}} \right )^2 - \frac{\sum_{W_\mu} (- W_\mu^2) Z_0 e^{iAW_\mu}}{\sum_{W_\mu} Z_0 e^{iAW_\mu}} \right ) \\
 %
-    &= T K^2 \left ( -\langle W_\mu \rangle^2 + \langle W_\mu^2 \rangle \right ) \\
+    &= T \left ( -\langle W_\mu \rangle^2 + \langle W_\mu^2 \rangle \right ) \\
 %
-    &= T K^2 \langle W_\mu^2 \rangle
+    &= T \langle W_\mu^2 \rangle
 \end{align}
 
 Where $\langle W_\mu \rangle = 0$ since there is an equal chance of percolating from $-\mu$ to $\mu$ as the other way around.
@@ -172,6 +172,6 @@ Where $\langle W_\mu \rangle = 0$ since there is an equal chance of percolating 
 The superfluid density can finally be determined as
 
 \begin{equation}
-    \rho_s = L^{2 - d} T K^2 \langle W_\mu^2 \rangle 
+    \rho_s = L^{2 - d} T \langle W_\mu^2 \rangle 
 \end{equation}
 
