@@ -104,206 +104,74 @@
 
 \begin{abstract}
 
-2.3 The Metropolis Monte Carlo method
-The principle of importance sampling in statistical physics as suggested by
-	Metropolis et al. [83] is as follows. In Fig. 2.1 we generated numbers $x$ and from a uniform distribution. In the evaluation of something like (2.1), we could instead imagine generating the configurations $ \mu \equiv  {\{ \theta_i \}}^N_{i=1}$ not uniformly, but in such a way that the number of hits and misses are roughly equal. The estimated expectation value after $M$ generated configurations $\mu_n$ can be written
-\begin{equation}
-	\langle O \rangle = \frac{\sum^{M}_{n = 1} O_{\mu_n} e^{ \beta H \mu_n}}{\sum^{M}_{n = 1} e^{ \beta H \mu_n}}
-\end{equation}
+% 2.3 The Metropolis Monte Carlo method
+% The principle of importance sampling in statistical physics as suggested by
+% 	Metropolis et al. [83] is as follows. In Fig. 2.1 we generated numbers $x$ and from a uniform distribution. In the evaluation of something like (2.1), we could instead imagine generating the configurations $ \mu \equiv  {\{ \theta_i \}}^N_{i=1}$ not uniformly, but in such a way that the number of hits and misses are roughly equal. The estimated expectation value after $M$ generated configurations $\mu_n$ can be written
+% \begin{equation}
+% 	\langle O \rangle = \frac{\sum^{M}_{n = 1} O_{\mu_n} e^{ \beta H \mu_n}}{\sum^{M}_{n = 1} e^{ \beta H \mu_n}}
+% \end{equation}
 
-for states $\mu_n$ generated with uniform probability.
-If we instead were to draw configurations with probabilities according to their Boltzmann weights, the estimator is simply an unweighted arithmetic
-average
+% for states $\mu_n$ generated with uniform probability.
+% If we instead were to draw configurations with probabilities according to their Boltzmann weights, the estimator is simply an unweighted arithmetic
+% average
 
-\begin{equation}
-	\langle O \rangle \approx \sum^{M}_{n = 1} O_{\mu_n}
-\end{equation}
+% \begin{equation}
+% 	\langle O \rangle \approx \sum^{M}_{n = 1} O_{\mu_n}
+% \end{equation}
 
-for states $\mu_n$ generated with probability $e^{-\beta \mu_n}$
+% for states $\mu_n$ generated with probability $e^{-\beta \mu_n}$
 
-The remaining question is then how one generates configurations with probability according to their Boltzmann weights.
-In practice, the importance sampling discussed above is obtained with a Markov chain through the Metropolis method [83]. Metropolis Monte Carlo works by proposing a new configuration $j$ from an old configuration $i$ with a proposal distribution $g(i \to j)$, which is accepted with a specified probability $A(i \to j) = \min(1, e^{-\beta \Delta E})$ where  $\Delta E = E_j - E_i$. Consider the time evolution of the probability of being in state $i$,
+% The remaining question is then how one generates configurations with probability according to their Boltzmann weights.
+% In practice, the importance sampling discussed above is obtained with a Markov chain through the Metropolis method [83]. Metropolis Monte Carlo works by proposing a new configuration $j$ from an old configuration $i$ with a proposal distribution $g(i \to j)$, which is accepted with a specified probability $A(i \to j) = \min(1, e^{-\beta \Delta E})$ where  $\Delta E = E_j - E_i$. Consider the time evolution of the probability of being in state $i$,
 
-\begin{equation}
-	\frac{\mathrm d p_i}{\mathrm d t} =\sum_j [ p_j P(j \to i) - p_i P(i \to j)]
-\end{equation}
+% \begin{equation}
+% 	\frac{\mathrm d p_i}{\mathrm d t} =\sum_j [ p_j P(j \to i) - p_i P(i \to j)]
+% \end{equation}
  
-where $P(i \to j)$ is the probability of transitioning from $i$ to $j$. The first and second terms on the right-hand side correspond to the rate of transitioning into and out of the state i respectively. In equilibrium the time derivative is zero and (2.5) is fulfilled if (but not only if)
+% where $P(i \to j)$ is the probability of transitioning from $i$ to $j$. The first and second terms on the right-hand side correspond to the rate of transitioning into and out of the state i respectively. In equilibrium the time derivative is zero and (2.5) is fulfilled if (but not only if)
 
-\begin{equation}
-	p_jP(j {\to} i) = p_iP(i {\to} j)
-\end{equation}
+% \begin{equation}
+% 	p_jP(j {\to} i) = p_iP(i {\to} j)
+% \end{equation}
 
-The condition of (2.6) is called detailed balance and is a sufficient but not necessary condition for Metropolis Monte Carlo given that states are generated ergodically, see [84, 88]. Ergodicity means that each state is reachable from every other state in a finite time, however a non-ergodic calculation may still yield useful information within an ergodic class [84].
-In a simulation, the probability of transitioning from i to j is the product of the proposal and acceptance probabilities, that is $P(i \to j) = g(i \to j)A(i \to j)$ which after insertion into the balance equation (2.6) gives
+% The condition of (2.6) is called detailed balance and is a sufficient but not necessary condition for Metropolis Monte Carlo given that states are generated ergodically, see [84, 88]. Ergodicity means that each state is reachable from every other state in a finite time, however a non-ergodic calculation may still yield useful information within an ergodic class [84].
+% In a simulation, the probability of transitioning from i to j is the product of the proposal and acceptance probabilities, that is $P(i \to j) = g(i \to j)A(i \to j)$ which after insertion into the balance equation (2.6) gives
 
-\begin{equation}
-	\frac{p_i}{p_j} \frac{g(j \to i)\min(1,e^{- \beta (E_i-E_j)} )}{g(i \to j)\min(1,e^{-\beta(E_j-E_i) } )} = \frac{e^{-\beta E_i}}{e^{-\beta E_j}} 
-\end{equation}
+% \begin{equation}
+% 	\frac{p_i}{p_j} \frac{g(j \to i)\min(1,e^{- \beta (E_i-E_j)} )}{g(i \to j)\min(1,e^{-\beta(E_j-E_i) } )} = \frac{e^{-\beta E_i}}{e^{-\beta E_j}} 
+% \end{equation}
 
-assuming that the proposal distribution is symmetric. The Metropolis Monte Carlo method thus generates a chain of configurations where each configuration appears with a probability proportional to its Boltzmann weight.
-The estimation of thermal averages can thus be done via arithmetic averaging of the form (2.4) by starting with some initial configuration $\mu_0$ and generating a chain $\mu_1, \ldots , \mu_M$ via the Metropolis scheme.
-2.5 Phase transitions: definition and classification
+% assuming that the proposal distribution is symmetric. The Metropolis Monte Carlo method thus generates a chain of configurations where each configuration appears with a probability proportional to its Boltzmann weight.
+% The estimation of thermal averages can thus be done via arithmetic averaging of the form (2.4) by starting with some initial configuration $\mu_0$ and generating a chain $\mu_1, \ldots , \mu_M$ via the Metropolis scheme.
+% 2.5 Phase transitions: definition and classification
 
-The thermodynamical bulk free-energy density $f = \beta-1 \ln(Z)/V$ depends on the coupling parameters of the Hamiltonian, and thermodynamic functions are calculated via differentiation of the free energy. Such thermo-ynamic functions may exhibit discontinuities at certain sets of coupling parameters, for which the free energy is not analytic. Such sets can be taken as definitions of phase boundaries which separate phases (i.e.\ regions of analyticity). The crossing of a phase boundary is then understood as a phase transition. It should be noted that the definition in terms of analytic free-energy is not completely general, considering the BKT-transition. For further details of mathematical aspects of phase transitions, we refer to [94] and for a more physical discussion to [95].
+% The thermodynamical bulk free-energy density $f = \beta-1 \ln(Z)/V$ depends on the coupling parameters of the Hamiltonian, and thermodynamic functions are calculated via differentiation of the free energy. Such thermo-ynamic functions may exhibit discontinuities at certain sets of coupling parameters, for which the free energy is not analytic. Such sets can be taken as definitions of phase boundaries which separate phases (i.e.\ regions of analyticity). The crossing of a phase boundary is then understood as a phase transition. It should be noted that the definition in terms of analytic free-energy is not completely general, considering the BKT-transition. For further details of mathematical aspects of phase transitions, we refer to [94] and for a more physical discussion to [95].
 
-By the Ehrenfest classification [96] phase transitions are classified by the order of the derivative of the free energy which has a discontinuity at the critical point. If a first order derivative (e.g.\ entropy, internal energy) is discontinuous, then the phase transition is of first order. If a second order derivative (e.g.\ heat capacity) is discontinuous, the phase transition is of second order, and so on.
+% By the Ehrenfest classification [96] phase transitions are classified by the order of the derivative of the free energy which has a discontinuity at the critical point. If a first order derivative (e.g.\ entropy, internal energy) is discontinuous, then the phase transition is of first order. If a second order derivative (e.g.\ heat capacity) is discontinuous, the phase transition is of second order, and so on.
 
-The Ehrenfest classification is however discouraged [95, 98], for example there may be divergences rather than dis- continuities in thermodynamic functions (as for the 2D Ising model without external field, where the heat capacity diverges logarithmically at $T_c$).
-The modern classification of phase transitions is binary where a phase transition is either `first-order' (there is a latent heat for a temperature-driven transition) or `continuous' (no latent heat) [98, 95].
+% The Ehrenfest classification is however discouraged [95, 98], for example there may be divergences rather than dis- continuities in thermodynamic functions (as for the 2D Ising model without external field, where the heat capacity diverges logarithmically at $T_c$).
+% The modern classification of phase transitions is binary where a phase transition is either `first-order' (there is a latent heat for a temperature-driven transition) or `continuous' (no latent heat) [98, 95].
 
-5. Partition function
-A problem of statistical mechanics is to calculate the partition function, that is calculating the trace of $e^{-\beta H}$, a task most straightforwardly written as
+% 5. Partition function
+% A problem of statistical mechanics is to calculate the partition function, that is calculating the trace of $e^{-\beta H}$, a task most straightforwardly written as
 
-\begin{align}
-		Z = &\sum \langle \alpha_n | e^{-\beta H} | \alpha_n \rangle \\
-		= & \sum e^{-\beta E_i}
-\end{align}
+% \begin{align}
+% 		Z = &\sum \langle \alpha_n | e^{-\beta H} | \alpha_n \rangle \\
+% 		= & \sum e^{-\beta E_i}
+% \end{align}
 
-where the $| \alpha_n \rangle$ is a complete orthonormal set and $E_i$ the energy eigenvalues of $H$. In this form, it is necessary to determine the eigenvalues $E_i$ of the Hamiltonian operator, and then carry out the sum over all corresponding weights $e^{-\beta E_i}$, as Feynman put it [132] a `hopelessly difficult' calculation. Instead we reformulate the problem in terms of imaginary time path integrals [132, 69, 133].
+% where the $| \alpha_n \rangle$ is a complete orthonormal set and $E_i$ the energy eigenvalues of $H$. In this form, it is necessary to determine the eigenvalues $E_i$ of the Hamiltonian operator, and then carry out the sum over all corresponding weights $e^{-\beta E_i}$, as Feynman put it [132] a `hopelessly difficult' calculation. Instead we reformulate the problem in terms of imaginary time path integrals [132, 69, 133].
 
-Imaginary-time path integral reformulation of the partition function
-First, we outline the reformulation of (5.5) in terms of path integrals, with the Bose-Hubbard model (5.2) in mind. Following the derivation in [69], first denote the statistical operator
-It then follows that
+% Imaginary-time path integral reformulation of the partition function
+% First, we outline the reformulation of (5.5) in terms of path integrals, with the Bose-Hubbard model (5.2) in mind. Following the derivation in [69], first denote the statistical operator
+% It then follows that
 
-\begin{align}
-	\rho(\beta) &= e^{-\beta H} \\
-	\partial \rho &= -H \rho
-\end{align}
-
-\section{Derivation for Ising 2D Worm}
-
-The Ising model energy
-
-\begin{equation}
-    E = - J \sum_{\langle ij \rangle} S_i S_j
-\end{equation}
-
-Let $K = \beta J$ where $\beta = 1/k_{\text{B}} T$.
-
-\begin{equation}
-    \beta E = - K \sum_{\langle ij \rangle} S_i S_j
-\end{equation}
-
-The partition function $Z$.
-
-\begin{equation}
-    Z = \sum_{\text{all states}} e^{-\beta E} = \sum_{\text{all states}} e^{K \sum_{\langle ij \rangle} S_i S_j} = \sum_{\text{all states}} \Pi_{\langle ij \rangle} e^{K S_i S_j}
-\label{Eq:partitionIsingWithoutExpansion}
-\end{equation}
-
-Since $S_i S_j = \pm 1$ in the Ising model, Euler identities can be used to expand the exponential in (\ref{Eq:partitionIsingWithoutExpansion}).
-
-\begin{align*}
-    e^{KS_i S_j} &= \frac{e^K + e^{-K}}{2} + S_i S_j \frac{e^K - e^{-K}}{2} \\
-    &= \cosh (K) + S_i S_j \sinh(K) \\
-    &= \{ T = \tanh(K) \} \\
-    &= (1 + T S_i S_j) \cosh(K)
-\end{align*}
-
-For $N$ spins there are 2N bonds, therefore the partition function is
-
-\begin{align*}
-    Z &= \sum_{\text{all states}} \Pi_{\langle ij \rangle} (1 + T S_i S_j) \cosh(K) \\
-    &= \cosh^{2N} (K) \cdot 2^N \left ( 2^{-N} \sum_{\text{all states}} \Pi_{\langle ij \rangle} (1 + T S_i S_j) \right ) \\
-    &= \cosh^{2N} (K) \cdot 2^N Z'
-\end{align*}
-
-And
-
-\begin{align*}
-    Z' &= 2^{-N} \sum_{\text{all states}} \Pi_{\langle ij \rangle} (1 + T S_i S_j) \\
-    &= 2^{-N} \sum_{S_1 = \pm 1} \sum_{S_2 = \pm 1} \ldots \sum_{S_N = \pm 1} \left ( 1 + T \sum_{l = 1} S_i S_j + T^2 \sum_{l = 2} (S_i S_j)(S_{i'} S_{j'}) + \ldots \right ) 
-\end{align*}
-
-Where the sums $\sum_{l=L}$ should be interpreted as the sum over all sets where the link length is $L$. Link length is the coupling between $S$-terms as
-
-\begin{align*}
-    (S_1 S_2) \ &- \ \text{Open with length 1} \\
-    (S_1 S_2)(S_2 S_3) \ &- \ \text{Open with length 2} \\
-    (S_1 S_2)(S_2 S_3)(S_3 S_4)(S_4 S_1) \ &- \ \text{Closed with length 4}
-\end{align*}
-
-Since $\sum_{S_i = \pm 1} S_i = 0$, only terms with an even number of $S_i$ are contributing to $Z'$. We will call these terms closed, indicating that they represent a closed loop if we were to draw the link lengths between the sites. The sum over all contributing terms gives a factor of $2^N$, canceling the $2^{-N}$.
-
-We can now rewrite $Z'$ in terms of loop lengths.
-
-\begin{equation}
-    Z' = \sum_L g(L) T^L
-\end{equation}
-
-Where $g(L)$ is the number of loops with length $L$. Finally we can write the expression for the partition function.
-
-\begin{equation}
-    Z = 2^N \cosh^{2N} (K) \sum_L g(L) T^L
-\end{equation}
-
-\subsection{Energy calculation}
-
-\begin{equation}
-    E = - \frac{1}{Z} \frac{\partial Z}{\partial \beta} = - \frac{J}{Z} \frac{\partial Z}{\partial K}
-\end{equation}
-
-Therefore
-
-\begin{align*}
-    \frac{\partial Z}{\partial K} &= 2^N 2N \cosh^{2N-1}(K) \cdot \frac{\partial \cosh(K)}{\partial K} Z' + 2^N \cosh^{2N}(K) \cdot \frac{\partial Z'}{\partial K} \\
-    &= 2^N \cosh^{2N}(K) \left ( 2N \tanh(K) Z' + \frac{\partial Z'}{\partial K} \right ) \\
-    &= 2^N \cosh^{2N}(K) \tanh(K) \left ( 2N Z' + \frac{1}{\tanh(K)}\frac{\partial Z'}{\partial K} \right )
-\end{align*}
-
-Examine $\tanh^{-1}(K) \frac{\partial Z'}{\partial K}$.
-
-\begin{align*}
-    \tanh^{-1}(K) \frac{\partial Z'}{\partial K} &= \tanh^{-1}(K) \frac{\tanh(K)}{\partial K} \sum_L g(L) L \tanh^{L-1}(K) \\
-    &= \frac{1}{\tanh^2(K)\cosh^2(K)} \sum_L g(L) L \tanh^L(K) \\
-    &= \frac{Z'}{\sinh^2(K)} \frac{\sum_L g(L) L \tanh^L(K)}{\sum_L g(L) \tanh^L(K)} \\
-    &= \frac{Z'}{\sinh^2(K)} \langle L \rangle
-\end{align*}
-
-And finally
-
-\begin{equation}
-    E = -J \tanh(K) \left ( 2N + \frac{\langle L \rangle}{\sinh^2(K)} \right )
-\end{equation}
-
-where
-
-\begin{equation}
-    \langle L \rangle = \frac{\sum_L g(L) L \tanh^L(K)}{\sum_L g(L) \tanh^L(K)}
-\end{equation}
+% \begin{align}
+% 	\rho(\beta) &= e^{-\beta H} \\
+% 	\partial \rho &= -H \rho
+% \end{align}
 
 
-\subsection{Heat capacity}
-
-\begin{equation}
-    C = \frac{\partial E}{\partial T} = - \beta^2 \frac{\partial E}{\partial \beta} = -K \beta \frac{\partial E}{\partial K}
-\end{equation}
-
-Let $A = 2N + \frac{1}{\sinh^2(K)} \langle L \rangle$. Then
-
-\begin{equation}
-    \frac{E}{J} = - \tanh(K) A
-\end{equation}
-
-and
-
-\begin{equation}
-    \frac{1}{J} \frac{\partial E}{\partial K} = - \frac{\partial \tanh(K)}{\partial K} A - \tanh(K) \frac{\partial A}{\partial K}
-\end{equation}
-
-where
-
-\begin{align*}
-    \frac{\partial A}{\partial K} &= \langle L \rangle \frac{\partial \sinh^{-2}}{\partial K} + \tanh^{-1}(K)\sinh^{-2}(K) \left ( \langle L^2 \rangle - \langle L \rangle^2 \right ) \frac{\partial \tanh(K)}{\partial K} \\
-    &= \frac{1}{\sinh^2(K) \tanh(K)} \left (-2 \langle L \rangle + \frac{\langle L^2 \rangle - \langle L \rangle^2}{\cosh^2(K)} \right )
-\end{align*}
-
-and finally
-
-\begin{equation}
-    C = \frac{K^2}{\sinh^2(K)} \left ( \frac{\langle L^2 \rangle - \langle L \rangle^2}{\cosh^2(K)} - E \tanh(K) - 2 \langle L \rangle \right )
-\end{equation}
 
 
 \end{abstract}
