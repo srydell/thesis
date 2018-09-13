@@ -5,6 +5,11 @@
 #include <string>
 #include <unordered_map>
 
+struct WNandNS{
+	WNandNS(int winding_number, long double num_steps) : winding_number(winding_number), num_steps(num_steps) {};
+	int winding_number;
+	long double num_steps;
+};
 /**
 * @brief: Check if the link between current_site and next_site in gitter is accepted
 *
@@ -18,7 +23,6 @@
 * @return: bool
 */
 bool IsAccepted(double K, int link_between, int difference, long double &random_num) {
-	// TODO: Make this XY
     // Probability of being accepted
 	int new_energy = std::pow(link_between + difference, 2);
 	int old_energy = std::pow(link_between, 2);
@@ -87,9 +91,9 @@ void UpdateLoopLengths(std::unordered_map<int, int> &loop_lengths, std::unordere
 * @param: Graph &lattice
 *       : double K
 *
-* @return: long double
+* @return: WNandNS
 */
-long double XySimulation(Graph & lattice, double K) {
+WNandNS XySimulation(Graph & lattice, double K) {
 	// TODO: Fix this to be XY
 	// Get the first site for this simulation
 	int first_site = lattice.GetRandomSite();
@@ -107,16 +111,20 @@ long double XySimulation(Graph & lattice, double K) {
 	// Store the total number of accepted steps
 	long double num_steps = 1.0;
 
+	// Store the total links for this loop (winding number)
+	int winding_number = lattice.GetSign(first_site, current_site);
+
 	bool loop_formed = 0;
 	while (!loop_formed) {
 		int next_site = lattice.GetRandomNeighbour(current_site);
 
 		// std::cout << "Next site is: " << next_site << "\n";
 
-		// int sign = GetSign(neighbours_to_site0, site0, site1, dimension, length);
+		int sign = lattice.GetSign(current_site, next_site);
 		auto rand_num = lattice.GetRandomNum();
-		if (IsAccepted(K, 1, 1, rand_num)) {
+		if (IsAccepted(K, lattice.GetLink(current_site, sign * next_site), sign, rand_num)) {
 			num_steps++;
+			winding_number += lattice.GetSign(current_site, next_site);
 
 			// std::cout << "Got accepted!" << "\n";
 			// std::cout << "Switch link between sites: " << current_site << " and " << next_site << "\n";
@@ -132,7 +140,7 @@ long double XySimulation(Graph & lattice, double K) {
 			}
 		}
 	}
-	return num_steps;
+	return {winding_number, num_steps};
 }
 
 /**
