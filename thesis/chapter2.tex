@@ -1,3 +1,140 @@
+\section{Ising model}
+
+\subsection{Loop expansion}
+
+The Ising model energy
+
+\begin{equation}
+    E = - J \sum_{\langle ij \rangle} S_i S_j
+\end{equation}
+
+Let $K = \beta J$ where $\beta = 1/k_{\text{B}} T$.
+
+\begin{equation}
+    \beta E = - K \sum_{\langle ij \rangle} S_i S_j
+\end{equation}
+
+The partition function $Z$.
+
+\begin{equation}
+    Z = \sum_{\text{all states}} e^{-\beta E} = \sum_{\text{all states}} e^{K \sum_{\langle ij \rangle} S_i S_j} = \sum_{\text{all states}} \Pi_{\langle ij \rangle} e^{K S_i S_j}
+\label{Eq:partitionIsingWithoutExpansion}
+\end{equation}
+
+Since $S_i S_j = \pm 1$ in the Ising model, Euler identities can be used to expand the exponential in equation (\ref{Eq:partitionIsingWithoutExpansion}).
+
+\begin{align*}
+    e^{KS_i S_j} &= \frac{e^K + e^{-K}}{2} + S_i S_j \frac{e^K - e^{-K}}{2} \\
+    &= \cosh (K) + S_i S_j \sinh(K) \\
+    &= \{ T = \tanh(K) \} \\
+    &= (1 + T S_i S_j) \cosh(K)
+\end{align*}
+
+For $N$ spins there are 2N bonds, therefore the partition function is
+
+\begin{align*}
+    Z &= \sum_{\text{all states}} \Pi_{\langle ij \rangle} (1 + T S_i S_j) \cosh(K) \\
+    &= \cosh^{2N} (K) \cdot 2^N \left ( 2^{-N} \sum_{\text{all states}} \Pi_{\langle ij \rangle} (1 + T S_i S_j) \right ) \\
+    &= \cosh^{2N} (K) \cdot 2^N Z'
+\end{align*}
+
+And
+
+\begin{align*}
+    Z' &= 2^{-N} \sum_{\text{all states}} \Pi_{\langle ij \rangle} (1 + T S_i S_j) \\
+    &= 2^{-N} \sum_{S_1 = \pm 1} \sum_{S_2 = \pm 1} \ldots \sum_{S_N = \pm 1} \left ( 1 + T \sum_{l = 1} S_i S_j + T^2 \sum_{l = 2} (S_i S_j)(S_{i'} S_{j'}) + \ldots \right ) 
+\end{align*}
+
+Where the sums $\sum_{l=L}$ should be interpreted as the sum over all sets where the link length is $L$. Link length is the coupling between $S$-terms as
+
+\begin{align*}
+    (S_1 S_2) \ &- \ \text{Open with length 1} \\
+    (S_1 S_2)(S_2 S_3) \ &- \ \text{Open with length 2} \\
+    (S_1 S_2)(S_2 S_3)(S_3 S_4)(S_4 S_1) \ &- \ \text{Closed with length 4}
+\end{align*}
+
+% TODO: Add illustration over spin clusters
+
+Since $\sum_{S_i = \pm 1} S_i = 0$, only terms with an even number of $S_i$ are contributing to $Z'$. Call these terms closed, indicating that they represent a closed loop. The sum over all contributing terms gives a factor of $2^N$, canceling the $2^{-N}$.
+
+Rewrite $Z'$ in terms of loop lengths.
+
+\begin{equation}
+    Z' = \sum_L g(L) T^L
+\end{equation}
+
+Where $g(L)$ is the number of loops with length $L$. Finally write the expression for the partition function.
+
+\begin{equation}
+    Z = 2^N \cosh^{2N} (K) \sum_L g(L) T^L
+\end{equation}
+
+\subsection{Energy calculation}
+
+\begin{equation}
+    E = - \frac{1}{Z} \frac{\partial Z}{\partial \beta} = - \frac{J}{Z} \frac{\partial Z}{\partial K}
+\end{equation}
+
+Therefore
+
+\begin{align*}
+    \frac{\partial Z}{\partial K} &= 2^N 2N \cosh^{2N-1}(K) \cdot \frac{\partial \cosh(K)}{\partial K} Z' + 2^N \cosh^{2N}(K) \cdot \frac{\partial Z'}{\partial K} \\
+    &= 2^N \cosh^{2N}(K) \left ( 2N \tanh(K) Z' + \frac{\partial Z'}{\partial K} \right ) \\
+    &= 2^N \cosh^{2N}(K) \tanh(K) \left ( 2N Z' + \frac{1}{\tanh(K)}\frac{\partial Z'}{\partial K} \right )
+\end{align*}
+
+Examine $\tanh^{-1}(K) \frac{\partial Z'}{\partial K}$.
+
+\begin{align*}
+    \tanh^{-1}(K) \frac{\partial Z'}{\partial K} &= \tanh^{-1}(K) \frac{\tanh(K)}{\partial K} \sum_L g(L) L \tanh^{L-1}(K) \\
+    &= \frac{1}{\tanh^2(K)\cosh^2(K)} \sum_L g(L) L \tanh^L(K) \\
+    &= \frac{Z'}{\sinh^2(K)} \frac{\sum_L g(L) L \tanh^L(K)}{\sum_L g(L) \tanh^L(K)} \\
+    &= \frac{Z'}{\sinh^2(K)} \langle L \rangle
+\end{align*}
+
+And finally
+
+\begin{equation}
+    E = -J \tanh(K) \left ( 2N + \frac{\langle L \rangle}{\sinh^2(K)} \right )
+\end{equation}
+
+where
+
+\begin{equation}
+    \langle L \rangle = \frac{\sum_L g(L) L \tanh^L(K)}{\sum_L g(L) \tanh^L(K)}
+\end{equation}
+
+
+\subsection{Heat capacity}
+
+\begin{equation}
+    C = \frac{\partial E}{\partial T} = - \beta^2 \frac{\partial E}{\partial \beta} = -K \beta \frac{\partial E}{\partial K}
+\end{equation}
+
+Let $A = 2N + \frac{1}{\sinh^2(K)} \langle L \rangle$. Then
+
+\begin{equation}
+    \frac{E}{J} = - \tanh(K) A
+\end{equation}
+
+and
+
+\begin{equation}
+    \frac{1}{J} \frac{\partial E}{\partial K} = - \frac{\partial \tanh(K)}{\partial K} A - \tanh(K) \frac{\partial A}{\partial K}
+\end{equation}
+
+where
+
+\begin{align*}
+    \frac{\partial A}{\partial K} &= \langle L \rangle \frac{\partial \sinh^{-2}}{\partial K} + \tanh^{-1}(K)\sinh^{-2}(K) \left ( \langle L^2 \rangle - \langle L \rangle^2 \right ) \frac{\partial \tanh(K)}{\partial K} \\
+    &= \frac{1}{\sinh^2(K) \tanh(K)} \left (-2 \langle L \rangle + \frac{\langle L^2 \rangle - \langle L \rangle^2}{\cosh^2(K)} \right )
+\end{align*}
+
+and finally
+
+\begin{equation}
+    C = \frac{K^2}{\sinh^2(K)} \left ( \frac{\langle L^2 \rangle - \langle L \rangle^2}{\cosh^2(K)} - E \tanh(K) - 2 \langle L \rangle \right )
+\end{equation}
 
 \section{$n$-vector model}
 \label{sec:nVector}
