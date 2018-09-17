@@ -37,6 +37,7 @@ add_library(XYGraphUtils
 target_include_directories(XYGraphUtils PRIVATE source)
 
 add_library(XY
+	source/xy/xyHelper.h
 	source/xy/xyWorm.cpp
 	source/xy/xyWorm.h
 )

@@ -31,6 +31,11 @@ include(SetupLibraries)
 include(SetupTests)
 
 # Set IsingWorm executable
-add_executable(IsingWorm application/main.cpp)
+add_executable(IsingWorm application/isingmain.cpp)
 target_include_directories(IsingWorm PRIVATE source source/Ising)
 target_link_libraries(IsingWorm PRIVATE IsingGraph)
+
+# Set xyWorm executable
+add_executable(xyWorm application/xymain.cpp)
+target_include_directories(xyWorm PRIVATE source source/xy)
+target_link_libraries(xyWorm PRIVATE XYGraph)

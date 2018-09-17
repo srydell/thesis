@@ -396,3 +396,21 @@ TEST_CASE( "GetPercolatingIndices finds all 2D percolating clusters", "[Perc]" )
 	auto it1 = std::find(perc_indices.begin(), perc_indices.end(), 1);
 	REQUIRE( it1 != perc_indices.end() );
 }
+
+TEST_CASE( "GetSign works for 2D graph with L=4", "[GetSign]" ) {
+	int dimension = 2;
+	int length = 4;
+	int nulltime = time(nullptr);
+	srand((unsigned)nulltime);
+
+	int long seed = rand();
+	Graph lattice = Graph(dimension, length, seed);
+
+	std::unordered_map<int, int> positive_links = {{ 0, 1 }, {1, 2}, {2, 3}, {3, 0}, {4, 5}, {5, 6}, {6, 7}, {7, 4}, {8, 9}, {9, 10}, {11, 8}, {12, 13}, {13, 14}, {14, 15}, {15, 12},
+		{0, 4}, {1, 5}, {2, 6}, {3, 7}, {4, 8}, {5, 9}, {6, 10}, {7, 11}, {8, 12}, {9, 13}, {10, 14}, {11, 15}, {12, 0}, {13, 1}, {14, 2}, {15, 3}};
+
+	for (auto& link : positive_links) {
+		REQUIRE( lattice.GetSign(link.first, link.second) == +1 );
+		REQUIRE( lattice.GetSign(link.second, link.first) == -1 );
+	}
+}

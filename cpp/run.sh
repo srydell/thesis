@@ -12,7 +12,9 @@ function run_project {
 	# Run binary build succeeds
 	if cmake --build build --target "$1"; then
 		cd ./build || exit
-		time ./"$1" ;
+		if [[ -f ./"$1" ]]; then
+			time ./"$1"
+		fi
 		cd - || exit
 	fi
 }
@@ -31,7 +33,12 @@ elif [[ "$1" == test ]]; then
 	do
 		run_project "$t"
 	done
-else
+elif [[ "$1" == i ]]; then
 	# On clean make, just run the project
 	run_project IsingWorm
+elif [[ "$1" == x ]]; then
+	# On clean make, just run the project
+	run_project xyWorm
+else
+	run_project "$1"
 fi

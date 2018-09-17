@@ -15,6 +15,7 @@
 * @return: void
 */
 void Graph::SwitchLinkBetween(int site0, int site1) {
+	std::cout << "Call to SwitchLinkBetween(site0 = " << site0 << ", site1 = " << site1 << ")" << "\n";
 	// Check if sites are in mGraph
 	if (IsInGraph(site0) && IsInGraph(site1)) {
 
