@@ -31,7 +31,7 @@ target_link_libraries(IsingGraph INTERFACE
 )
 
 add_library(XYGraphUtils
-	source/xy/xyGraphUtils.cpp
+	source/xy/XYGraphUtils.cpp
 	source/xy/Site.cpp
 )
 target_include_directories(XYGraphUtils PRIVATE source)
