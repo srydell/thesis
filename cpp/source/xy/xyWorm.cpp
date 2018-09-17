@@ -7,25 +7,6 @@
 #include <unordered_map>
 
 /**
-* @brief: brief
-*
-* @param: std::vector<int> 
-*
-* @return: void
-*/
-void PopulateBoxDim(Graph& lattice, std::unordered_map<int, std::vector<int>>& clusters, std::unordered_map<int, std::vector<int>>& loop_lengths) {
-	// Find the sites corresponding to the largest worm
-	std::vector<int> largest_worm = clusters[GetMaximumMapIndex(loop_lengths)];
-
-	// Split up the graph into boxes of decreasing sizes
-	std::unordered_map<int, std::vector<int>> blocks;
-	lattice.DivideGraph(blocks);
-	
-	std::unordered_map<int, int> side_length_and_num_occupied;
-	lattice.GetBoxDimension(blocks, side_length_and_num_occupied, largest_worm);
-}
-
-/**
 * @brief: Check if the link between current_site and next_site in gitter is accepted
 *
 * @param: double K
