@@ -3,6 +3,60 @@
 
 In this thesis a number of error estimation techniques were used to know how much data was needed for each measurement. In this section the techniques will be described intuitively.
 
+\subsection{Monte Carlo error estimation}
+\label{subsec:MonteCarloErrorEst}
+
+Given a Monte Carlo simulation where polling of some quantity $A$ has been done $N$ times an estimation of the expectation value of $A$ is
+
+\begin{equation}
+    \bar A = \frac{1}{N} \sum_{i = 1}^{N} A_i
+\end{equation}
+
+where each sampling was labeled $A_i$. To show that this is an unbiased estimator the expectation value of the difference between the estimation and the real value $\langle A \rangle$ is used.
+
+\begin{align}
+    \langle \bar A - \langle A \rangle \rangle &= \langle \bar A \rangle - \langle A \rangle \\
+%
+    &= \left \langle \frac{1}{N} \sum_{i = 1}^{N} A_i \right \rangle - \langle A \rangle \\
+%
+    &= \frac{1}{N} \sum_{i = 1}^{N} \langle A_i \rangle - \langle A \rangle \\
+\label{eq:unbiasedEst}
+%
+    &= \frac{1}{N} \sum_{i = 1}^{N} \langle A \rangle - \langle A \rangle \\
+%
+    &= \frac{1}{N} N \langle A \rangle - \langle A \rangle = 0
+\end{align}
+
+where the fact that $A_i$ is a random sampling from the distribution of $A$ was used in (\ref{eq:unbiasedEst}).
+
+The standard deviation of this estimate can be calculated through the variance.
+
+\begin{align}
+    \sigma_{\bar A}^{2} &= V\left( \bar A - \langle A \rangle \right ) \\
+%
+    &= V\left(\bar A\right) - V\left(\langle A \rangle\right) \\
+%
+    &= \{ \langle A \rangle \ \text{is a constant} \Rightarrow V(\langle A \rangle) = 0 \} \\
+%
+    &= V \left ( \frac{1}{N} \sum_{i = 1}^{N} A_i \right ) \\
+%
+    &= \{ \text{Monte Carlo simulations give independent samples} \} \\
+%
+    &= \frac{1}{N^2} \sum_{i = 1}^{N} V(A_i) \\
+%
+    &= \{ V(A_i) = \sigma_{A}^2 \} \\
+%
+    &= \frac{1}{N^2} N \sigma_{A}^2 = \frac{\sigma_{A}^2}{N}
+\end{align}
+
+or
+
+\begin{equation}
+    \sigma_{\bar A} = \frac{\sigma_A}{\sqrt{N}}
+\end{equation}
+
+So the standard error in this estimation decreases as $N^{-1/2}$.
+
 \subsection{Bootstrap}
 \label{subsec:Bootstrap}
 
