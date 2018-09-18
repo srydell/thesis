@@ -7,7 +7,7 @@ Python Version:      3.7
 '''
 
 data = []
-filename = "./susceptibility27515"
+filename = "../susceptibility.txt"
 with open(filename, 'r') as data_file:
     # Create the data boxes
     current_length = 4

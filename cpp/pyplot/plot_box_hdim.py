@@ -145,13 +145,14 @@ def plot_error_bars(data_dict):
 
             # Calculate the standard deviation
             # std_dev = sqrt(((sample1 - average)^2 + ... + (sampleN - average)^2)/N)
-            std_average.append(np.std(brs_dhs[rel_box]))
+            std_average.append(np.std(brs_dhs[rel_box]) / np.sqrt(len(data_dict[system_linear_size])))
 
+        best_std_hdim = best_std_hdim / len(data_dict[system_linear_size])
         print(f"D_H = {best_avg_hdim:.5} +- {best_std_hdim:.2}")
 
         plt.errorbar(list(brs_dhs.keys()), average_dh, yerr=std_average,\
             ecolor='gray', elinewidth=2, fmt='k.', linestyle="None",\
-            capsize=3, capthick=2, label=r"$\bar D_H \pm \sigma_{D_H}$")
+            capsize=3, capthick=2, label=r"$\bar D_H \pm \frac{\sigma_{D_H}}{\sqrt{N}}$")
 
 def plot_boxsize_vs_hausdorff(data_dict, plot_scatter=False, savefig=False):
     """Plot data from data_dict[system_linear_size]
@@ -181,7 +182,7 @@ def plot_boxsize_vs_hausdorff(data_dict, plot_scatter=False, savefig=False):
             # color_counter %= len(colors)
 
         # Set labels
-        plt.title(r"Box dimension calculation on a ${}^3$ Ising lattice"\
+        plt.title(r"Box dimension calculation on a ${}^2$ Ising lattice"\
                 .format(int(system_linear_size)))
         plt.xlabel("Relative size of box division")
         plt.ylabel(r"$D_H$")
@@ -199,7 +200,7 @@ def plot_boxsize_vs_hausdorff(data_dict, plot_scatter=False, savefig=False):
 
         if savefig:
             sls = system_linear_size
-            plt.savefig(f"./plots/box_dimension_for_{sls}x{sls}x{sls}Ising.png",\
+            plt.savefig(f"./plots/box_dimension_for_{int(sls)}x{int(sls)}Ising.png",\
                         bbox_inches='tight')
         plt.show()
 
@@ -213,5 +214,8 @@ if __name__ == '__main__':
 
     plot_error_bars(simulation_data)
 
+    # plt.xlim([1/64 - 1/64 * .2, 1/8 + 1/64 * .2])
+    plt.plot([1/64 - 1/64 * .2, 1/8 + 1/64 * .2], [1.375, 1.375], linewidth=1, c="#0e68ce", label=r"D_H = 1.375")
+
     # plt.show() called here
-    plot_boxsize_vs_hausdorff(simulation_data, savefig=False)
+    plot_boxsize_vs_hausdorff(simulation_data, savefig=True)

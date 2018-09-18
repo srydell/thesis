@@ -70,13 +70,13 @@ def plot_hist_of_error(data_dict):
     for system_size in data_dict:
         plt.hist(data_dict[system_size])
         plt.title(rf"Error distribution for ${system_size}^2$ Ising lattice")
-        plt.xlabel("Susceptibility")
+        plt.xlabel(r"$\chi$")
         plt.ylabel("Number of counts")
         plt.show()
         # Clear figure
         plt.clf()
 
-def plot_syssize_vs_looplength(data_dict):
+def plot_syssize_vs_susc(data_dict):
     """Plot system size (key) vs loop lengths (values) from data_dict
 
     :data_dict: dict
@@ -115,7 +115,7 @@ def plot_setup():
     # Set labels
     plt.title("Susceptibility on a 2D Ising lattice")
     plt.xlabel("Linear system size")
-    plt.ylabel("Susceptibility")
+    plt.ylabel(r"$\chi$")
 
 def bootstrap(fit_func, xdata, ydata, iterations=100):
     """Perform bootstrap resampling and get the average and standard deviation from the optimal parameters
@@ -199,7 +199,7 @@ if __name__ == '__main__':
     # plot_hist_of_error(simulation_data)
 
     plot_setup()
-    plot_syssize_vs_looplength(simulation_data)
+    plot_syssize_vs_susc(simulation_data)
     plot_syssize_vs_fit(simulation_data)
 
     plt.legend()
