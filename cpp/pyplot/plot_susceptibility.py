@@ -192,6 +192,46 @@ def plot_syssize_vs_fit(data_dict):
 
     print(f"eta = {opt_pars[1]:.6} +- {stderr_pars[opt_pars[1]]:.4}")
 
+def plot_error_bars(data_dict):
+    """Plot error bars from data_dict[system_linear_size]
+
+    :data_dict: dict -
+           {<system_linear_size>: [[<box_relative_size>, <hausdorff_dimension>], ...]}
+    :returns: None
+    """
+    # NOTE: There should only be one system_linear_size here
+    for system_linear_size in data_dict:
+        # {box_relative_size: [D_H0, D_H1, ...], ...}
+        brs_dhs = {}
+        for brs_and_dh in data_dict[system_linear_size]:
+            # If new relative box size
+            if brs_and_dh[0] not in brs_dhs:
+                brs_dhs[brs_and_dh[0]] = []
+
+            # Append the D_H to the correct relative box size
+            brs_dhs[brs_and_dh[0]].append(brs_and_dh[1])
+
+        min_rel_box_size = min(brs_dhs.keys())
+        average_dh = []
+        std_average = []
+        for rel_box in brs_dhs:
+            # NOTE: The best approximation in the box model is always the smallest box
+            if rel_box == min_rel_box_size:
+                best_avg_hdim = np.average(brs_dhs[rel_box])
+                best_std_hdim = np.std(brs_dhs[rel_box])
+
+            average_dh.append(np.average(brs_dhs[rel_box]))
+
+            # Calculate the standard deviation
+            # std_dev = sqrt(((sample1 - average)^2 + ... + (sampleN - average)^2)/N)
+            std_average.append(np.std(brs_dhs[rel_box]))
+
+        print(f"D_H = {best_avg_hdim:.5} +- {best_std_hdim:.2}")
+
+        plt.errorbar(list(brs_dhs.keys()), average_dh, yerr=std_average,\
+            ecolor='gray', elinewidth=2, fmt='k.', linestyle="None",\
+            capsize=3, capthick=2, label=r"$\bar D_H \pm \sigma_{D_H}$")
+
 if __name__ == '__main__':
     simulation_data = process_file("./data/susceptibility.txt")
     clean_processed_data(simulation_data, exclude_system_size=[])
