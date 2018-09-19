@@ -108,7 +108,7 @@ bool Graph::IsInGraph(int site) {
 /**
 * @brief: Pretty print the contents of mGraph for debugging
 *
-* @param: 
+* @param:
 *
 * @return: void
 */
@@ -128,7 +128,7 @@ void Graph::PrintGraph() {
 /**
 * @brief: Return a random number generated from Mersienne Twister
 *
-* @param: 
+* @param:
 *
 * @return: int long
 */
@@ -139,7 +139,7 @@ long double Graph::GetRandomNum(){
 /**
 * @brief: Return a random site index
 *
-* @param: 
+* @param:
 *
 * @return: int
 */
@@ -165,4 +165,26 @@ std::vector<int> Graph::GetxyzConversion(int index) {
 		index = std::floor(index / mLength);
 	}
 	return xyz;
+}
+
+/**
+* @brief: Return mDimension
+*
+* @param:
+*
+* @return: int
+*/
+int Graph::GetDimension() {
+	return mDimension;
+}
+
+/**
+* @brief: Return mLength
+*
+* @param:
+*
+* @return: int
+*/
+int Graph::GetLength() {
+	return mLength;
 }

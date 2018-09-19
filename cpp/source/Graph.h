@@ -12,6 +12,8 @@ public:
 	Graph(int dimension, int length, int long seed);
 
 	// Functions
+	int GetLength();
+	int GetDimension();
 	long double GetRandomNum();
 	int GetLink(int site0, int site1);
 	int GetRandomNeighbour(int site);
