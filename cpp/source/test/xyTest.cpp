@@ -3,6 +3,7 @@
 #include "catch.hpp"
 #include "cmath"
 #include "utils.h"
+#include "xyWorm.h"
 #include <algorithm>
 #include <iostream>
 #include <sstream>
@@ -413,4 +414,33 @@ TEST_CASE( "GetSign works for 2D graph with L=4", "[GetSign]" ) {
 		REQUIRE( lattice.GetSign(link.first, link.second) == +1 );
 		REQUIRE( lattice.GetSign(link.second, link.first) == -1 );
 	}
+}
+
+TEST_CASE( "Warmup works and saving works", "[Warmup]" ) {
+	int dimension = 2;
+	int length = 4;
+	int nulltime = time(nullptr);
+	srand((unsigned)nulltime);
+
+	int long seed = rand();
+	Graph lattice = Graph(dimension, length, seed);
+
+	lattice.SwitchLinkBetween(0, 1);
+	lattice.SwitchLinkBetween(1, 5);
+	lattice.SwitchLinkBetween(5, 6);
+	lattice.SwitchLinkBetween(6, 10);
+	lattice.SwitchLinkBetween(10, 9);
+	lattice.SwitchLinkBetween(9, 5);
+	lattice.SwitchLinkBetween(5, 6);
+	lattice.SwitchLinkBetween(6, 7);
+	lattice.SwitchLinkBetween(7, 3);
+	lattice.SwitchLinkBetween(3, 0);
+
+	std::string filename = "test_graph.txt";
+	SaveGraphToFile(filename, lattice);
+	lattice.PrintGraph();
+
+	Graph compare_lattice = Graph(dimension, length, seed);
+	LoadGraphFromFile(filename, compare_lattice);
+	compare_lattice.PrintGraph();
 }

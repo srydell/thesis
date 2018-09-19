@@ -106,6 +106,8 @@ void Graph::SwitchLinkBetween(int site0, int site1) {
 /**
 * @brief: Return the link between site0 and site1 if it exists. Otherwise throw std::string error.
 *         NOTE: site0 and site1 is assumed to be > 0
+*         NOTE: This is the physical link, not necessarily the link from site0 to site1
+*               If the arrow is in the negative x_i direction, the link will be negative, otherwise positive
 *
 * @param: int site0
 *       : int site1
@@ -116,6 +118,7 @@ int Graph::GetLink(int site0, int site1) {
 	if (IsInGraph(site0) && IsInGraph(site1)) {
 		if (AreNeighbours(site1, site0)) {
 			int sign = GetSign(site0, site1);
+
 			// Example:
 			//         s0 {s1  :  J}
 			//         s1 {s0  :  J}
