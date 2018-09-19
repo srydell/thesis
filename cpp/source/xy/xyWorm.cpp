@@ -3,6 +3,7 @@
 #include "xyHelper.h"
 #include <algorithm>
 #include <iostream>
+#include <regex>
 #include <string>
 #include <unordered_map>
 
@@ -168,5 +169,142 @@ WNandNS XySimulation(Graph & lattice, double K) {
 void WarmUp(int warm_up_runs, Graph& lattice, double K) {
 	for (int i = 0; i < warm_up_runs; ++i) {
 		XySimulation(lattice, K);
+	}
+}
+
+/**
+* @brief: Help function to switch the link between site0 and site1 to have the value link
+*
+* @param: int site0
+*       : int site1
+*       : int link
+*       : Graph& lattice
+*
+* @return: void
+*/
+void SetLinks(int site0, int site1, int link, Graph& lattice) {
+	if (link < 0) {
+		int tmp = site0;
+		site0 = site1;
+		site1 = tmp;
+		link = -1 * link;
+	}
+	for (int i = 0; i < link; ++i) {
+		// std::cout << "Switch link between " << site0 << " and " << site1 << "\n";
+		lattice.SwitchLinkBetween(site0, site1);
+	}
+}
+
+
+/**
+* @brief: Switch all links saved in filename.
+*
+* @param: const std::string& filename
+*       : Graph& lattice
+*
+* @return: void
+*/
+void LoadGraphFromFile(const std::string& filename, Graph& lattice) {
+	std::ifstream file;
+	file.open(filename, std::ios_base::in);
+
+	std::string line;
+	while(std::getline(file, line)) {
+		// std::cout << "Current line is: " << line << "\n";
+		std::regex sites_and_links;
+		// Find how many linked neighbours this site has
+		{
+			std::stringstream ss;
+			ss << "(\\d+):";
+			size_t n = std::count(line.begin(), line.end(), ',');
+			for (size_t i = 0; i < n; ++i) {
+				ss << " ";
+				ss << "(-?\\d+),(-?\\d+)";
+			}
+			// std::cout << "Got the regex: " << ss.str() << "\n";
+			// Create the resulting regex
+			sites_and_links = ss.str();
+		}
+
+		std::smatch matches;
+		if (std::regex_search(line, matches, sites_and_links)) {
+			int current_site;
+			if (matches.size() > 1) {
+				std::stringstream(matches[1].str()) >> current_site;
+			}
+			for (size_t i = 2; i < matches.size(); ++i) {
+				// TODO: Actually switch the sites
+				int neighbour, link;
+				std::stringstream(matches[i].str()) >> neighbour;
+				std::stringstream(matches[++i].str()) >> link;
+
+				// std::cout << "\n================================" << "\n";
+
+				SetLinks(current_site, neighbour, link, lattice);
+			}
+		}
+	}
+}
+
+/**
+* @brief: Loop through lattice and save down the positive links. Except for site = 0 where it saves all links
+*
+* @param: const std::string& filename
+*       : Graph& lattice
+*
+* @return: void
+*/
+void SaveGraphToFile(const std::string& filename, Graph& lattice) {
+	std::ofstream file;
+	file.open(filename, std::ios_base::out);
+	// Special case for site = 0
+	{
+		std::vector<int> neighbours;
+		lattice.GetLinkedNeighbours(0, neighbours);
+		std::stringstream ss;
+		if (neighbours.size() != 0) {
+			ss << 0 << ":";
+			for (auto& n : neighbours) {
+				// NOTE: GetLink returns the physical link between 0, n, therefore GetSign
+				ss << " " << std::abs(n) << "," << lattice.GetSign(0, n) * lattice.GetLink(0, std::abs(n));
+			}
+			file << ss.str() << "\n";
+		}
+	}
+	for (int i = 1; i < std::pow(lattice.GetLength(), lattice.GetDimension()); ++i) {
+		std::vector<int> neighbours;
+		lattice.GetLinkedNeighbours(i, neighbours);
+		std::stringstream ss;
+		// Only save links where the neighbour index > 0 to avoid double counting
+		bool HasPositiveLinks = std::any_of(neighbours.begin(), neighbours.end(), [](int n) { return n > 0; });
+		if ((neighbours.size() != 0) && HasPositiveLinks) {
+			ss << i << ":";
+			for (auto& n : neighbours) {
+				if (n > 0) {
+					// NOTE: GetLink returns the physical link between 0, n, therefore GetSign
+					ss << " " << n << "," << lattice.GetSign(i, n) * lattice.GetLink(i, n);
+				}
+			}
+			file << ss.str() << "\n";
+		}
+	}
+}
+
+/**
+* @brief: Check if the system has been saved before as a warmed up state, or warm it up and save it
+*
+* @param: int warm_up_runs
+*       : Graph& lattice
+*       : double K
+*       : std::string& filename
+*
+* @return: void
+*/
+void WarmUpAndSaveOrReload(int warm_up_runs, Graph& lattice, double K, const std::string& filename) {
+	if (FileExists(filename)) {
+		LoadGraphFromFile(filename, lattice);
+	} else {
+		WarmUp(warm_up_runs, lattice, K);
+		SaveGraphToFile(filename, lattice);
 	}
 }
