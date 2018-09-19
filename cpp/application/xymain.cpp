@@ -28,7 +28,7 @@ int main(/*int argc, char** argv*/) {
 		for (auto& length : {4}) {
 		// for (auto& length : {4, 8, 16, 32}) {
 
-			double MIN_T = 2.15;
+			double MIN_T = 2.10;
 			double MAX_T = 2.3;
 			double NUM_T = 3;
 			for (double T = MIN_T; T <= MAX_T; T+=(MAX_T - MIN_T)/(NUM_T - 1)) {
