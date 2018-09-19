@@ -10,6 +10,7 @@
 #include <fstream>
 #include <sstream>
 #include <sys/types.h>
+#include <sys/stat.h>
 #include <unistd.h>
 #include <string>
 
@@ -122,6 +123,11 @@ template<typename T1, typename T2>
 bool MapHasItem(T1 item, T2 &map) {
 	// Try with unordered_map like behaviour
 	return map.find(item) != map.end();
+}
+
+inline bool FileExists(const std::string& name) {
+  struct stat buffer;   
+  return (stat (name.c_str(), &buffer) == 0); 
 }
 
 #endif
