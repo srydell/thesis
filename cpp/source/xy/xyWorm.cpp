@@ -22,6 +22,7 @@
 bool IsAccepted(double K, int link_between, int difference, long double &random_num) {
 	// std::cout << "Call to IsAccepted(K = " << K << ", link_between = " << link_between << ", difference = " << difference << ", random_num = " << random_num << "\n";
 
+	// TODO: Check if this is correct. Probably with Mats
     // Probability of being accepted
 	int new_energy = std::pow(link_between + difference, 2);
 	int old_energy = std::pow(link_between, 2);
@@ -102,7 +103,6 @@ void UpdateLoopLengths(std::unordered_map<int, int> &loop_lengths, std::unordere
 * @return: WNandNS
 */
 WNandNS XySimulation(Graph & lattice, double K) {
-
 	// std::cout << "\n\nCall to XySimulation" << "\n";
 
 	// TODO: Fix this to be XY
@@ -118,7 +118,7 @@ WNandNS XySimulation(Graph & lattice, double K) {
 
 	// Store the total links for this loop (winding number)
 	int sign = lattice.GetSign(first_site, current_site);
-	int winding_number = sign;
+	double winding_number = sign;
 
 	// Form the first link
 	lattice.SwitchLinkBetween(first_site, current_site);
@@ -155,7 +155,7 @@ WNandNS XySimulation(Graph & lattice, double K) {
 			}
 		}
 	}
-	return {winding_number, num_steps};
+	return {winding_number / lattice.GetLength(), num_steps};
 }
 
 /**

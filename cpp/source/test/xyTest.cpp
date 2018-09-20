@@ -416,7 +416,7 @@ TEST_CASE( "GetSign works for 2D graph with L=4", "[GetSign]" ) {
 	}
 }
 
-TEST_CASE( "Warmup works and saving works", "[Warmup]" ) {
+TEST_CASE( "SaveGraphToFile and LoadGraphFromFile gives the same graph", "[GraphToFile]" ) {
 	int dimension = 2;
 	int length = 4;
 	int nulltime = time(nullptr);
@@ -438,9 +438,20 @@ TEST_CASE( "Warmup works and saving works", "[Warmup]" ) {
 
 	std::string filename = "test_graph.txt";
 	SaveGraphToFile(filename, lattice);
-	lattice.PrintGraph();
 
 	Graph compare_lattice = Graph(dimension, length, seed);
 	LoadGraphFromFile(filename, compare_lattice);
-	compare_lattice.PrintGraph();
+
+	for (int i = 0; i < std::pow(length, dimension); ++i) {
+		std::vector<int> neighbours;
+		lattice.GetLinkedNeighbours(i, neighbours);
+
+		std::vector<int> compare_ns;
+		lattice.GetLinkedNeighbours(i, compare_ns);
+
+		REQUIRE( neighbours.size() == compare_ns.size() );
+		for (auto& n : neighbours) {
+			REQUIRE( VecHasItem(compare_ns, n) );
+		}
+	}
 }

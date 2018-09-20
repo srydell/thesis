@@ -130,4 +130,17 @@ inline bool FileExists(const std::string& name) {
   return (stat (name.c_str(), &buffer) == 0); 
 }
 
+/**
+* @brief: Return true if item is in vec
+*
+* @param: std::vector<T>& vec
+*       : T item
+*
+* @return: bool
+*/
+template <typename T>
+bool VecHasItem(std::vector<T>& vec, T item) {
+	return std::find(vec.begin(), vec.end(), item) != vec.end();
+}
+
 #endif

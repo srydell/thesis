@@ -39,3 +39,8 @@ target_link_libraries(IsingWorm PRIVATE IsingGraph)
 add_executable(xyWorm application/xymain.cpp)
 target_include_directories(xyWorm PRIVATE source source/xy)
 target_link_libraries(xyWorm PRIVATE XYGraph)
+
+# Set warmup executable
+add_executable(warmup application/warmup.cpp)
+target_include_directories(warmup PRIVATE source source/xy)
+target_link_libraries(warmup PRIVATE XYGraph)
