@@ -25,11 +25,11 @@ int main(/*int argc, char** argv*/) {
 		auto windingnum_temp_file = GetUniqueFile("windingnum_tempXY");
 
 		// How many different sizes of the simulation should run (L = 2^i)
-		for (auto& length : {8}) {
+		for (auto& length : {4}) {
 		// for (auto& length : {4, 8, 16, 32}) {
 
-			double MIN_T = 2.10;
-			double MAX_T = 2.3;
+			double MIN_T = 1.8;
+			double MAX_T = 2.6;
 			double NUM_T = 3;
 			for (double T = MIN_T; T <= MAX_T; T+=(MAX_T - MIN_T)/(NUM_T - 1)) {
 
@@ -45,6 +45,10 @@ int main(/*int argc, char** argv*/) {
 				
 				// Reach equilibrium
 				WarmUp(10000 * length, lattice, K);
+
+				std::stringstream ss;
+				ss << "xyl" << length << "t" << T << ".txt";
+				WarmUpAndSaveOrReload(10000 * length, lattice, K, ss.str());
 				
 				// Run the simulation for size from 2^2 to 2^max_length_exponent num_sim times
 				int num_worms_started = 100;
@@ -64,11 +68,11 @@ int main(/*int argc, char** argv*/) {
 						WNandNS res = XySimulation(lattice, K);
 						winding_number_squared += std::pow(res.winding_number / 3, 2);
 
-						std::cout << "Got the winding_number: " << res.winding_number / 3 << "\n";
+						// std::cout << "Got the winding_number: " << res.winding_number / 3 << "\n";
 
 					}
 						
-					std::cout << "Taking measurements..." << "\n";
+					// std::cout << "Taking measurements..." << "\n";
 					
 					windingnum_temp_file << "L=" << length << ":\n";
 					windingnum_temp_file << winding_number_squared / num_worms_started;

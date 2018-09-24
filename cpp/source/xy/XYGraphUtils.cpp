@@ -163,3 +163,43 @@ bool Graph::AreNeighbours(int site0, int site1) {
 	}
 	return 0;
 }
+
+/**
+* @brief: brief
+*
+* @param: int site0
+*       : int site1
+*       : int link
+*
+* @return: void
+*/
+void Graph::SetLinks(int site0, int site1, int link) {
+	// std::cout << "Switching link between: " << site0 << " and " << site1 << "\n";
+	// Check if sites are in mGraph
+	if (IsInGraph(site0) && IsInGraph(site1)) {
+		if (AreNeighbours(site0, site1)) {
+
+			int site0_to_site1_sign = GetSign(site0, site1);
+			mGraph[site0].neighbours[site0_to_site1_sign * site1] = link;
+			mGraph[site1].neighbours[-1 * site0_to_site1_sign * site0] = -1 * link;
+
+			// std::cout << "Switch between site0: " << site0 << " and site1: " << site1 << "\n";
+			// std::cout << "mGraph[" << site0 << "].neighbours[" << site0_to_site1_sign * site1 << "]++;" << "\n";
+			// std::cout << "mGraph[" << site1 << "].neighbours[" << -1 * site0_to_site1_sign * site0 << "]--;" << "\n\n";
+
+		} else {
+			// Error handling for siteX and siteY not neighbours
+			std::stringstream ss;
+			ss << "Call to Graph::SwitchLinkBetween failed since "
+				<< site0 << " and " << site1 << " are not in neighbours." << "\n";
+			throw ss.str();
+		}
+
+	} else {
+		// Error handling for site not in mGraph
+		std::stringstream ss;
+		ss << "Call to Graph::SwitchLinkBetween failed since "
+			<< site0 << " and/or " << site1 << " are not in mGraph." << "\n";
+		throw ss.str();
+	}
+}

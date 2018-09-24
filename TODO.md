@@ -5,6 +5,7 @@
 ### Questions for Mats ###
 
 * How good is the approximation of box dimension compared to the Hausdorff dimension with differing radii of balls?
+* Am I doing the acceptance ration correctly?
 
 ### General ###
 
