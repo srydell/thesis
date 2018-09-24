@@ -77,6 +77,9 @@ if __name__ == '__main__':
     for size in simulation_data:
         color = colors.pop()
         labeled = False
+
+        x = []
+        y = []
         for i in [1, 2, 3]:
             if not labeled:
                 plt.scatter(np.mean(simulation_data[size][0][((i-1)*100):(i*100)]),\
@@ -88,6 +91,10 @@ if __name__ == '__main__':
                 plt.scatter(np.mean(simulation_data[size][0][((i-1)*100):(i*100)]),\
                         np.mean(simulation_data[size][1][((i-1)*100):(i*100)]),\
                         c=color)
+            x.append(np.mean(simulation_data[size][0][((i-1)*100):(i*100)]))
+            y.append(np.mean(simulation_data[size][1][((i-1)*100):(i*100)]))
+        plt.plot(x, y, c=color)
+
 
     plt.title("XY lattice")
     plt.xlabel("Temperature")
