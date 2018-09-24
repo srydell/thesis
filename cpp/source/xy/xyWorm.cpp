@@ -26,16 +26,9 @@ bool IsAccepted(double K, int link_between, int difference, long double &random_
     // Probability of being accepted
 	int new_energy = std::pow(link_between + difference, 2);
 	int old_energy = std::pow(link_between, 2);
-	double e = 2.7182818;
-    auto p = std::pow(e, K * (new_energy - old_energy));
-
-	// std::cout << "p before test: " << p << "\n";
-
-	p = (p < 1) ? p : 1;
+    auto p = std::exp(- 1 * K * (new_energy - old_energy));
 
 	// std::cout << "Probability of acceptance: p = " << p << "\n";
-	// std::string s;
-	// std::cin >> s;
 
 	if (random_num < p) {
 		// std::cout << "Accepted!" << "\n";
@@ -189,10 +182,8 @@ void SetLinks(int site0, int site1, int link, Graph& lattice) {
 		site1 = tmp;
 		link = -1 * link;
 	}
-	for (int i = 0; i < link; ++i) {
-		// std::cout << "Switch link between " << site0 << " and " << site1 << "\n";
-		lattice.SwitchLinkBetween(site0, site1);
-	}
+	// std::cout << "Switch link between " << site0 << " and " << site1 << "\n";
+	lattice.SetLinks(site0, site1, link);
 }
 
 
@@ -240,6 +231,7 @@ void LoadGraphFromFile(const std::string& filename, Graph& lattice) {
 
 				// std::cout << "\n================================" << "\n";
 
+				// std::cout << "Setting links between: " << current_site << " and " << neighbour << "\n";
 				SetLinks(current_site, neighbour, link, lattice);
 			}
 		}

@@ -27,22 +27,29 @@ int main() {
 		// How many different sizes of the simulation should run (L = 2^i)
 		for (auto& length : {8}) {
 
+			std::cout << "Dimension: " << dimension << "\n";
+			std::cout << "On length: " << length << "\n";
+			
 			// Create a new graph
 			int long seed = rand();
 			Graph lattice(dimension, length, seed + getpid());
-			std::string filename = "xyl8t2.txt";
-			if (FileExists(filename)) {
-				LoadGraphFromFile(filename, lattice);
-			}
-			
+
 			// Bond strength J = 1
-			double T = 2.0;
+			double T = 2.2;
 			double K = 1/T;
 
+			std::stringstream ss;
+			ss << "xyl" << length << "t" << T << ".txt";
+			std::string filename = ss.str();
+			if (FileExists(filename)) {
+				std::cout << "Loading file..." << "\n";
+				LoadGraphFromFile(filename, lattice);
+			} else {
+				std::cout << "File didn't exist" << "\n";
+			}
+			
 			windingnum_temp_file << "L=" << length << ":\n";
 
-			std::cout << "On length: " << length << "\n";
-			
 			// Store the winding number
 			double winding_number_squared = 0;
 

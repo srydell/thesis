@@ -28,6 +28,7 @@ public:
 
 	// Only for XY
 	int GetSign(int site0, int site1);
+	void SetLinks(int site0, int site1, int link);
 
 	// IndexClusters
 	void IndexClusters(std::unordered_map<int, std::vector<int>> &clusters);
