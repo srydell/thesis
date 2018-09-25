@@ -111,3 +111,13 @@ def fill_with_arrows(p0, p1, size, color):
     else:
         print("Error! Function 'fill_with_arrows' requires the points to be parallell on either x-axis or y-axis")
         print(f"       Provided points were: {p0}, {p1}")
+
+def save_figure(figname, form = "pdf"):
+    """Save figure as figname.form
+
+    :figname: String - name of figure without postfix
+    :form: String - postfix
+    :returns: None
+    """
+    plt.savefig(f"./plots/{figname}.{form}",\
+                bbox_inches='tight', format=form, dpi=1200)

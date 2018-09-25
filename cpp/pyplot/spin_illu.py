@@ -15,7 +15,7 @@ if __name__ == '__main__':
     x = 4
     y = 4
     pi = 3.1415
-    form = "png"
+    form = "pdf"
 
     same_angle = pi/2
     tilt = list(np.linspace(0, pi/4, x))
@@ -24,7 +24,7 @@ if __name__ == '__main__':
     random_tilt_angles = [a - t for a, t in zip(random_angles, tilt * y)]
 
     angles = [same_angle, tilt_angles, random_angles, random_tilt_angles]
-    fignames = ["SameAngle", "PhaseShift", "RandomAngle", "RandomPhaseShift"]
+    fignames = ["NoPhaseShift", "PhaseShift", "RandomAngle", "RandomPhaseShift"]
     for angs, figname in zip(angles, fignames):
         plt.clf()
         illu.plot_lattice(x, y)
@@ -33,8 +33,7 @@ if __name__ == '__main__':
 
         # plt.show()
 
-        ans = input(f"Save figure as: {figname}? ")
+        # ans = input(f"Save figure as: {figname}? ")
 
-        if ans in 'yY':
-            plt.savefig(f"./plots/{figname}.{form}",\
-                        bbox_inches='tight', format=form, dpi=1200)
+        # if ans in 'yY':
+        illu.save_figure(figname, form)
