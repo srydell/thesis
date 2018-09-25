@@ -1,0 +1,20 @@
+\section{Testing}
+\label{sec:Testing}
+
+Testing is an essential part of writing a simulation. The correctness of the code ensures that the physical model is aptly described. To facilitate the development, a number of coding practices were applied, such as unit testing (Section \ref{sec:UnitTesting}) and regression testing (Section \ref{sec:RegressionTesting}). The tests for the prototypes were written in the Python standard library utility \textit{unittest}, and those for the main simulation used the C++ framework \textit{Catch2}.
+
+\subsection{Unit Testing}
+\label{sec:UnitTesting}
+
+Unit testing refers to the practice of isolating a `unit' of code and testing its correctness. A unit can be any small piece of code with an expected behaviour.
+
+This was done by manually calculating the expected output of some code, given some input, and ensuring that the piece of code produced an equivalent result.
+
+The parts of the simulation using a pseudorandom number generator were tested by randomly selecting a set of seeds on which the tests were run upon. The correctness is then assumed from this subset of possible inputs.
+
+\subsection{Regression Testing}
+\label{sec:RegressionTesting}
+
+Rerunning the relevant tests in a continuous manner after each update is called regression testing. This ensures that, however many unintended consequences were introduced during the update, the expected behaviour of the program is still intact.
+
+This was done by writing a `hook' such that, whenever a piece of code were recompiled, the relevant tests were subsequently compiled and run. With sufficient tests in place, the correctness of the code after the update was assumed.
