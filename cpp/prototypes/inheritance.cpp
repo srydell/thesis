@@ -6,7 +6,7 @@ public:
 		std::cout << "Human constructor" << "\n";
 	};
 	~Human() {
-		std::cout << "Human destrucor" << "\n";
+		std::cout << "Human destructor" << "\n";
 	};
 
 	int virtual f() {
@@ -31,7 +31,6 @@ public:
 };
 
 int main() {
+	Human* h;
 	Fysiker f;
-	Human* h = &f;
-	std::cout << h->f() << "\n";
 }
