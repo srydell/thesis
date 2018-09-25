@@ -16,6 +16,8 @@ rc('text', usetex=True)
 if __name__ == '__main__':
     x, y = 4, 4
     s = 3
+    figname = "graphDividing"
+    form = "pdf"
 
     illu.plot_lattice(x, y, size=s)
 
@@ -33,7 +35,7 @@ if __name__ == '__main__':
     plt.text(0.2, 1.8, r"$e_i^1$", fontsize=16, horizontalalignment='center', verticalalignment='center')
     plt.text(0.2, 0.2, r"$s_i$", fontsize=16, horizontalalignment='center', verticalalignment='center')
 
-    plt.show()
+    # plt.show()
 
-#     plt.savefig(f"./plots/graphDividing.png",\
-#                 bbox_inches='tight', format="png", dpi=1200)
+    plt.savefig(f"./plots/{figname}.{form}",\
+                bbox_inches='tight', format=form, dpi=1200)

@@ -45,15 +45,30 @@ And
     &= 2^{-N} \sum_{S_1 = \pm 1} \sum_{S_2 = \pm 1} \ldots \sum_{S_N = \pm 1} \left ( 1 + T \sum_{l = 1} S_i S_j + T^2 \sum_{l = 2} (S_i S_j)(S_{i'} S_{j'}) + \ldots \right ) 
 \end{align*}
 
-Where the sums $\sum_{l=L}$ should be interpreted as the sum over all sets where the link length is $L$. Link length is the coupling between $S$-terms as
+Where the sums $\sum_{l=L}$ should be interpreted as the sum over all sets where the link length is $L$. Link length is the coupling between $S$-terms as can be seen in Figure (\ref{fig:LinkIsing}).
 
-\begin{align*}
-    (S_1 S_2) \ &- \ \text{Open with length 1} \\
-    (S_1 S_2)(S_2 S_3) \ &- \ \text{Open with length 2} \\
-    (S_1 S_2)(S_2 S_3)(S_3 S_4)(S_4 S_1) \ &- \ \text{Closed with length 4}
-\end{align*}
-
-% TODO: Add illustration over spin clusters
+\begin{figure}[h!]
+    \begin{subfigure}{.5\linewidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/ising_loop_one_link.pdf}
+        \caption{$(S_1 S_2), \ L = 1$}
+        \label{fig:oneLinkIsing}
+    \end{subfigure}%
+    \begin{subfigure}{.5\linewidth}
+        \centering
+        \includegraphics[width=\textwidth]{figures/ising_loop_two_link.pdf}
+        \caption{$(S_1 S_2)(S_2 S_3), \ L = 2$}
+        \label{fig:twoLinkIsing}
+    \end{subfigure}\\[1ex]
+    \begin{subfigure}{\linewidth}
+        \centering
+        \includegraphics[width=.5\textwidth]{figures/ising_loop_four_link.pdf}
+        \caption{$(S_1 S_2)(S_2 S_3)(S_3 S_4)(S_4 S_1), \ L = 4$}
+    \label{fig:fourLinkIsing}
+    \end{subfigure}
+    \caption{Link structure of an Ising lattice where (a) and (b) are open while (c) is closed.}
+    \label{fig:LinkIsing}
+\end{figure}
 
 Since $\sum_{S_i = \pm 1} S_i = 0$, only terms with an even number of $S_i$ are contributing to $Z'$. Call these terms closed, indicating that they represent a closed loop. The sum over all contributing terms gives a factor of $2^N$, canceling the $2^{-N}$.
 
@@ -198,45 +213,43 @@ leads to the conclusion that the sum of incoming and outgoing flux $J$ into a si
 
 In the ground state all the spins are aligned, while at higher energy states, the spins are pointed in random directions as can be seen in figure (\ref{fig:xygroundhigher}).
 
-% TODO: Uncomment these
-
-%\begin{figure}[h!]
-%\centering
-%    \begin{subfigure}{.4\textwidth}
-%        \centering
-%        \includegraphics[width=\linewidth]{figures/noPhaseShift.png}
-%        \caption{Ground state}
-%        \label{fig:xyground}
-%    \end{subfigure}%
-%    \begin{subfigure}{.4\textwidth}
-%        \centering
-%        \includegraphics[width=\linewidth]{figures/randomAngle.png}
-%        \caption{Higher energy state}
-%        \label{fig:xyhigher}
-%    \end{subfigure}
-%    \caption{Energy states for XY model}
-%\label{fig:xygroundhigher}
-%\end{figure}
+\begin{figure}[h!]
+\centering
+    \begin{subfigure}{.4\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/noPhaseShift.pdf}
+        \caption{Ground state}
+        \label{fig:xyground}
+    \end{subfigure}
+    \begin{subfigure}{.4\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/randomAngle.pdf}
+        \caption{Higher energy state}
+        \label{fig:xyhigher}
+    \end{subfigure}
+    \caption{Energy states for XY model}
+\label{fig:xygroundhigher}
+\end{figure}
 
 Therefore, making a constant phase shift $\Phi_\mu = \frac{A}{L}$ of $\theta_i - \theta_j$ in the $\mu$ direction would change the energy drastically for the ground state while, on a statistical average, not change the higher states energy at all (see figure (\ref{fig:xyphaseshift})).
 
-%\begin{figure}[h!]
-%\centering
-%    \begin{subfigure}{.4\textwidth}
-%        \centering
-%        \includegraphics[width=\linewidth]{figures/phaseShiftXaxis.png}
-%        \caption{Ground state}
-%        \label{fig:xyground}
-%    \end{subfigure}%
-%    \begin{subfigure}{.4\textwidth}
-%        \centering
-%        \includegraphics[width=\linewidth]{figures/randomPhaseShift.png}
-%        \caption{Higher energy state}
-%        \label{fig:xyhigher}
-%    \end{subfigure}
-%    \caption{A phase shift for $\mu = x$}
-%\label{fig:xyphaseshift}
-%\end{figure}
+\begin{figure}[h!]
+\centering
+    \begin{subfigure}{.4\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/PhaseShift.pdf}
+        \caption{Ground state}
+        \label{fig:xyground}
+    \end{subfigure}
+    \begin{subfigure}{.4\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/randomPhaseShift.pdf}
+        \caption{Higher energy state}
+        \label{fig:xyhigher}
+    \end{subfigure}
+    \caption{A phase shift for $\mu = x$}
+\label{fig:xyphaseshift}
+\end{figure}
 
 The free energy change $\Delta F$ for such a shift is
 
@@ -281,12 +294,12 @@ Introduce the winding number in the $\mu$ direction as
 
 Intuitively, this describes the net flux in the $\mu$-direction. Given a loop within the bounds of the lattice, the winding number is always zero. This is since an equal amount of flux in $+\mu$ as in $-\mu$ is needed to form a loop. However, this is not the case for a percolating cluster going, for example, from $-\mu$ to $+\mu$ connecting with periodic boundary conditions. For such a `winding' cluster, the winding number will be $+1$. An example can be seen in figure (\ref{fig:fluxpercolation}).
 
-%\begin{figure}[h!]
-%    \centering
-%        \includegraphics[width=0.6\textwidth]{figures/percolatingFlux.png}
-%    \caption{Three flux clusters on a square lattice. One percolating cluster with $W_x = +1$. The size of arrow corresponds to the number of flux quanta between two sites.}
-%    \label{fig:fluxpercolation}
-%\end{figure}
+\begin{figure}[h!]
+    \centering
+        \includegraphics[width=0.6\textwidth]{figures/percolatingFlux.pdf}
+    \caption{Three flux clusters on a square lattice. One percolating cluster with $W_x = +1$. The size of arrow corresponds to the number of flux quanta between two sites.}
+    \label{fig:fluxpercolation}
+\end{figure}
 
 Using the definition (\ref{eq:defwinding}) for the winding number in the partition function in equation (\ref{eq:xypart3}) yields
 

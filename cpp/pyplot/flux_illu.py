@@ -13,6 +13,8 @@ if __name__ == '__main__':
     x, y = 6, 6
     s = 2.5
     color = "#d64d4d"
+    form = "pdf"
+    figname = "percolatingFlux"
 
     illu.plot_lattice(x, y, size=1)
 
@@ -36,5 +38,5 @@ if __name__ == '__main__':
     # Percolating cluster
     illu.fill_with_arrows([-1, 1], [x + 1, 1], size=s, color=color)
     # plt.show()
-    plt.savefig(f"./plots/percolatingFlux.png",\
-                bbox_inches='tight', format="png", dpi=1200)
+    plt.savefig(f"./plots/{figname}.{form}",\
+                bbox_inches='tight', format=form, dpi=1200)
