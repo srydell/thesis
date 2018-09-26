@@ -1,3 +1,17 @@
+\section{Monte Carlo Simulations}
+\label{sec:MonteCarloSims}
+
+
+
+\section{Ergodicity}
+\label{sec:Ergodicity}
+
+\section{Detailed Balance}
+\label{sec:DetailedBalance}
+
+\section{Worm Algorithm}
+\label{sec:WormAlgorithm}
+
 \section{Testing}
 \label{sec:Testing}
 
@@ -11,6 +25,8 @@ Unit testing refers to the practice of isolating a `unit' of code and testing it
 This was done by manually calculating the expected output of some code, given some input, and ensuring that the piece of code produced an equivalent result.
 
 The parts of the simulation using a pseudorandom number generator were tested by randomly selecting a set of seeds on which the tests were run upon. The correctness is then assumed from this subset of possible inputs.
+
+When multiple unit tests are tested together, it is called integration testing. This assumes that each unit is correct by itself, and it was used to more closely ressemble the actual simulation.
 
 \subsection{Regression Testing}
 \label{sec:RegressionTesting}
