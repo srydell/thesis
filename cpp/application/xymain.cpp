@@ -39,41 +39,39 @@ int main(/*int argc, char** argv*/) {
 				// Create a new graph
 				int long seed = rand();
 				Graph lattice(dimension, length, seed + getpid());
-				
+
 				// Bond strength J = 1
 				double K = 1/T;
-				
-				// Reach equilibrium
-				WarmUp(10000 * length, lattice, K);
 
+				// Reach equilibrium
 				std::stringstream ss;
 				ss << "xyl" << length << "t" << T << ".txt";
 				WarmUpAndSaveOrReload(10000 * length, lattice, K, ss.str());
-				
+
 				// Run the simulation for size from 2^2 to 2^max_length_exponent num_sim times
 				int num_worms_started = 100;
 				int num_sim = 100;
-				for (int multiplier = 0; multiplier < num_sim; ++multiplier) {
+				for (int s = 0; s < num_sim; ++s) {
 					// Store the winding number
 					double winding_number_squared = 0;
 				
+					// How many new worms started before next measurement
 					int refresh_state = 10;
 					for (int i = 0; i < num_worms_started; ++i) {
-						// How many new worms started before next measurement
 						WarmUp(refresh_state, lattice, K);
-					
+
 						// std::cout << "Warmed up. On worm number: " << i << "\n";
-					
+
 						// Take measurement
-						WNandNS res = XySimulation(lattice, K);
+						auto res = XySimulation(lattice, K);
 						winding_number_squared += std::pow(res.winding_number / 3, 2);
 
 						// std::cout << "Got the winding_number: " << res.winding_number / 3 << "\n";
 
 					}
-						
+
 					// std::cout << "Taking measurements..." << "\n";
-					
+
 					windingnum_temp_file << "L=" << length << ":\n";
 					windingnum_temp_file << winding_number_squared / num_worms_started;
 					windingnum_temp_file << " " << T;
