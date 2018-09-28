@@ -273,7 +273,7 @@ void SaveGraphToFile(const std::string& filename, Graph& lattice) {
 			ss << i << ":";
 			for (auto& n : neighbours) {
 				if (n > 0) {
-					// NOTE: GetLink returns the physical link between 0, n, therefore GetSign
+					// NOTE: GetLink returns the physical link between i, n, therefore GetSign
 					ss << " " << n << "," << lattice.GetSign(i, n) * lattice.GetLink(i, n);
 				}
 			}
