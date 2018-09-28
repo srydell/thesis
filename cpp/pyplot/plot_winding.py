@@ -90,22 +90,40 @@ if __name__ == '__main__':
             x = []
             y = []
             for i in [1, 2, 3]:
+                # NOTE: 100 is the number of points measured
+                #       (they are all the same temperature, but different winding)
+                T = simulation_data[size][0][((i-1)*100):(i*100)][0]
+                current_windings = simulation_data[size][1][((i-1)*100):(i*100)]
+                avg_winding = np.mean(current_windings)
+                montecarlo_std_winding = np.std(current_windings) / len(current_windings)
+
                 if not labeled:
-                    plt.scatter(np.mean(simulation_data[size][0][((i-1)*100):(i*100)]),\
-                            np.mean(simulation_data[size][1][((i-1)*100):(i*100)]),\
-                            c=color,\
-                            label=rf"${int(size)}^3$")
+                    # plt.scatter(T,\
+                    #         avg_winding,\
+                    #         c=color,\
+                    #         label=rf"${int(size)}^3$")
+
+                    plt.errorbar(T, avg_winding, yerr=montecarlo_std_winding,\
+                        ecolor='gray', elinewidth=2, fmt=f'{color}.', linestyle="None",\
+                        capsize=3, capthick=2, label=rf"${int(size)}^3$")
+
                     labeled = True
                 else:
-                    plt.scatter(np.mean(simulation_data[size][0][((i-1)*100):(i*100)]),\
-                            np.mean(simulation_data[size][1][((i-1)*100):(i*100)]),\
-                            c=color)
-                x.append(np.mean(simulation_data[size][0][((i-1)*100):(i*100)]))
-                y.append(np.mean(simulation_data[size][1][((i-1)*100):(i*100)]))
+                    # plt.scatter(T,\
+                    #         avg_winding,\
+                    #         c=color)
+
+                    plt.errorbar(T, avg_winding, yerr=montecarlo_std_winding,\
+                        ecolor='gray', elinewidth=2, fmt=f'{color}.', linestyle="None",\
+                        capsize=3, capthick=2)
+
+
+                x.append(T)
+                y.append(avg_winding)
             plt.plot(x, y, c=color)
             plt.xlabel("Temperature")
             plt.ylabel(r"$\langle W^2 \rangle$")
 
             plt.title(r"XY lattice, each $\langle W^2 \rangle$ averaged over 100 points")
-            plt.legend()
+            plt.legend(loc=1)
     plt.show()
