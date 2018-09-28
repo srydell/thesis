@@ -71,33 +71,41 @@ def process_file(filename):
     return out_dict
 
 if __name__ == '__main__':
-    simulation_data = process_file("./data/windingnum_temp.txt")
+    simulation_data = process_file("./windingnum_temp.txt")
 
+    plot_histogram = False
     colors = ['k', 'g', 'b', 'r']
     for size in simulation_data:
         color = colors.pop()
-        labeled = False
 
-        x = []
-        y = []
-        for i in [1, 2, 3]:
-            if not labeled:
-                plt.scatter(np.mean(simulation_data[size][0][((i-1)*100):(i*100)]),\
-                        np.mean(simulation_data[size][1][((i-1)*100):(i*100)]),\
-                        c=color,\
-                        label=rf"${int(size)}^3$")
-                labeled = True
-            else:
-                plt.scatter(np.mean(simulation_data[size][0][((i-1)*100):(i*100)]),\
-                        np.mean(simulation_data[size][1][((i-1)*100):(i*100)]),\
-                        c=color)
-            x.append(np.mean(simulation_data[size][0][((i-1)*100):(i*100)]))
-            y.append(np.mean(simulation_data[size][1][((i-1)*100):(i*100)]))
-        plt.plot(x, y, c=color)
+        if plot_histogram:
+            plt.hist(simulation_data[size][1], label=rf"${int(size)}$", color=color)
+            plt.xlabel(r"$\langle W^2 \rangle$")
+            plt.ylabel("Counts")
+            plt.title(r"XY lattice, each $\langle W^2 \rangle$ averaged over 100 points")
+            plt.legend()
+            plt.show()
+        else:
+            labeled = False
+            x = []
+            y = []
+            for i in [1, 2, 3]:
+                if not labeled:
+                    plt.scatter(np.mean(simulation_data[size][0][((i-1)*100):(i*100)]),\
+                            np.mean(simulation_data[size][1][((i-1)*100):(i*100)]),\
+                            c=color,\
+                            label=rf"${int(size)}^3$")
+                    labeled = True
+                else:
+                    plt.scatter(np.mean(simulation_data[size][0][((i-1)*100):(i*100)]),\
+                            np.mean(simulation_data[size][1][((i-1)*100):(i*100)]),\
+                            c=color)
+                x.append(np.mean(simulation_data[size][0][((i-1)*100):(i*100)]))
+                y.append(np.mean(simulation_data[size][1][((i-1)*100):(i*100)]))
+            plt.plot(x, y, c=color)
+            plt.xlabel("Temperature")
+            plt.ylabel(r"$\langle W^2 \rangle$")
 
-
-    plt.title("XY lattice")
-    plt.xlabel("Temperature")
-    plt.ylabel(r"$\langle W^2 \rangle$")
-    plt.legend()
+            plt.title(r"XY lattice, each $\langle W^2 \rangle$ averaged over 100 points")
+            plt.legend()
     plt.show()
