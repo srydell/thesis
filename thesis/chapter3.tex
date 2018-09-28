@@ -6,8 +6,31 @@
 \section{Ergodicity}
 \label{sec:Ergodicity}
 
+An ergodic system is one where its time average coincides with its ensemble average. 
+
+Intuitively, ergodicity is the assumption that a Markov chain starting from some state $S_a$ with a non zero Boltzmann weight can reach any other state $S_b$ withing a finite number of updates~\cite{Zwanzig:nonequil_stat_mech}.
+
+This is necessary to assume, since otherwise there could be a non zero contribution to the partition function not being sampled by the Markov chain.
+
 \section{Detailed Balance}
 \label{sec:DetailedBalance}
+
+Generally, a Markov process can be described through the Master equation
+
+\begin{equation}
+    \frac{\mathrm d P_a}{\mathrm d t} = \sum_{a \neq b} \left ( P_b W_{ba} - P_a W_{ab} \right )
+\end{equation}
+
+where $P_a$ is the probability to find the system in the state a, and $W_{ab}$ is the transition rate from the state $a$ to $b$. This equation describes the equilibrating of $P_a$ into $P_a^{eq} \propto e^{-\beta E_a}$. The resulting equation is called detailed balance
+
+\begin{equation}
+    W_{ba} e^{\beta E_b} = W_{ab} e^{\beta E_a}
+\end{equation}
+
+This describes an equal rate of flow into the state $a$ as out of it.
+
+% TODO: Write dividing W_ab and write about acceptance ratio.
+
 
 \section{Worm Algorithm}
 \label{sec:WormAlgorithm}
