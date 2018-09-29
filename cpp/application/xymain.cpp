@@ -25,13 +25,10 @@ int main(/*int argc, char** argv*/) {
 		auto windingnum_temp_file = GetUniqueFile("windingnum_tempXY");
 
 		// How many different sizes of the simulation should run (L = 2^i)
-		for (auto& length : {4}) {
+		for (auto& length : {4, 8, 16}) {
 		// for (auto& length : {4, 8, 16, 32}) {
-
-			double MIN_T = 1.8;
-			double MAX_T = 2.6;
-			double NUM_T = 3;
-			for (double T = MIN_T; T <= MAX_T; T+=(MAX_T - MIN_T)/(NUM_T - 1)) {
+;
+			for (double T : {.1, .3, .5}) {
 
 				std::cout << "On length: " << length << "\n";
 				std::cout << "On temperature: " << T << "\n";

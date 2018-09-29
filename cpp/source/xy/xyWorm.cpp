@@ -20,7 +20,7 @@
 * @return: bool
 */
 bool IsAccepted(double K, int link_between, int difference, long double &random_num) {
-	std::cout << "Call to IsAccepted(K = " << K << ", link_between = " << link_between << ", difference = " << difference << ", random_num = " << random_num << "\n";
+	// std::cout << "Call to IsAccepted(K = " << K << ", link_between = " << link_between << ", difference = " << difference << ", random_num = " << random_num << "\n";
 
 	// TODO: Check if this is correct. Probably with Mats
     // Probability of being accepted
@@ -28,13 +28,13 @@ bool IsAccepted(double K, int link_between, int difference, long double &random_
 	int old_energy = std::pow(link_between, 2);
     auto p = std::exp(- .5 * K * (new_energy - old_energy));
 
-	std::cout << "Probability of acceptance: p = " << p << "\n";
+	// std::cout << "Probability of acceptance: p = " << p << "\n";
 
 	if (random_num < p) {
-		std::cout << "Accepted!" << "\n";
+		// std::cout << "Accepted!" << "\n";
 		return 1;
 	} else {
-		std::cout << "Rejected!" << "\n";
+		// std::cout << "Rejected!" << "\n";
 		return 0;
 	}
 }
@@ -96,18 +96,18 @@ void UpdateLoopLengths(std::unordered_map<int, int> &loop_lengths, std::unordere
 * @return: WNandNS
 */
 WNandNS XySimulation(Graph & lattice, double K) {
-	std::cout << "\n\nCall to XySimulation(lattice, K = " << K << ")" << "\n";
+	// std::cout << "\n\nCall to XySimulation(lattice, K = " << K << ")" << "\n";
 
 	// TODO: Fix this to be XY
 	// Get the first site for this simulation
 	int first_site = lattice.GetRandomSite();
 
-	std::cout << "Got the first site: " << first_site << "\n";
+	// std::cout << "Got the first site: " << first_site << "\n";
 
 	// Get some random neighbour to form the first link
 	int current_site = std::abs(lattice.GetRandomNeighbour(first_site));
 
-	std::cout << "Got the neighbour: " << current_site << "\n";
+	// std::cout << "Got the neighbour: " << current_site << "\n";
 
 	// Store the total links for this loop (winding number)
 	int sign = lattice.GetSign(first_site, current_site);
@@ -123,7 +123,7 @@ WNandNS XySimulation(Graph & lattice, double K) {
 	while (!loop_formed) {
 		int next_site = std::abs(lattice.GetRandomNeighbour(current_site));
 
-		std::cout << "(current_site, next_site) = (" << current_site << ", " << next_site << ")" << "\n";
+		// std::cout << "(current_site, next_site) = (" << current_site << ", " << next_site << ")" << "\n";
 
 		int sign = lattice.GetSign(current_site, next_site);
 		auto rand_num = lattice.GetRandomNum();
@@ -131,10 +131,10 @@ WNandNS XySimulation(Graph & lattice, double K) {
 			num_steps++;
 			winding_number += sign;
 
-			std::cout << "Got accepted!" << "\n";
-			std::cout << "Switch link between sites: " << current_site << " and " << next_site << "\n";
-			std::cout << "Call lattice.SwitchLinkBetween(" << current_site << ", " << sign << " * " <<  next_site << ");" << "\n";
-			std::cout << "Current winding number: " << winding_number << "\n";
+			// std::cout << "Got accepted!" << "\n";
+			// std::cout << "Switch link between sites: " << current_site << " and " << next_site << "\n";
+			// std::cout << "Call lattice.SwitchLinkBetween(" << current_site << ", " << sign << " * " <<  next_site << ");" << "\n";
+			// std::cout << "Current winding number: " << winding_number << "\n";
 
 			// Flip the weight between currentSite and nextSite
 			lattice.SwitchLinkBetween(current_site, next_site);
@@ -144,13 +144,9 @@ WNandNS XySimulation(Graph & lattice, double K) {
 
 			// If we have found a loop
 			if (next_site == first_site) {
-				std::cout << "Found a loop!" << "\n==========================\n\n";
+				// std::cout << "Found a loop!" << "\n==========================\n\n";
 				loop_formed = 1;
 			}
-
-			// cout TEST cin
-			std::string s;
-			std::cin >> s;
 
 		}
 	}
@@ -188,7 +184,7 @@ void SetLinks(int site0, int site1, int link, Graph& lattice) {
 		site1 = tmp;
 		link = -1 * link;
 	}
-	std::cout << "Switch link between " << site0 << " and " << site1 << " by: " << link << "\n";
+	// std::cout << "Switch link between " << site0 << " and " << site1 << " by: " << link << "\n";
 	lattice.SetLinks(site0, site1, link);
 }
 
