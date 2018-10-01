@@ -40,6 +40,11 @@ add_executable(xyWorm application/xymain.cpp)
 target_include_directories(xyWorm PRIVATE source source/xy)
 target_link_libraries(xyWorm PRIVATE XYGraph)
 
+# Set closeToTc executable
+add_executable(closeToTc ./application/closetotcxy.cpp)
+target_include_directories(closeToTc PRIVATE source source/xy)
+target_link_libraries(closeToTc PRIVATE XYGraph)
+
 # Set warmup executable
 add_executable(warmup application/warmup.cpp)
 target_include_directories(warmup PRIVATE source source/xy)
