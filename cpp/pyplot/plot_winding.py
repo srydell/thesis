@@ -56,7 +56,7 @@ def process_file(filename):
                 continue
 
             # Check data
-            wn_temp_match = re.match(r"(\d+\.?\d+) (\d+\.?\d+)", line)
+            wn_temp_match = re.match(r"(\d*\.?\d*) (\d*\.?\d*)", line)
             if wn_temp_match:
                 avg_windingnum_sqred = float(wn_temp_match.group(1))
                 temperature = float(wn_temp_match.group(2))
@@ -71,7 +71,7 @@ def process_file(filename):
     return out_dict
 
 if __name__ == '__main__':
-    simulation_data = process_file("./windingnum_temp.txt")
+    simulation_data = process_file("./windingnum_tempXY.txt")
 
     plot_histogram = False
     colors = ['k', 'g', 'b', 'r']
@@ -90,12 +90,22 @@ if __name__ == '__main__':
             x = []
             y = []
             for i in [1, 2, 3]:
+            # for i in [1]:
                 # NOTE: 100 is the number of points measured
                 #       (they are all the same temperature, but different winding)
-                T = simulation_data[size][0][((i-1)*100):(i*100)][0]
-                current_windings = simulation_data[size][1][((i-1)*100):(i*100)]
+                if i == 3:
+                    T = simulation_data[size][0][((i-1)*100):][0]
+                    current_windings = simulation_data[size][1][((i-1)*100):]
+                else:
+                    T = simulation_data[size][0][((i-1)*100):(i*100)][0]
+                    current_windings = simulation_data[size][1][((i-1)*100):(i*100)]
+
                 avg_winding = np.mean(current_windings)
                 montecarlo_std_winding = np.std(current_windings) / len(current_windings)
+
+                # print(f"Temperature is: {T}")
+                # print(f"Average winding is: {avg_winding}")
+                # input()
 
                 if not labeled:
                     # plt.scatter(T,\
