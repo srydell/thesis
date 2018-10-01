@@ -27,7 +27,9 @@ int main(/*int argc, char** argv*/) {
 		// How many different sizes of the simulation should run (L = 2^i)
 		for (auto& length : {4, 8, 16}) {
 		// for (auto& length : {4, 8, 16, 32}) {
-			for (double T : {.31, .32, .33, .34, .35}) {
+			// NOTE: It is necessary to start with .35 since this is what will be warmed up to file
+			//       (Only necessary on first run and doesn't matter after that)
+			for (double T : {.35, .34, .33, .32, .31}) {
 
 				std::cout << "On length: " << length << "\n";
 				std::cout << "On temperature: " << T << "\n";
