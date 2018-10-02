@@ -9,6 +9,9 @@ Python Version:      3.7
 import re
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib import rc
+rc('font', **{'family': 'serif', 'serif': ['DejaVu Sans']})
+rc('text', usetex=True)
 
 def process_file(filename, key, xy):
     """Go through filename and split it into arrays
@@ -69,30 +72,29 @@ def process_file(filename, key, xy):
 
     return out_dict
 
-def plot_errorbars(data_dict, labels, colors=None):
+def plot_errorbars(data_dict, label, color="#966842"):
     """Plot error bars using numpy.std() and numpy.mean() according to input bools
        Let xi = [x0, x1, ...]
        Let yi = [y0, y1, ...]
 
     :data_dict: dict - Assumed to be {x0: [[y0, y1, ...]], x1: ...}
-    :labels: array of strings or a single string - All labels for the plots
-    :colors: array of strings - All colors for the plots
+    :label: string - label for the plot
+    :color: string - color for the plot
     :returns: None
     """
-    if colors is None:
-        colors = ["#966842", "#f44747", "#eedc31", "#7fdb6a", "#0e68ce"]
-
+    # To only label once
+    labeled = False
     for x in data_dict:
 
-        c_id += 1
-        color = colors[c_id % len(colors)]
-        if type(labels) == str:
-            label = labels.format(x = x)
-        else:
-            l = labels[0]
-            labels = labels[1:]
+        label = label.format(x = x)
 
         y = data_dict[x]
-        plt.errorbar(x, np.mean(y), yerr=np.std(y)/len(y),\
-            ecolor='gray', elinewidth=2, fmt=f'{color}', linestyle="None",\
-            capsize=3, capthick=2, label=rf"{label}")
+        if not labeled:
+            plt.errorbar(x, np.mean(y), yerr=np.std(y)/len(y),\
+                ecolor='gray', elinewidth=2, fmt=f'{color}', marker='.',\
+                linestyle="None", capsize=3, capthick=2, label=rf"{label}")
+            labeled = True
+        else:
+            plt.errorbar(x, np.mean(y), yerr=np.std(y)/len(y),\
+                ecolor='gray', elinewidth=2, fmt=f'{color}', marker='.',\
+                linestyle="None", capsize=3, capthick=2)
