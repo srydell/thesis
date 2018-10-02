@@ -11,68 +11,43 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import rc
 import helpers.calc as calc
+import helpers.constants as const
+import helpers.illustrations as illu
 
 rc('font', **{'family': 'serif', 'serif': ['DejaVu Sans']})
 rc('text', usetex=True)
 
 if __name__ == '__main__':
-    simulation_data = calc.process_file("../windingnum_temp.txt", key=r"L=(\d+):", xy=r"(\d*\.?\d*) (\d*\.?\d*)")
+    simulation_data = calc.process_file("./data/windingnum_temp.txt", key=r"L=(\d+):", xy=r"(\d*\.?\d*) (\d*\.?\d*)")
 
-    plot_histogram = False
-    colors = ['k', 'g', 'b', 'r']
+    colors = const.COLORS
+    c_id = 0
     for size in simulation_data:
-        color = colors.pop()
+        c_id += 1
+        c = colors[c_id % len(colors)]
 
-        if plot_histogram:
-            plt.hist(simulation_data[size][1], label=rf"${int(size)}$", color=color)
-            plt.xlabel(r"$\langle W^2 \rangle$")
-            plt.ylabel("Counts")
-            plt.title(r"XY lattice")
-            plt.legend()
-            plt.show()
-        else:
-            # labels = "${current_x}$"
-            # calc.plot_errorbars(simulation_data, labels=labels, via_same_x=True)
-            labeled = False
-            x = []
-            y = []
-            for i in [1, 2, 3, 4, 5]:
-                T = simulation_data[size][0][((i-1)*100):(i*100)][0]
-                current_windings = simulation_data[size][1][((i-1)*100):(i*100)]
+        unique_temperatures = sorted(list(set(simulation_data[size][0])))
+        winding_number = simulation_data[size][1]
 
-                avg_winding = np.mean(current_windings)
-                montecarlo_std_winding = np.std(current_windings) / (100 * len(current_windings))
+        # Create the data in the format that calc.plot_errorbars wants
+        plot_dict = {}
+        for temp in unique_temperatures:
+            # All indices for t = temp
+            indices = [i for i, t in enumerate(simulation_data[size][0]) if t == temp]
 
-                # print(f"Temperature is: {T}")
-                # print(f"Average winding is: {avg_winding}")
-                # input()
+            plot_dict[temp] = [winding_number[i] for i in indices]
 
-                if not labeled:
-                    # plt.scatter(T,\
-                    #         avg_winding,\
-                    #         c=color,\
-                    #         label=rf"${int(size)}^3$")
+        calc.plot_errorbars(plot_dict, f"${int(size)}^3$", color=c)
 
-                    plt.errorbar(T, avg_winding, yerr=montecarlo_std_winding,\
-                        ecolor='gray', elinewidth=2, fmt=f'{color}.', linestyle="None",\
-                        capsize=3, capthick=2, label=rf"${int(size)}^3$")
+        # Plot the lines between the error bars
+        avg_windings = []
+        for t in sorted(list(unique_temperatures)):
+            avg_windings.append(np.mean(plot_dict[t]))
+        plt.plot(list(unique_temperatures), avg_windings, color=c)
 
-                    labeled = True
-                else:
-                    # plt.scatter(T,\
-                    #         avg_winding,\
-                    #         c=color)
-
-                    plt.errorbar(T, avg_winding, yerr=montecarlo_std_winding,\
-                        ecolor='gray', elinewidth=2, fmt=f'{color}.', linestyle="None",\
-                        capsize=3, capthick=2)
-
-                x.append(T)
-                y.append(avg_winding)
-            plt.plot(x, y, c=color)
-            plt.xlabel("Temperature")
-            plt.ylabel(r"$\langle W^2 \rangle$")
-
-            plt.title(r"XY lattice, each $\langle W^2 \rangle$ averaged over 100 points")
-            plt.legend(loc=1)
+    plt.xlabel("Temperature")
+    plt.ylabel(r"$\langle W^2 \rangle \propto \frac{L}{T} \rho_s$")
+    plt.title(r"Superfluid density, $\rho_s$, determined in terms of the winding number on a 3D XY lattice")
+    plt.legend(loc=1)
     plt.show()
+    # illu.save_figure("winding_number_Tc")
