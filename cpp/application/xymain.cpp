@@ -27,8 +27,7 @@ int main(/*int argc, char** argv*/) {
 		// How many different sizes of the simulation should run (L = 2^i)
 		for (auto& length : {4, 8, 16}) {
 		// for (auto& length : {4, 8, 16, 32}) {
-;
-			for (double T : {.1, .3, .5}) {
+			for (double T : {.1, .35, .5}) {
 
 				std::cout << "On length: " << length << "\n";
 				std::cout << "On temperature: " << T << "\n";
@@ -59,9 +58,14 @@ int main(/*int argc, char** argv*/) {
 
 						// std::cout << "Warmed up. On worm number: " << i << "\n";
 
-						// Take measurement
-						auto res = XySimulation(lattice, K);
-						winding_number_squared += std::pow(res.winding_number / 3, 2);
+						// ------- Take measurement -------
+						// This will store {Cluster index: [sites_in_cluster]}
+						std::unordered_map<int, std::vector<int>> clusters;
+						lattice.HKIndex(clusters);
+
+						// This will store {Cluster index: Loop lengths}
+						std::unordered_map<int, int> loop_lengths;
+						UpdateLoopLengths(loop_lengths, clusters, lattice);
 
 						// std::cout << "Got the winding_number: " << res.winding_number / 3 << "\n";
 
