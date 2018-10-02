@@ -29,7 +29,7 @@ int main(/*int argc, char** argv*/) {
 		// for (auto& length : {4, 8, 16, 32}) {
 			// NOTE: It is necessary to start with .35 since this is what will be warmed up to file
 			//       (Only necessary on first run and doesn't matter after that)
-			for (double T : {.35, .34, .33, .32, .31}) {
+			for (double T : {.330, .331, .332, .333, .334, .335}) {
 
 				std::cout << "On length: " << length << "\n";
 				std::cout << "On temperature: " << T << "\n";
@@ -66,7 +66,7 @@ int main(/*int argc, char** argv*/) {
 
 						// Take measurement
 						auto res = XySimulation(lattice, K);
-						winding_number_squared += std::pow(res.winding_number / 3, 2);
+						winding_number_squared += std::pow(res.winding_number, 2)  / 3;
 
 						// std::cout << "Got the winding_number: " << res.winding_number / 3 << "\n";
 
