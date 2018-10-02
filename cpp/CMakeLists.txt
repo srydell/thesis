@@ -49,3 +49,8 @@ target_link_libraries(closeToTc PRIVATE XYGraph)
 add_executable(warmup application/warmup.cpp)
 target_include_directories(warmup PRIVATE source source/xy)
 target_link_libraries(warmup PRIVATE XYGraph)
+
+# Set energy_scaling executable
+add_executable(energy_scaling ./application/energy_scaling_xy.cpp)
+target_include_directories(energy_scaling PRIVATE source source/xy)
+target_link_libraries(energy_scaling PRIVATE XYGraph)

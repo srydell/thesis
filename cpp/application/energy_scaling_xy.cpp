@@ -17,6 +17,7 @@ int main(/*int argc, char** argv*/) {
 
 		// Temperature
 		const int dimension = 3;
+		// TODO: Change this to actual Tc
 		const double T = 0.33;
 		// Bond strength J = 1
 		const double K = 1/T;
@@ -42,6 +43,9 @@ int main(/*int argc, char** argv*/) {
 			ss << "xyl" << length << "t" << T << ".txt";
 			WarmUpAndSaveOrReload(10000 * length, lattice, K, ss.str());
 
+			// Store all hausdorff_dimensions for this length
+			std::vector<double> hausdorff_dimensions;
+
 			// Run the simulation for size from 2^2 to 2^max_length_exponent num_sim times
 			int num_worms_started = 100;
 			int num_sim = 100;
@@ -54,8 +58,28 @@ int main(/*int argc, char** argv*/) {
 
 					// std::cout << "Warmed up. On worm number: " << i << "\n";
 
-					// Take measurement
+					// ------- Take measurement -------
+					// This will store {Cluster index: [sites_in_cluster]}
+					std::unordered_map<int, std::vector<int>> clusters;
+					lattice.HKIndex(clusters);
 
+					// This will store {Cluster index: Loop lengths}
+					std::unordered_map<int, int> loop_lengths;
+					UpdateLoopLengths(loop_lengths, clusters, lattice);
+
+					std::unordered_map<int, std::vector<int>> blocks;
+					lattice.DivideGraph(blocks);
+
+					// Find the sites corresponding to the largest worm
+					std::vector<int> largest_worm = clusters[GetMaximumMapIndex(loop_lengths)];
+					std::unordered_map<int, int> sidelength_and_numoccupied;
+					lattice.GetBoxDimension(blocks, sidelength_and_numoccupied, largest_worm);
+
+					for (auto& sl_and_no : sidelength_and_numoccupied) {
+						// D_box = log(N_s) / log(1/s)
+						double d_h = -1 * std::log(sl_and_no.second) / std::log(sl_and_no.first);
+						hausdorff_dimensions.push_back(d_h);
+					}
 					// std::cout << "Got the winding_number: " << res.winding_number / 3 << "\n";
 
 				}
@@ -63,9 +87,9 @@ int main(/*int argc, char** argv*/) {
 				// std::cout << "Taking measurements..." << "\n";
 
 				energy_size_file << "L=" << length << ":\n";
-				energy_size_file << winding_number_squared / num_worms_started;
-				energy_size_file << " " << T;
-				energy_size_file << "\n";
+				for (auto& d_h : hausdorff_dimensions) {
+					energy_size_file << d_h << "\n";
+				}
 
 			}
 		}
