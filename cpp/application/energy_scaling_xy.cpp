@@ -28,6 +28,7 @@ int main(/*int argc, char** argv*/) {
 
 		// Create data files
 		auto energy_size_file = GetUniqueFile("energy_sizeXY");
+		auto h_dimension_file = GetUniqueFile("h_dimensionXY");
 
 		// How many different sizes of the simulation should run (L = 2^i)
 		for (auto& length : {4, 8}) {
@@ -43,8 +44,9 @@ int main(/*int argc, char** argv*/) {
 			ss << "xyl" << length << "t" << T << ".txt";
 			WarmUpAndSaveOrReload(10000 * length, lattice, K, ss.str());
 
-			// Store all hausdorff_dimensions for this length
+			// Store all hausdorff_dimensions/total length for this L
 			std::vector<double> hausdorff_dimensions;
+			std::vector<double> total_worm_length;
 
 			// Run the simulation for size from 2^2 to 2^max_length_exponent num_sim times
 			int num_worms_started = 100;
@@ -75,11 +77,20 @@ int main(/*int argc, char** argv*/) {
 					std::unordered_map<int, int> sidelength_and_numoccupied;
 					lattice.GetBoxDimension(blocks, sidelength_and_numoccupied, largest_worm);
 
+					// Calculate the Hausdorff dimension
 					for (auto& sl_and_no : sidelength_and_numoccupied) {
 						// D_box = log(N_s) / log(1/s)
 						double d_h = -1 * std::log(sl_and_no.second) / std::log(sl_and_no.first);
 						hausdorff_dimensions.push_back(d_h);
 					}
+
+					// Calculate the total length = total energy
+					int total_length = 0;
+					for (auto& index_and_looplength : loop_lengths) {
+						total_length += index_and_looplength.second;
+					}
+					total_worm_length.push_back(total_length);
+
 					// std::cout << "Got the winding_number: " << res.winding_number / 3 << "\n";
 
 				}
@@ -87,8 +98,13 @@ int main(/*int argc, char** argv*/) {
 				// std::cout << "Taking measurements..." << "\n";
 
 				energy_size_file << "L=" << length << ":\n";
+				for (auto& e : total_worm_length) {
+					energy_size_file << e << "\n";
+				}
+
+				h_dimension_file << "L=" << length << ":\n";
 				for (auto& d_h : hausdorff_dimensions) {
-					energy_size_file << d_h << "\n";
+					h_dimension_file << d_h << "\n";
 				}
 
 			}
