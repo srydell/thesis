@@ -22,7 +22,7 @@ int main() {
 		srand((unsigned)nulltime + getpid());
 
 		// How many different sizes of the simulation should run (L = 2^i)
-		for (auto& length : {4, 8, 16, 32}) {
+		for (auto& length : {64, 128}) {
 
 			std::cout << "Dimension: " << dimension << "\n";
 			std::cout << "On length: " << length << "\n";
