@@ -18,7 +18,7 @@ rc('font', **{'family': 'serif', 'serif': ['DejaVu Sans']})
 rc('text', usetex=True)
 
 if __name__ == '__main__':
-    simulation_data = calc.process_file("../windingnum_temp.txt", key=r"L=(\d+):", xy=r"(\d*\.?\d*) (\d*\.?\d*)")
+    simulation_data = calc.process_file("./data/windingnum_temp_closetoTc.txt", key=r"L=(\d+):", xy=r"(\d*\.?\d*) (\d*\.?\d*)")
 
     with open("test.out", 'w') as f:
         for size in simulation_data:
