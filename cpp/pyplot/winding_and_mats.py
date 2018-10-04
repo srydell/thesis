@@ -21,11 +21,8 @@ if __name__ == '__main__':
     mats_simulation_data = calc.process_file("./cleaned_mats_data.txt", key=r"L=(\d+):", xy=r"(\d*\.?\d*) (\d*\.?\d*)")
     # The bad big data
     # simon_simulation_data = calc.process_file("./data/windingnum_temp.txt", key=r"L=(\d+):", xy=r"(\d*\.?\d*) (\d*\.?\d*)")
-    # The good data
-    # simon_simulation_data = calc.process_file("./windingnum_tempXY3283", key=r"L=(\d+):", xy=r"(\d*\.?\d*) (\d*\.?\d*)")
-    # simon_simulation_data = calc.process_file("./windingnum_tempXY17849", key=r"L=(\d+):", xy=r"(\d*\.?\d*) (\d*\.?\d*)")
-    # simon_simulation_data = calc.process_file("./windingnum_tempXY20131", key=r"L=(\d+):", xy=r"(\d*\.?\d*) (\d*\.?\d*)")
-    simon_simulation_data = calc.process_file("./windingnum_tempXY22525", key=r"L=(\d+):", xy=r"(\d*\.?\d*) (\d*\.?\d*)")
+    # The bad data
+    simon_simulation_data = calc.process_file("./windingnum_tempXY25080", key=r"L=(\d+):", xy=r"(\d*\.?\d*) (\d*\.?\d*)")
 
 
     colors = {4: "#b2b2b2", 6: "#999999", 8: "#7f7f7f", 10: "#666666", 12: "#4c4c4c",\
