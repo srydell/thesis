@@ -98,23 +98,14 @@ void UpdateLoopLengths(std::unordered_map<int, int> &loop_lengths, std::unordere
 WNandNS XySimulation(Graph & lattice, double K) {
 	// std::cout << "\n\nCall to XySimulation(lattice, K = " << K << ")" << "\n";
 
-	// TODO: Fix this to be XY
 	// Get the first site for this simulation
 	int first_site = lattice.GetRandomSite();
+	int current_site = first_site;
 
 	// std::cout << "Got the first site: " << first_site << "\n";
 
-	// Get some random neighbour to form the first link
-	int current_site = std::abs(lattice.GetRandomNeighbour(first_site));
-
-	// std::cout << "Got the neighbour: " << current_site << "\n";
-
 	// Store the total links for this loop (winding number)
-	int sign = lattice.GetSign(first_site, current_site);
-	double winding_number = sign;
-
-	// Form the first link
-	lattice.SwitchLinkBetween(first_site, current_site);
+	double winding_number = 0.0;
 
 	// Store the total number of accepted steps
 	long double num_steps = 1.0;
@@ -147,6 +138,10 @@ WNandNS XySimulation(Graph & lattice, double K) {
 				// std::cout << "Found a loop!" << "\n==========================\n\n";
 				loop_formed = 1;
 			}
+
+		} else if (current_site == first_site) {
+		// If the first site we tried failed, loop closed directly
+			loop_formed = 1;
 
 		}
 	}
