@@ -108,7 +108,7 @@ WNandNS XySimulation(Graph & lattice, double K) {
 	double winding_number = 0.0;
 
 	// Store the total number of accepted steps
-	long double num_steps = 1.0;
+	long double num_steps = 0.0;
 
 	bool loop_formed = 0;
 	while (!loop_formed) {
