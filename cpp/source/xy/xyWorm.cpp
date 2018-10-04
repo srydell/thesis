@@ -140,9 +140,8 @@ WNandNS XySimulation(Graph & lattice, double K) {
 			}
 
 		} else if (current_site == first_site) {
-		// If the first site we tried failed, loop closed directly
+			// If the first site we tried failed, loop closed directly
 			loop_formed = 1;
-
 		}
 	}
 	return {winding_number / lattice.GetLength(), num_steps};
