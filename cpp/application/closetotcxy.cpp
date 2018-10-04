@@ -25,7 +25,7 @@ int main(/*int argc, char** argv*/) {
 		auto windingnum_temp_file = GetUniqueFile("windingnum_tempXY");
 
 		// How many different sizes of the simulation should run (L = 2^i)
-		for (auto& length : {4}) {
+		for (auto& length : {4, 8}) {
 		// for (auto& length : {4, 8, 16, 32}) {
 			// NOTE: It is necessary to start with .35 since this is what will be warmed up to file
 			//       (Only necessary on first run and doesn't matter after that)

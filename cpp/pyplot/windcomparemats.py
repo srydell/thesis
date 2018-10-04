@@ -22,8 +22,7 @@ if __name__ == '__main__':
     # simon_simulation_data = calc.process_file("./data/windingnum_temp.txt", key=r"L=(\d+):", xy=r"(\d*\.?\d*) (\d*\.?\d*)")
 
     # Data with acceptance patch
-    # simon_simulation_data = calc.process_file("./windingnum_tempXY3283", key=r"L=(\d+):", xy=r"(\d*\.?\d*) (\d*\.?\d*)")
-    simon_simulation_data = calc.process_file("./windingnum_tempXY31481", key=r"L=(\d+):", xy=r"(\d*\.?\d*) (\d*\.?\d*)")
+    simon_simulation_data = calc.process_file("./windingnum_tempXY41213", key=r"L=(\d+):", xy=r"(\d*\.?\d*) (\d*\.?\d*)")
 
 
     colors = {4: "#b2b2b2", 6: "#999999", 8: "#7f7f7f", 10: "#666666", 12: "#4c4c4c",\
