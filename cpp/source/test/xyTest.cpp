@@ -455,3 +455,28 @@ TEST_CASE( "SaveGraphToFile and LoadGraphFromFile gives the same graph", "[Graph
 		}
 	}
 }
+
+TEST_CASE( "SwitchLinkBetween throws when two incompatible sites are switched", "[SwitchLinkBetween]" ) {
+	int dimension = 2;
+	int length = 4;
+	int nulltime = time(nullptr);
+	srand((unsigned)nulltime);
+
+	int long seed = rand();
+	Graph lattice = Graph(dimension, length, seed);
+
+	try {
+		lattice.SwitchLinkBetween(0, 17);
+	} catch (std::string& error) {
+		std::string correct_error = "Call to Graph::SwitchLinkBetween failed since 0 and/or 17 are not in mGraph.\n";
+		REQUIRE( error == correct_error );
+	}
+
+	try {
+		lattice.SwitchLinkBetween(0, 2);
+	} catch (std::string& error) {
+		std::string correct_error = "Call to Graph::SwitchLinkBetween failed since 0 and 2 are not in neighbours.\n";
+		REQUIRE( error == correct_error );
+	}
+
+}
