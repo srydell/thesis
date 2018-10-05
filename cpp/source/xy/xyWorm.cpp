@@ -96,25 +96,19 @@ void UpdateLoopLengths(std::unordered_map<int, int> &loop_lengths, std::unordere
 * @return: WNandNS
 */
 WNandNS XySimulation(Graph & lattice, double K) {
-	// std::cout << "\n\nCall to XySimulation(lattice, K = " << K << ")" << "\n";
-
 	// Get the first site for this simulation
 	int first_site = lattice.GetRandomSite();
 	int current_site = first_site;
 
-	// std::cout << "Got the first site: " << first_site << "\n";
-
-	// Store the total links for this loop (winding number)
+	// Total link weights for this loop
 	double winding_number = 0.0;
 
-	// Store the total number of accepted steps
+	// Total number of accepted steps
 	long double num_steps = 0.0;
 
 	bool loop_formed = 0;
 	while (!loop_formed) {
 		int next_site = std::abs(lattice.GetRandomNeighbour(current_site));
-
-		// std::cout << "(current_site, next_site) = (" << current_site << ", " << next_site << ")" << "\n";
 
 		int sign = lattice.GetSign(current_site, next_site);
 		auto rand_num = lattice.GetRandomNum();
@@ -122,20 +116,12 @@ WNandNS XySimulation(Graph & lattice, double K) {
 			num_steps++;
 			winding_number += sign;
 
-			// std::cout << "Got accepted!" << "\n";
-			// std::cout << "Switch link between sites: " << current_site << " and " << next_site << "\n";
-			// std::cout << "Call lattice.SwitchLinkBetween(" << current_site << ", " << sign << " * " <<  next_site << ");" << "\n";
-			// std::cout << "Current winding number: " << winding_number << "\n";
-
 			// Flip the weight between currentSite and nextSite
 			lattice.SwitchLinkBetween(current_site, next_site);
 			current_site = next_site;
 
-			// lattice.PrintGraph();
-
 			// If we have found a loop
 			if (next_site == first_site) {
-				// std::cout << "Found a loop!" << "\n==========================\n\n";
 				loop_formed = 1;
 			}
 
