@@ -22,7 +22,7 @@ if __name__ == '__main__':
     # The bad big data
     # simon_simulation_data = calc.process_file("./data/windingnum_temp.txt", key=r"L=(\d+):", xy=r"(\d*\.?\d*) (\d*\.?\d*)")
     # The bad data
-    simon_simulation_data = calc.process_file("./windingnum_tempXY25080", key=r"L=(\d+):", xy=r"(\d*\.?\d*) (\d*\.?\d*)")
+    simon_simulation_data = calc.process_file("./windingnum_tempXY67535", key=r"L=(\d+):", xy=r"(\d*\.?\d*) (\d*\.?\d*)")
 
 
     colors = {4: "#b2b2b2", 6: "#999999", 8: "#7f7f7f", 10: "#666666", 12: "#4c4c4c",\
@@ -72,5 +72,7 @@ if __name__ == '__main__':
     plt.xlabel("Temperature")
     plt.ylabel(r"$\langle W^2 \rangle \propto \frac{L}{T} \rho_s$")
     plt.title(r"Superfluid density, $\rho_s$, determined in terms of the winding number on a 3D XY lattice")
+    # plt.xlim([.05, .7])
+    # plt.ylim([-.05, .3])
     plt.show()
     # illu.save_figure("winding_number_Tc")
