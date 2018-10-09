@@ -71,7 +71,7 @@ if __name__ == '__main__':
         plt.legend(loc=1)
     plt.xlabel("Temperature")
     plt.ylabel(r"$\langle W^2 \rangle \propto \frac{L}{T} \rho_s$")
-    plt.title(r"Superfluid density, $\rho_s$, determined in terms of the winding number on a 3D XY lattice")
+    plt.title(r"Mean square winding number on a 3D XY lattice")
     # plt.xlim([.05, .7])
     # plt.ylim([-.05, .3])
     plt.show()
