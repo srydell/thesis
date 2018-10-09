@@ -51,6 +51,11 @@ target_include_directories(warmup PRIVATE source source/xy)
 target_link_libraries(warmup PRIVATE XYGraph)
 
 # Set energy_scaling executable
-add_executable(energy_scaling ./application/energy_scaling_xy.cpp)
+add_executable(energy_scaling application/energy_scaling_xy.cpp)
 target_include_directories(energy_scaling PRIVATE source source/xy)
 target_link_libraries(energy_scaling PRIVATE XYGraph)
+
+# Set measure_graphdiv executable
+add_executable(measure_graphdiv application/measure_graphdiv.cpp)
+target_include_directories(measure_graphdiv PRIVATE source source/xy)
+target_link_libraries(measure_graphdiv PRIVATE XYGraph)

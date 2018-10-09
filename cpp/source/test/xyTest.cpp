@@ -478,5 +478,60 @@ TEST_CASE( "SwitchLinkBetween throws when two incompatible sites are switched", 
 		std::string correct_error = "Call to Graph::SwitchLinkBetween failed since 0 and 2 are not in neighbours.\n";
 		REQUIRE( error == correct_error );
 	}
+}
 
+TEST_CASE( "SignIfInXDirection works for small 2D cases", "[SignIfInXDirection]" ) {
+	int dimension = 2;
+	int length = 4;
+	int nulltime = time(nullptr);
+	srand((unsigned)nulltime);
+
+	int long seed = rand();
+	Graph lattice = Graph(dimension, length, seed);
+
+	// Non wrapping x direction
+	int x_sign0 = SignIfInXDirection(0, 1, length);
+	REQUIRE( x_sign0 == 1 );
+	int x_sign1 = SignIfInXDirection(1, 0, length);
+	REQUIRE( x_sign1 == -1 );
+
+	// Wrapping x direction
+	int x_sign2 = SignIfInXDirection(7, 4, length);
+	REQUIRE( x_sign2 == 1 );
+	int x_sign3 = SignIfInXDirection(4, 7, length);
+	REQUIRE( x_sign3 == -1 );
+
+	// Non x direction returns 0
+	int x_sign4 = SignIfInXDirection(6, 10, length);
+	REQUIRE( x_sign4 == 0 );
+	int x_sign5 = SignIfInXDirection(10, 6, length);
+	REQUIRE( x_sign5 == 0 );
+}
+
+TEST_CASE( "SignIfInXDirection works for small 3D cases", "[SignIfInXDirection]" ) {
+	int dimension = 3;
+	int length = 4;
+	int nulltime = time(nullptr);
+	srand((unsigned)nulltime);
+
+	int long seed = rand();
+	Graph lattice = Graph(dimension, length, seed);
+
+	// Non wrapping x direction
+	int x_sign0 = SignIfInXDirection(0, 1, length);
+	REQUIRE( x_sign0 == 1 );
+	int x_sign1 = SignIfInXDirection(1, 0, length);
+	REQUIRE( x_sign1 == -1 );
+
+	// Wrapping x direction
+	int x_sign2 = SignIfInXDirection(7, 4, length);
+	REQUIRE( x_sign2 == 1 );
+	int x_sign3 = SignIfInXDirection(4, 7, length);
+	REQUIRE( x_sign3 == -1 );
+
+	// Non x direction returns 0
+	int x_sign4 = SignIfInXDirection(6, 10, length);
+	REQUIRE( x_sign4 == 0 );
+	int x_sign5 = SignIfInXDirection(10, 6, length);
+	REQUIRE( x_sign5 == 0 );
 }
