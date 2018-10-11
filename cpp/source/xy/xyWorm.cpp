@@ -22,7 +22,6 @@
 bool IsAccepted(double K, int link_between, int difference, long double &random_num) {
 	// std::cout << "Call to IsAccepted(K = " << K << ", link_between = " << link_between << ", difference = " << difference << ", random_num = " << random_num << "\n";
 
-	// TODO: Check if this is correct. Probably with Mats
     // Probability of being accepted
 	int new_energy = std::pow(link_between + difference, 2);
 	int old_energy = std::pow(link_between, 2);
@@ -30,13 +29,7 @@ bool IsAccepted(double K, int link_between, int difference, long double &random_
 
 	// std::cout << "Probability of acceptance: p = " << p << "\n";
 
-	if (random_num < p) {
-		// std::cout << "Accepted!" << "\n";
-		return 1;
-	} else {
-		// std::cout << "Rejected!" << "\n";
-		return 0;
-	}
+	return random_num < p;
 }
 
 /**
