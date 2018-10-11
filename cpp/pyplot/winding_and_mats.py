@@ -23,12 +23,12 @@ if __name__ == '__main__':
     # simon_simulation_data = calc.process_file("./data/windingnum_temp.txt", key=r"L=(\d+):", xy=r"(\d*\.?\d*) (\d*\.?\d*)")
     # The bad data
     # simon_simulation_data = calc.process_file("./windingnum_tempXY77474", key=r"L=(\d+):", xy=r"(\d*\.?\d*) (\d*\.?\d*)")
-    simon_simulation_data = calc.process_file("./windingnum_tempXY87446", key=r"L=(\d+):", xy=r"(\d*\.?\d*) (\d*\.?\d*)")
+    simon_simulation_data = calc.process_file("./windingnum_tempXY93299", key=r"L=(\d+):", xy=r"(\d*\.?\d*) (\d*\.?\d*)")
 
 
     colors = {4: "#b2b2b2", 6: "#999999", 8: "#7f7f7f", 10: "#666666", 12: "#4c4c4c",\
               16: "#323232", 20: "#191919", 30: "#111111", 40: "#000000"}
-    for size in [4, 8, 20]:
+    for size in [4, 8]:
         c = colors[size]
 
         unique_temperatures = sorted(list(set(mats_simulation_data[size][0])))
