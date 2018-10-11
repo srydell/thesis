@@ -7,8 +7,6 @@ Python Version:      3.7
 '''
 
 import re
-import numpy as np
-import matplotlib.pyplot as plt
 import helpers.calc as calc
 import helpers.constants as const
 import helpers.illustrations as illu
