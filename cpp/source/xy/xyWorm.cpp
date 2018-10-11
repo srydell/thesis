@@ -101,20 +101,22 @@ void UpdateLoopLengths(std::unordered_map<int, int> &loop_lengths, std::unordere
 }
 
 /**
-* @brief: Run the simulation until at least one loop is formed and return the number of steps taken
+* @brief: Run the simulation until at least one loop is formed and return winding_number, energy and the number of steps taken
 *
 * @param: Graph &lattice
 *       : double K
 *
-* @return: WNandNS
+* @return: WNENS
 */
-WNandNS XySimulation(Graph & lattice, double K) {
+WNENS XySimulation(Graph & lattice, double K) {
 	// Get the first site for this simulation
 	int first_site = lattice.GetRandomSite();
 	int current_site = first_site;
 
 	// Total link weights for this loop
 	double winding_number = 0.0;
+	// E = K/2 * sum(J^2)
+	double energy = 0.0;
 
 	// Total number of accepted steps
 	long double num_steps = 0.0;
@@ -125,9 +127,17 @@ WNandNS XySimulation(Graph & lattice, double K) {
 
 		int sign = lattice.GetSign(current_site, next_site);
 		auto rand_num = lattice.GetRandomNum();
-		if (IsAccepted(K, lattice.GetLink(current_site, next_site), sign, rand_num)) {
+		auto link_between = lattice.GetLink(current_site, next_site);
+		if (IsAccepted(K, link_between, sign, rand_num)) {
+
 			num_steps++;
 			winding_number += SignIfInXDirection(current_site, next_site, lattice.GetLength());
+
+			// Energy changed during this
+			int new_Jsquare = std::pow(link_between + sign, 2);
+			int old_Jsquare = std::pow(link_between, 2);
+			energy += K / 2 * (new_Jsquare - old_Jsquare);
+
 
 			// Flip the weight between currentSite and nextSite
 			lattice.SwitchLinkBetween(current_site, next_site);
@@ -143,7 +153,7 @@ WNandNS XySimulation(Graph & lattice, double K) {
 			loop_formed = 1;
 		}
 	}
-	return {winding_number / lattice.GetLength(), num_steps};
+	return {winding_number / lattice.GetLength(), energy, num_steps};
 }
 
 /**
@@ -152,12 +162,17 @@ WNandNS XySimulation(Graph & lattice, double K) {
 * @param: int warm_up_runs
 *       : Graph& lattice
 *
-* @return: void
+* @return: WNENS
 */
-void WarmUp(int warm_up_runs, Graph& lattice, double K) {
+WNENS WarmUp(int warm_up_runs, Graph& lattice, double K) {
+	double winding_number = 0.0;
+	double energy = 0.0;
 	for (int i = 0; i < warm_up_runs; ++i) {
-		XySimulation(lattice, K);
+		auto res = XySimulation(lattice, K);
+		winding_number += res.winding_number;
+		energy += res.energy;
 	}
+	return {winding_number, energy, 0};
 }
 
 /**
@@ -190,16 +205,45 @@ void SetLinks(int site0, int site1, int link, Graph& lattice) {
 *
 * @return: void
 */
-void LoadGraphFromFile(const std::string& filename, Graph& lattice) {
+WNENS LoadGraphFromFile(const std::string& filename, Graph& lattice) {
 	std::ifstream file;
 	file.open(filename, std::ios_base::in);
+
+	std::regex energy_winding;
+	{
+		// Resulting regex:
+		// Energy: <number>, Windgin Number: <number>
+		std::stringstream ss;
+		ss << "Energy: ";
+		ss << "(-?\\d*\\.?\\d*)";
+		ss << ", Winding Number: ";
+		ss << "(-?\\d*\\.?\\d*)";
+		energy_winding = ss.str();
+	}
+
+	double energy = 0;
+	double winding_number = 0;
+	bool found_energy_and_winding = 0;
 
 	std::string line;
 	while(std::getline(file, line)) {
 		// std::cout << "Current line is: " << line << "\n";
+
+		std::smatch matches;
+		// Check for energy and winding_number
+		// NOTE: There is only one such line, therefore checking if found
+		if (!found_energy_and_winding) {
+			if (std::regex_search(line, matches, energy_winding)) {
+				std::stringstream(matches[1].str()) >> energy;
+				std::stringstream(matches[2].str()) >> winding_number;
+				found_energy_and_winding = 1;
+				continue;
+			}
+		}
+
 		std::regex sites_and_links;
-		// Find how many linked neighbours this site has
 		{
+			// Find how many linked neighbours this site has
 			std::stringstream ss;
 			ss << "(\\d+):";
 			size_t n = std::count(line.begin(), line.end(), ',');
@@ -212,14 +256,12 @@ void LoadGraphFromFile(const std::string& filename, Graph& lattice) {
 			sites_and_links = ss.str();
 		}
 
-		std::smatch matches;
 		if (std::regex_search(line, matches, sites_and_links)) {
 			int current_site;
 			if (matches.size() > 1) {
 				std::stringstream(matches[1].str()) >> current_site;
 			}
 			for (size_t i = 2; i < matches.size(); ++i) {
-				// TODO: Actually switch the sites
 				int neighbour, link;
 				std::stringstream(matches[i].str()) >> neighbour;
 				std::stringstream(matches[++i].str()) >> link;
@@ -231,6 +273,8 @@ void LoadGraphFromFile(const std::string& filename, Graph& lattice) {
 			}
 		}
 	}
+
+	return {winding_number, energy, 0};
 }
 
 /**
@@ -241,9 +285,17 @@ void LoadGraphFromFile(const std::string& filename, Graph& lattice) {
 *
 * @return: void
 */
-void SaveGraphToFile(const std::string& filename, Graph& lattice) {
+void SaveGraphToFile(const std::string& filename, Graph& lattice, const WNENS& data) {
 	std::ofstream file;
 	file.open(filename, std::ios_base::out);
+
+	// Write energy and winding_number
+	{
+		std::stringstream ss;
+		ss << "Energy: " << data.energy << ", " << "Winding Number: " << data.winding_number;
+		file << ss.str() << "\n";
+	}
+
 	// Special case for site = 0
 	{
 		std::vector<int> neighbours;
@@ -258,6 +310,7 @@ void SaveGraphToFile(const std::string& filename, Graph& lattice) {
 			file << ss.str() << "\n";
 		}
 	}
+
 	for (int i = 1; i < std::pow(lattice.GetLength(), lattice.GetDimension()); ++i) {
 		std::vector<int> neighbours;
 		lattice.GetLinkedNeighbours(i, neighbours);
@@ -291,7 +344,7 @@ void WarmUpAndSaveOrReload(int warm_up_runs, Graph& lattice, double K, const std
 	if (FileExists(filename)) {
 		LoadGraphFromFile(filename, lattice);
 	} else {
-		WarmUp(warm_up_runs, lattice, K);
-		SaveGraphToFile(filename, lattice);
+		auto res = WarmUp(warm_up_runs, lattice, K);
+		SaveGraphToFile(filename, lattice, res);
 	}
 }
