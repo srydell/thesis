@@ -437,10 +437,14 @@ TEST_CASE( "SaveGraphToFile and LoadGraphFromFile gives the same graph", "[Graph
 	lattice.SwitchLinkBetween(3, 0);
 
 	std::string filename = "test_graph.txt";
-	SaveGraphToFile(filename, lattice);
+	WNENS data = {1.2, -2, 0};
+	SaveGraphToFile(filename, lattice, data);
 
 	Graph compare_lattice = Graph(dimension, length, seed);
-	LoadGraphFromFile(filename, compare_lattice);
+	auto out_data = LoadGraphFromFile(filename, compare_lattice);
+	REQUIRE( data.winding_number == out_data.winding_number );
+	REQUIRE( data.energy == out_data.energy );
+	REQUIRE( data.num_steps == out_data.num_steps );
 
 	for (int i = 0; i < std::pow(length, dimension); ++i) {
 		std::vector<int> neighbours;
