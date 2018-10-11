@@ -212,6 +212,7 @@ long double IsingSimulation(Graph & lattice, double K) {
 * @return: void
 */
 void WarmUp(int warm_up_runs, Graph& lattice, double K) {
+	std::cout << "Ising warmup called" << "\n";
 	for (int i = 0; i < warm_up_runs; ++i) {
 		IsingSimulation(lattice, K);
 	}
