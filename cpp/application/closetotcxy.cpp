@@ -60,7 +60,8 @@ int main(/*int argc, char** argv*/) {
 					}
 
 					// Take measurement
-					winding_number_squared += std::pow(winding_number / 3, 2);
+					// NOTE: No longer dividing by 3 since only x direction
+					winding_number_squared += std::pow(winding_number, 2);
 
 				}
 

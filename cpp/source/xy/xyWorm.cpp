@@ -8,6 +8,26 @@
 #include <unordered_map>
 
 /**
+* @brief: Return +1 if site1 is a +x neighbour to site0, -1 if -x neighbour and 0 otherwise
+*
+* @param: const int site0
+*       : const int site1
+*       : const int length
+*
+* @return: int
+*/
+int SignIfInXDirection(const int site0, const int site1, const int length) {
+	int diff = site1 - site0;
+	if ((diff == 1) || (diff == -1* (length-1))) {
+		return 1;
+	}
+	if ((diff == -1) || (diff == +1* (length-1))) {
+		return -1;
+	}
+	return 0;
+}
+
+/**
 * @brief: Check if the link between current_site and next_site in gitter is accepted
 *
 * @param: double K
@@ -107,7 +127,7 @@ WNandNS XySimulation(Graph & lattice, double K) {
 		auto rand_num = lattice.GetRandomNum();
 		if (IsAccepted(K, lattice.GetLink(current_site, next_site), sign, rand_num)) {
 			num_steps++;
-			winding_number += sign;
+			winding_number += SignIfInXDirection(current_site, next_site, lattice.GetLength());
 
 			// Flip the weight between currentSite and nextSite
 			lattice.SwitchLinkBetween(current_site, next_site);
