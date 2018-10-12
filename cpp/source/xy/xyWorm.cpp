@@ -198,12 +198,12 @@ void SetLinks(int site0, int site1, int link, Graph& lattice) {
 
 
 /**
-* @brief: Switch all links saved in filename.
+* @brief: Switch all links saved in filename and return the energy and winding number.
 *
 * @param: const std::string& filename
 *       : Graph& lattice
 *
-* @return: void
+* @return: WNENS
 */
 WNENS LoadGraphFromFile(const std::string& filename, Graph& lattice) {
 	std::ifstream file;
