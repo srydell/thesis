@@ -59,3 +59,9 @@ target_link_libraries(energy_scaling PRIVATE XYGraph)
 add_executable(measure_graphdiv application/measure_graphdiv.cpp)
 target_include_directories(measure_graphdiv PRIVATE source source/xy)
 target_link_libraries(measure_graphdiv PRIVATE XYGraph)
+
+# Set convert_warmups executable
+# Read the xyl*t*.txt files and calulate energy/winding number and rewrite them
+add_executable(convert_warmups application/convert_warmups.cpp)
+target_include_directories(convert_warmups PRIVATE source source/xy)
+target_link_libraries(convert_warmups PRIVATE XYGraph)

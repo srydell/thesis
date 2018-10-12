@@ -6,6 +6,7 @@
 #include <unordered_map>
 #include <vector>
 
+int SignIfInXDirection(const int site0, const int site1, const int length);
 bool IsAccepted(double K, int link_between, long double &random_num);
 void UpdateLoopLengths(std::unordered_map<int, int> &loop_lengths, std::unordered_map<int, std::vector<int>> &clusters, Graph &lattice);
 WNENS XySimulation(Graph & lattice, double K);
