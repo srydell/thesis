@@ -338,13 +338,15 @@ void SaveGraphToFile(const std::string& filename, Graph& lattice, const WNENS& d
 *       : double K
 *       : std::string& filename
 *
-* @return: void
+* @return: WNENS
 */
-void WarmUpAndSaveOrReload(int warm_up_runs, Graph& lattice, double K, const std::string& filename) {
+WNENS WarmUpAndSaveOrReload(int warm_up_runs, Graph& lattice, double K, const std::string& filename) {
+	WNENS res(0, 0, 0);
 	if (FileExists(filename)) {
-		LoadGraphFromFile(filename, lattice);
+		res = LoadGraphFromFile(filename, lattice);
 	} else {
-		auto res = WarmUp(warm_up_runs, lattice, K);
+		res = WarmUp(warm_up_runs, lattice, K);
 		SaveGraphToFile(filename, lattice, res);
 	}
+	return res;
 }
