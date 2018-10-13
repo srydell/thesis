@@ -40,13 +40,19 @@ int main(/*int argc, char** argv*/) {
 				// Bond strength J = 1
 				double K = 1/T;
 
-				// Warmup
+				// // Warmup
+				// double winding_number = 0;
+				// for (int i = 0; i < 10'000 * length; ++i) {
+				// 	// Take measurement
+				// 	auto res = XySimulation(lattice, K);
+				// 	winding_number += res.winding_number;
+				// }
+
 				double winding_number = 0;
-				for (int i = 0; i < 10'000 * length; ++i) {
-					// Take measurement
-					auto res = XySimulation(lattice, K);
-					winding_number += res.winding_number;
-				}
+				std::stringstream ss;
+				ss << "xyl" << length << "t" << T << ".txt";
+				auto start_data = WarmUpAndSaveOrReload(10'000 * length, lattice, K, ss.str());
+				winding_number = start_data.winding_number;
 
 				double winding_number_squared = 0;
 				int num_worms_started = 10'000;
