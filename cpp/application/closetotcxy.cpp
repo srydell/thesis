@@ -24,7 +24,7 @@ int main(/*int argc, char** argv*/) {
 		auto windingnum_temp_file = GetUniqueFile("windingnum_tempXY");
 
 		// How many different sizes of the simulation should run (L = 2^i)
-		// for (auto& length : {4, 8, 16, 32}) {
+		// for (auto& length : {4, 8, 16, 32, 64}) {
 		for (auto& length : {4, 8}) {
 			// for (double T : {.330, .331, .332, .333, .334, .335}) {
 			// for (double T : {0.1, 0.35, 0.6}) {
@@ -40,19 +40,16 @@ int main(/*int argc, char** argv*/) {
 				// Bond strength J = 1
 				double K = 1/T;
 
-				// // Warmup
-				// double winding_number = 0;
-				// for (int i = 0; i < 10'000 * length; ++i) {
-				// 	// Take measurement
-				// 	auto res = XySimulation(lattice, K);
-				// 	winding_number += res.winding_number;
-				// }
-
 				double winding_number = 0;
 				std::stringstream ss;
-				ss << "xyl" << length << "t" << T << ".txt";
+				ss << "xyl" << length << "t" << "0.35" << ".txt";
 				auto start_data = WarmUpAndSaveOrReload(10'000 * length, lattice, K, ss.str());
 				winding_number = start_data.winding_number;
+
+				if ((T < 0.35) && (T >= 0.3)) {
+					auto extra_data = WarmUpAndSaveOrReload(1000, lattice, K, ss.str());
+					winding_number += extra_data.winding_number;
+				}
 
 				double winding_number_squared = 0;
 				int num_worms_started = 10'000;
@@ -75,6 +72,7 @@ int main(/*int argc, char** argv*/) {
 				windingnum_temp_file << "L=" << length << ":\n";
 				windingnum_temp_file << winding_number_squared / num_worms_started;
 				windingnum_temp_file << " " << T;
+				windingnum_temp_file << " " << num_worms_started;
 				windingnum_temp_file << "\n";
 
 			}
