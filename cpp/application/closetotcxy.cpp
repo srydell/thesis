@@ -47,7 +47,7 @@ int main(/*int argc, char** argv*/) {
 				winding_number = start_data.winding_number;
 
 				if ((T < 0.35) && (T >= 0.3)) {
-					auto extra_data = WarmUpAndSaveOrReload(1000, lattice, K, ss.str());
+					auto extra_data = WarmUp(1000 * length, lattice, K);
 					winding_number += extra_data.winding_number;
 				}
 
