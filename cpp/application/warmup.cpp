@@ -22,7 +22,7 @@ int main() {
 		srand((unsigned)nulltime + getpid());
 
 		// How many different sizes of the simulation should run (L = 2^i)
-		for (auto& length : {64, 128}) {
+		for (auto& length : {4, 8, 16, 32, 64}) {
 
 			std::cout << "Dimension: " << dimension << "\n";
 			std::cout << "On length: " << length << "\n";
@@ -32,13 +32,28 @@ int main() {
 			Graph lattice(dimension, length, seed + getpid());
 
 			// Bond strength J = 1
-			double T = 0.35;
+			// Tc \approx 0.333
+			double T = 0.333;
 			double K = 1/T;
 
+			// Read in the closest file (T = 0.35)
+			double winding_number = 0;
+			double energy = 0;
 			std::stringstream ss;
-			ss << "xyl" << length << "t" << T << ".txt";
-			std::string filename = ss.str();
-			WarmUpAndSaveOrReload(10000 * length, lattice, K, filename);
+			ss << "xyl" << length << "t" << "0.35" << ".txt";
+			auto start_data = WarmUpAndSaveOrReload(10'000 * length, lattice, K, ss.str());
+			winding_number = start_data.winding_number;
+			energy = start_data.energy;
+
+			// Create the new file
+			auto extra_data = WarmUp(1000 * length, lattice, K);
+			winding_number += extra_data.winding_number;
+			energy += extra_data.energy;
+
+			std::stringstream ss2;
+			ss2 << "xyl" << length << "t" << T << ".txt";
+			SaveGraphToFile(ss2.str(), lattice, {winding_number, energy, 0.0});
+
 		}
 	} catch(std::string& error) {
 		std::cout << error << "\n";
