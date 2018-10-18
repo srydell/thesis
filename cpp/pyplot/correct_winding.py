@@ -24,7 +24,7 @@ if __name__ == '__main__':
         for size in simulation_data:
             f.write(f"L={int(size)}:\n")
             for i in range(len(simulation_data[size][0])):
-                winding_number = simulation_data[size][1][i]
-                temperature = simulation_data[size][0][i]
+                winding_number = simulation_data[size][0][i]
+                temperature = simulation_data[size][1][i]
 
                 f.write(f"{winding_number/3} {temperature}\n")
