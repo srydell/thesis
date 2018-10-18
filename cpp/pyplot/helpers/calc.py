@@ -73,11 +73,9 @@ def process_file(filename, key, xy):
     return out_dict
 
 def plot_errorbars(data_dict, label, color="#202020"):
-    """Plot error bars using numpy.std() and numpy.mean() according to input bools
-       Let xi = [x0, x1, ...]
-       Let yi = [y0, y1, ...]
+    """Plot Monte Carlo style error bars
 
-    :data_dict: dict - Assumed to be {x0: [y0, y1, ...], x1: ...}
+    :data_dict: dict - Assumed to be {x0: [avg(y0), std(y0), num_measurements(y0)], x1: ...}
     :label: string - label for the plot
     :color: string - color for the plot
     :returns: None
@@ -90,13 +88,16 @@ def plot_errorbars(data_dict, label, color="#202020"):
         if 'x' in label:
             label = label.format(x=x)
 
-        y = data_dict[x]
+        avg_y = data_dict[x][0]
+        std_y = data_dict[x][1]
+        num_measurements_y = data_dict[x][2]
+
         if not labeled:
-            plt.errorbar(x, np.mean(y), yerr=np.std(y)/len(y),\
+            plt.errorbar(x, avg_y, yerr=std_y/np.sqrt(num_measurements_y),\
                 ecolor='gray', elinewidth=2, fmt=f'{color}', marker='.',\
                 linestyle="None", capsize=3, capthick=2, label=rf"{label}")
             labeled = True
         else:
-            plt.errorbar(x, np.mean(y), yerr=np.std(y)/len(y),\
+            plt.errorbar(x, avg_y, yerr=std_y/np.sqrt(num_measurements_y),\
                 ecolor='gray', elinewidth=2, fmt=f'{color}', marker='.',\
                 linestyle="None", capsize=3, capthick=2)

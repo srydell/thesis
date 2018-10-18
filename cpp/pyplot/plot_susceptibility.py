@@ -241,7 +241,13 @@ if __name__ == '__main__':
     plot_setup()
     # plot_syssize_vs_susc(simulation_data)
 
-    calc.plot_errorbars(simulation_data,
+    errorbar_data = {}
+    for size in simulation_data:
+        errorbar_data[size] = [np.average(simulation_data[size]),
+                               np.std(simulation_data[size]),
+                               len(simulation_data[size])]
+
+    calc.plot_errorbars(errorbar_data,
                         label=r"$\bar{\chi} \pm \sigma_{\bar{\chi}}$",
                         color=const.COLOR_MAP["black"])
 
@@ -255,4 +261,4 @@ if __name__ == '__main__':
     savefig = False
     if savefig:
         illu.save_figure("susceptibility128x128Ising")
-    # plt.show()
+    plt.show()

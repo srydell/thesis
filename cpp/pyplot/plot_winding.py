@@ -35,7 +35,8 @@ if __name__ == '__main__':
             # All indices for t = temp
             indices = [i for i, t in enumerate(simulation_data[size][0]) if t == temp]
 
-            plot_dict[temp] = [winding_number[i] for i in indices]
+            w = [winding_number[i] for i in indices]
+            plot_dict[temp] = [np.mean(w), np.std(w), len(w)]
 
         calc.plot_errorbars(plot_dict, f"${int(size)}^3$", color=c)
 
