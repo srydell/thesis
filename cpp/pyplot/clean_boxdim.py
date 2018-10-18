@@ -233,4 +233,4 @@ if __name__ == '__main__':
                     number_datapoints = len(data[box_size])
                     avg_hausdorff = np.mean(data[box_size])
                     std_hausdorff = np.std(data[box_size])
-                    data_file.write(f"{avg_hausdorff} {std_hausdorff/number_datapoints}\n")
+                    data_file.write(f"{avg_hausdorff} {std_hausdorff/np.sqrt(number_datapoints)}\n")

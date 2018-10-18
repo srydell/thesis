@@ -26,13 +26,16 @@ int main(/*int argc, char** argv*/) {
 		// How many different sizes of the simulation should run (L = 2^i)
 		// for (auto& length : {4, 8, 16, 32, 64}) {
 		for (auto& length : {4, 8}) {
+
+			windingnum_temp_file << "L=" << length << ":\n";
+
 			// for (double T : {.330, .331, .332, .333, .334, .335}) {
 			// for (double T : {0.1, 0.35, 0.6}) {
 			for (double T : {0.31, 0.32, 0.33, 0.34, 0.35}) {
 
 				std::cout << "On length: " << length << "\n";
 				std::cout << "On temperature: " << T << "\n";
-
+;
 				// Create a new graph
 				int long seed = rand();
 				Graph lattice(dimension, length, seed + getpid());
@@ -51,8 +54,11 @@ int main(/*int argc, char** argv*/) {
 					winding_number += extra_data.winding_number;
 				}
 
-				double winding_number_squared = 0;
 				int num_worms_started = 10'000;
+
+				std::vector<double> winding_number_squared_vector;
+				winding_number_squared_vector.reserve(num_worms_started);
+
 				for (int i = 0; i < num_worms_started; ++i) {
 
 					// How many new worms thrown before next measurement
@@ -64,14 +70,24 @@ int main(/*int argc, char** argv*/) {
 
 					// Take measurement
 					// NOTE: No longer dividing by 3 since only x direction
-					winding_number_squared += std::pow(winding_number, 2);
+					winding_number_squared_vector.push_back(std::pow(winding_number, 2));
 
 				}
 
 				// Write to data files
-				windingnum_temp_file << "L=" << length << ":\n";
-				windingnum_temp_file << winding_number_squared / num_worms_started;
-				windingnum_temp_file << " " << T;
+				double avg_w_square = std::accumulate(winding_number_squared_vector.begin(),
+									winding_number_squared_vector.end(), 0.0) / winding_number_squared_vector.size();
+				double accum = 0.0;
+				std::for_each (std::begin(winding_number_squared_vector), std::end(winding_number_squared_vector),
+						[&](const double d) {
+							accum += (d - avg_w_square) * (d - avg_w_square);
+							});
+				double stdev_w_square = sqrt(accum / (winding_number_squared_vector.size()-1));
+
+				// Write to data files
+				windingnum_temp_file << T;
+				windingnum_temp_file << " " << avg_w_square;
+				windingnum_temp_file << " " << stdev_w_square;
 				windingnum_temp_file << " " << num_worms_started;
 				windingnum_temp_file << "\n";
 
