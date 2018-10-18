@@ -107,3 +107,21 @@ def plot_errorbars(data_dict, label, color="#202020"):
             plt.errorbar(x, avg_y, yerr=std_y/np.sqrt(num_measurements_y),\
                 ecolor='gray', elinewidth=2, fmt=f'{color}', marker='.',\
                 linestyle="None", capsize=3, capthick=2)
+
+def add_std(std):
+    """Calculate the standard deviation of a list of standard deviations
+
+    :std: 1xn Array - [std0, std1, ...]
+    :returns: Float - Square root of the average variance
+    """
+
+    variance = [np.power(s, 2) for s in std]
+    return np.sqrt(sum(variance)/len(variance))
+
+def add_mean(mean):
+    """Calculate the mean of a list of means
+
+    :mean: 1xn Array - [mean0, mean1, ...]
+    :returns: Float - sum(mean) / len(mean)
+    """
+    return sum(mean)/len(mean)

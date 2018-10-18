@@ -18,25 +18,31 @@ rc('font', **{'family': 'serif', 'serif': ['DejaVu Sans']})
 rc('text', usetex=True)
 
 if __name__ == '__main__':
-    simulation_data = calc.process_file("./cleaned_mats_data.txt", key=r"L=(\d+):", xy=r"(\d*\.?\d*) (\d*\.?\d*)")
+    simulation_data = calc.process_file("./data/windingnum_tempXY", key=r"L=(\d+):", xy=r"(\d*\.?\d*) (\d*\.?\d*) (\d*\.?\d*)")
 
-    colors = const.COLORS
+    colors = {4: "#9999ff", 8: "#4c4cff", 16: "#0000e5", 32: "#000066", 64: "#000066"}
+    # colors = const.COLORS
     c_id = 0
     for size in simulation_data:
         c_id += 1
         c = colors[c_id % len(colors)]
 
-        unique_temperatures = sorted(list(set(simulation_data[size][0])))
-        winding_number = simulation_data[size][1]
+        avg_winding_number = simulation_data[size][0]
+        temperatures = simulation_data[size][1]
+        number_measurements = simulation_data[size][2]
+
+        unique_temperatures = sorted(list(set(temperatures)))
 
         # Create the data in the format that calc.plot_errorbars wants
         plot_dict = {}
         for temp in unique_temperatures:
             # All indices for t = temp
-            indices = [i for i, t in enumerate(simulation_data[size][0]) if t == temp]
+            # NOTE: Done since the order of the data is random
+            indices = [i for i, t in enumerate(temperatures) if t == temp]
 
-            w = [winding_number[i] for i in indices]
-            plot_dict[temp] = [np.mean(w), np.std(w), len(w)]
+            avg_w = calc.add_mean([avg_winding_number[i] for i in indices])
+            n = [number_measurements[i] for i in indices]
+            plot_dict[temp] = [calc.add_mean(avg_w), calc.add_std(avg_w), sum(n)]
 
         calc.plot_errorbars(plot_dict, f"${int(size)}^3$", color=c)
 

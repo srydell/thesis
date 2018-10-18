@@ -1,5 +1,5 @@
 '''
-Brief:               Plot the winding number against the temperature
+Brief:               Plot the Hausdorff dimension for Ising 2D lattice
 
 File name:           plot_winding.py
 Author:              Simon Rydell
@@ -72,4 +72,4 @@ if __name__ == '__main__':
     plt.title(rf"Geometric Hausdorff dimension on a ${system_size}^2$ Ising lattice")
     plt.legend(loc=2)
     plt.show()
-    # illu.save_figure("box_dim_128x128Ising")
+    # illu.save_figure(f"box_dim_{system_size}x{system_size}Ising")
