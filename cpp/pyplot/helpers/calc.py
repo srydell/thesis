@@ -72,12 +72,12 @@ def process_file(filename, key, xy):
 
     return out_dict
 
-def plot_errorbars(data_dict, label, color="#966842"):
+def plot_errorbars(data_dict, label, color="#202020"):
     """Plot error bars using numpy.std() and numpy.mean() according to input bools
        Let xi = [x0, x1, ...]
        Let yi = [y0, y1, ...]
 
-    :data_dict: dict - Assumed to be {x0: [[y0, y1, ...]], x1: ...}
+    :data_dict: dict - Assumed to be {x0: [y0, y1, ...], x1: ...}
     :label: string - label for the plot
     :color: string - color for the plot
     :returns: None
@@ -86,7 +86,9 @@ def plot_errorbars(data_dict, label, color="#966842"):
     labeled = False
     for x in data_dict:
 
-        label = label.format(x = x)
+        # NOTE: Naive. Breaks on "axe", "flex", ...
+        if 'x' in label:
+            label = label.format(x=x)
 
         y = data_dict[x]
         if not labeled:
