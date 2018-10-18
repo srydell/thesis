@@ -10,6 +10,10 @@ import re
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import rc
+from mpl_toolkits.axes_grid1.inset_locator import zoomed_inset_axes
+from mpl_toolkits.axes_grid1.inset_locator import mark_inset
+from mpl_toolkits.axes_grid1.inset_locator import InsetPosition
+
 rc('font', **{'family': 'serif', 'serif': ['DejaVu Sans']})
 rc('text', usetex=True)
 
@@ -25,14 +29,18 @@ def process_file(filename, key, xy):
 
     :filename: String - Valid path to a file containing the abow
     :key: Regex String - Matching keys for the out_dict
-    :xy: Regex String - Matching x and y data for the out_dict
+    :xy: Regex String - Matching data for the out_dict
     :returns: dict - {<reg_group(1, key)>:
-                      [[<reg_group(1, xy)>, ...], [<reg_group(2, xy)>, ...]], ...}
+                      [[<reg_group(1, xy)>, ...], [<reg_group(2, xy)>, ...], ...], ...}
     """
     out_dict = {}
     with open(filename) as data_file:
         # Keep track of the key we are on
         current_key = 0
+        num_xy_groups = len(re.findall(r'\(.*?\)', xy))
+
+        # print(f"Found the number of groups: {num_xy_groups}")
+
         for line in data_file.readlines():
             # Check if line is describing system size or box sizes
 
@@ -51,7 +59,7 @@ def process_file(filename, key, xy):
                     # print(f"Key data: {key_data} has not been seen before. Adding new.")
 
                     # Create a new array for this key data
-                    out_dict[key_data] = [[], []]
+                    out_dict[key_data] = [[] for i in range(num_xy_groups)]
 
                 current_key = key_data
                 # No need to process further, we found a match
@@ -60,20 +68,18 @@ def process_file(filename, key, xy):
             # Check data
             xy_match = re.match(xy, line)
             if xy_match:
-                x = float(xy_match.group(1))
-                y = float(xy_match.group(2))
-                # Save the data under the current system size
-                out_dict[current_key][0].append(y)
-                out_dict[current_key][1].append(x)
+                for i in range(num_xy_groups):
+                    x = float(xy_match.group(i + 1))
+                    # Save the data under the current system size
+                    out_dict[current_key][i].append(x)
 
-                # print(f"Found winding number: {x}")
-                # print(f"Found y: {y}")
-            # input()
+                    # print(f"Found the number: {x}")
+                # input()
 
     return out_dict
 
 def plot_errorbars(data_dict, label, color="#202020"):
-    """Plot Monte Carlo style error bars
+    """Plot Monte Carlo style error bars where yerr=std(y)/sqrt(number_measurements)
 
     :data_dict: dict - Assumed to be {x0: [avg(y0), std(y0), num_measurements(y0)], x1: ...}
     :label: string - label for the plot

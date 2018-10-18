@@ -21,8 +21,8 @@ if __name__ == '__main__':
     system_size = 128
     # {system_size: [avg(D_H), std(D_H)], ...}
     simulation_data = calc.process_file(f"./data/hdims/box_size{system_size}.txt",
-            key=r"box_size=(\d*\.?\d*):",
-            xy=r"(\d*\.?\d*) (\d*\.?\d*e?-?\d*)")
+                                        key=r"box_size=(\d*\.?\d*):",
+                                        xy=r"(\d*\.?\d*) (\d*\.?\d*e?-?\d*)")
 
     ignore_sizes = [64.0, 32.0]
     for size in ignore_sizes:
@@ -31,8 +31,8 @@ if __name__ == '__main__':
     labeled = False
     color = const.COLOR_MAP["black"]
     for size in simulation_data:
-        avg_dh = simulation_data[size][1][0]
-        std_dh = simulation_data[size][0][0]
+        avg_dh = simulation_data[size][0][0]
+        std_dh = simulation_data[size][1][0]
         if not labeled:
 
             plt.errorbar(size / system_size, avg_dh, yerr=std_dh,\
@@ -71,5 +71,5 @@ if __name__ == '__main__':
     plt.ylabel(r"$D_H$")
     plt.title(rf"Geometric Hausdorff dimension on a ${system_size}^2$ Ising lattice")
     plt.legend(loc=2)
-    # plt.show()
-    illu.save_figure("box_dim_128x128Ising")
+    plt.show()
+    # illu.save_figure("box_dim_128x128Ising")
