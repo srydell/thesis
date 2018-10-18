@@ -170,7 +170,14 @@ if __name__ == '__main__':
     clean_processed_data(simulation_data, exclude_system_size=[])
 
     # plot_syssize_vs_looplength(simulation_data)
-    calc.plot_errorbars(simulation_data, label=r"$\bar{D}_H \pm \sigma_{\bar{D}_H}$", color=const.COLOR_MAP["black"])
+
+    errorbar_data = {}
+    for size in simulation_data:
+        errorbar_data[size] = [np.average(simulation_data[size]),
+                               np.std(simulation_data[size]),
+                               len(simulation_data[size])]
+
+    calc.plot_errorbars(errorbar_data, label=r"$\bar{D}_H \pm \sigma_{\bar{D}_H}$", color=const.COLOR_MAP["black"])
 
     plot_syssize_vs_fit(simulation_data)
 
@@ -179,7 +186,7 @@ if __name__ == '__main__':
     plt.ylabel("Loop length")
     plt.legend()
 
-    savefig=True
+    savefig=False
     if savefig:
         illu.save_figure(f"maximum_loop_length_for_2D_Ising.png")
-    # plt.show()
+    plt.show()
