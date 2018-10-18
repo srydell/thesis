@@ -12,6 +12,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import rc
 from scipy.optimize import curve_fit
+import helpers.illustrations as illu
+import helpers.calc as calc
+import helpers.constants as const
 
 rc('font', **{'family': 'serif', 'serif': ['DejaVu Sans']})
 rc('text', usetex=True)
@@ -76,7 +79,7 @@ def plot_syssize_vs_looplength(data_dict):
 
         plt.scatter([system_linear_size]*len(data_dict[system_linear_size]),\
                 data_dict[system_linear_size],\
-                c="#000000", s=10)
+                c=const.COLOR_MAP["blue"], s=10)
 
         # New color every box size
         color_counter += 1
@@ -96,6 +99,28 @@ def fit_function(x, a, b, c):
     :returns: Float
     """
     return a * np.power(x, b) + c
+
+def correct_function(x, a, b):
+    """Function to fit against
+    y = a * x^(1.375) + b
+
+    :x: Float - Known data
+    :a: Float - Unknown data
+    :b: Float - Unknown data
+    :returns: Float
+    """
+    return a * np.power(x, 1.375) + b
+
+def wrong_function(x, a, b):
+    """Function to fit against
+    y = a * x^(2) + b
+
+    :x: Float - Known data
+    :a: Float - Unknown data
+    :b: Float - Unknown data
+    :returns: Float
+    """
+    return a * np.power(x, 2) + b
 
 def plot_syssize_vs_fit(data_dict):
     """Fit against the function loop_length = system_size^(D_H)
@@ -121,11 +146,21 @@ def plot_syssize_vs_fit(data_dict):
     loop_lengths = np.array(loop_lengths)
 
     opt_parameters, _pcov = curve_fit(fit_function, system_sizes, loop_lengths)
+    correct_opt_parameters, _pcov = curve_fit(correct_function, system_sizes, loop_lengths)
+    wrong_opt_parameters, _pcov = curve_fit(wrong_function, system_sizes, loop_lengths)
 
     # Used for plotting against the fitted function
     xdata = np.linspace(min(system_sizes), max(system_sizes), 50)
     # colors = ["#966842", "#f44747", "#eedc31", "#7fdb6a", "#0e68ce"]
-    plt.loglog(xdata, fit_function(xdata, *opt_parameters), c="#0e68ce", label=fr"$\propto L^{{ {opt_parameters[1]:.4f} }}$")
+    plt.loglog(xdata, fit_function(xdata, *opt_parameters),
+               c=const.COLOR_MAP["blue"],
+               label=fr"$\propto L^{{ {opt_parameters[1]:.4f} }}$")
+    plt.loglog(xdata, correct_function(xdata, *correct_opt_parameters),
+               c=const.COLOR_MAP["green"],
+               label=r"$\propto L^{1.375}$")
+    plt.loglog(xdata, wrong_function(xdata, *wrong_opt_parameters),
+               c=const.COLOR_MAP["red"],
+               label=r"$\propto L^{2}$")
 
     print(f"D_H = {opt_parameters[1]:.6}")
 
@@ -134,14 +169,17 @@ if __name__ == '__main__':
 
     clean_processed_data(simulation_data, exclude_system_size=[])
 
-    plot_syssize_vs_looplength(simulation_data)
+    # plot_syssize_vs_looplength(simulation_data)
+    calc.plot_errorbars(simulation_data, label=r"$\bar{D}_H \pm \sigma_{\bar{D}_H}$", color=const.COLOR_MAP["black"])
 
     plot_syssize_vs_fit(simulation_data)
 
+    plt.title("Maximum loop length on a 2D Ising lattice")
+    plt.xlabel("Linear system size")
+    plt.ylabel("Loop length")
     plt.legend()
 
     savefig=True
     if savefig:
-        plt.savefig(f"./plots/maximum_loop_length_for_2D_Ising.png",\
-                    bbox_inches='tight')
-    plt.show()
+        illu.save_figure(f"maximum_loop_length_for_2D_Ising.png")
+    # plt.show()

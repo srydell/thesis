@@ -207,15 +207,30 @@ def plot_boxsize_vs_hausdorff(data_dict, plot_scatter=False, savefig=False):
 if __name__ == '__main__':
     simulation_data = process_file("./data/box_size128x128.txt")
 
-    # size_to_plot = 128
-    # clean_processed_data(simulation_data, size_to_plot, exclude_rel_size=[1/2, 1/4])
+    # Write the cleaned data files
+    for system_size in simulation_data:
+        print(f"On system size: {system_size}")
+        # data = {size0: [hausdorff_dim0, hausdorff_dim1, ...], size1: [...], ...}
+        data = {}
+        for size_numocc in simulation_data[system_size]:
+            if size_numocc[0] not in data:
+                print(f"Adding size: {size_numocc[0]} for system size: {system_size}")
+                data[size_numocc[0]] = []
 
-    # calc_hausdorff_dimension(simulation_data)
+            # NOTE: hausdorff_dim = log(number_occupied_boxes) / log(1 / box_relative_size)
+            #       Where box_relative_size is the relative size to the system_size
+            #          => box_relative_size = box_linear_size / system_size
+            box_relative_size = size_numocc[0] / system_size
+            if int(box_relative_size) != 1 and int(size_numocc[1]) != 0:
+                hausdorff_dim = np.log(size_numocc[1]) / np.log(1 / box_relative_size)
 
-    # plot_error_bars(simulation_data)
+                data[size_numocc[0]].append(hausdorff_dim)
 
-    # # plt.xlim([1/64 - 1/64 * .2, 1/8 + 1/64 * .2])
-    # plt.plot([1/64 - 1/64 * .2, 1/8 + 1/64 * .2], [1.375, 1.375], linewidth=1, c="#0e68ce", label="D_H = 1.375")
-
-    # # plt.show() called here
-    # plot_boxsize_vs_hausdorff(simulation_data, savefig=False)
+        with open(f"./data/hdims/box_size{int(system_size)}.txt", 'w') as data_file:
+            for box_size in data:
+                if data[box_size]:
+                    data_file.write(f"box_size={box_size}:\n")
+                    number_datapoints = len(data[box_size])
+                    avg_hausdorff = np.mean(data[box_size])
+                    std_hausdorff = np.std(data[box_size])
+                    data_file.write(f"{avg_hausdorff} {std_hausdorff/number_datapoints}\n")

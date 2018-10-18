@@ -13,6 +13,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import rc
 from scipy.optimize import curve_fit
+import helpers.illustrations as illu
+import helpers.calc as calc
+import helpers.constants as const
 
 rc('font', **{'family': 'serif', 'serif': ['DejaVu Sans']})
 rc('text', usetex=True)
@@ -21,15 +24,15 @@ def process_file(filename):
     """Go through filename and split it into arrays
        Assumes that the file is organized as:
 
-       <susceptibility00> <max_loop_length01> ...
-       <susceptibility10> <max_loop_length11> ...
+       <susceptibility00> <susceptibility01> ...
+       <susceptibility10> <susceptibility11> ...
        ...
 
        Where the system_linear_size is 2, 4, 8, ... on each line
 
     :filename: String - Valid path to a file containing the abow
     :returns: dict - {<system_linear_size0>:
-                      [<susceptibility00>, <max_loop_length10, ...], ...}
+                      [<susceptibility00>, <susceptibility10, ...], ...}
     """
     out_dict = {}
     with open(filename) as data_file:
@@ -93,9 +96,6 @@ def plot_syssize_vs_susc(data_dict):
         # New color every box size
         color_counter += 1
         color_counter %= len(colors)
-
-    plt.xticks(list(data_dict.keys()),\
-            list(data_dict.keys()),)
 
 def fit_function(x, a, eta):
     """Function to fit against
@@ -239,13 +239,20 @@ if __name__ == '__main__':
     # plot_hist_of_error(simulation_data)
 
     plot_setup()
-    plot_syssize_vs_susc(simulation_data)
+    # plot_syssize_vs_susc(simulation_data)
+
+    calc.plot_errorbars(simulation_data,
+                        label=r"$\bar{\chi} \pm \sigma_{\bar{\chi}}$",
+                        color=const.COLOR_MAP["black"])
+
     plot_syssize_vs_fit(simulation_data)
+
+    plt.xticks(list(simulation_data.keys()),
+               list(simulation_data.keys()))
 
     plt.legend()
 
     savefig = False
     if savefig:
-        plt.savefig(f"./plots/susceptibility128x128Ising.png",\
-                    bbox_inches='tight')
-    plt.show()
+        illu.save_figure("susceptibility128x128Ising")
+    # plt.show()
