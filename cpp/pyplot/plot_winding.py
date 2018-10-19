@@ -21,9 +21,9 @@ if __name__ == '__main__':
     # simulation_data = calc.process_file("./data/windingnum_tempXY", key=r"L=(\d+):", xy=r"(\d*\.?\d*) (\d*\.?\d*) (\d*\.?\d*)")
     simulation_data = calc.process_file("./winding", key=r"L=(\d+):", xy=r"(\d*\.?\d*) (\d*\.?\d*) (\d*\.?\d*) (\d*\.?\d*)")
 
+    # Necessary for the zoomed inset
     fig, ax = plt.subplots()
 
-    # colors = {4: "#9999ff", 8: "#4c4cff", 16: "#0000e5", 32: "#000066", 64: "#000066"}
     colors = const.GRADIENT["blue"]
     c_id = 0
     plot_dict = {}
@@ -62,7 +62,7 @@ if __name__ == '__main__':
 
 
         calc.plot_errorbars(errorbars_dict, f"${int(size)}^3$", color=c, axis=ax)
-        ax.plot(unique_temperatures, avg_ws, color=c)
+        ax.plot(unique_temperatures, avg_ws, color=c, linewidth=1.2)
 
         zoomed_data[size] = [unique_temperatures, avg_ws]
         plot_dict[size] = errorbars_dict
@@ -70,15 +70,18 @@ if __name__ == '__main__':
     # [x0, x1, y0, y1, zoom_factor]
     zoomed_size = [0.330, 0.335, -0.1, 1.0, 3]
     ticks = [[0.330, 0.333, 0.335], [0.0, 0.5, 1.0]]
-    # (x|y)0 refers to the lower left corner of the inset
-    # rel_size_(x|y) is relative the whole plot
-    # [rel_x0, rel_y0, rel_width, rel_height]
+
+    # rel_{x,y} refers to the lower left corner of the inset
+    # rel_{width,height} is relative the whole plot
+    # [rel_x, rel_y, rel_width, rel_height]
     inset_position = [0.1, 0.5, 0.4, 0.4]
+
     calc.plot_zoomed_inset(zoomed_data,
                            zoomed_size,
                            ax,
                            colors,
-                           plot_dict,
+                           # Uncomment to plot with error bars in inset
+                           # plot_dict,
                            ticks=ticks,
                            inset_position=inset_position)
 
@@ -86,5 +89,5 @@ if __name__ == '__main__':
     ax.set_ylabel(r"$\langle W^2 \rangle \propto \frac{L}{T} \rho_s$")
     ax.set_title(r"Average winding square on a 3D XY lattice")
     ax.legend(loc=1)
-    plt.show()
     # illu.save_figure("winding_number_Tc")
+    plt.show()

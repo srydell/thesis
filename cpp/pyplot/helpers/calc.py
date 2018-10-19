@@ -166,7 +166,7 @@ def plot_zoomed_inset(data, zoomed_size, axis, colors, plot_errorbar=None, ticks
         for key in data:
             c_id += 1
             c = colors[c_id % len(colors)]
-            zoomed_axis.plot(data[key][0], data[key][1], c=c)
+            zoomed_axis.plot(data[key][0], data[key][1], c=c, linewidth=1)
 
     # plot_errorbar is plotted using the function plot_errorbars
     if plot_errorbar is not None:
