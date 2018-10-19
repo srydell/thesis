@@ -13,6 +13,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import rc
 from scipy.optimize import curve_fit
+import helpers.illustrations as illu
 
 rc('font', **{'family': 'serif', 'serif': ['DejaVu Sans']})
 rc('text', usetex=True)
@@ -207,6 +208,7 @@ if __name__ == '__main__':
 
     savefig = False
     if savefig:
-        plt.savefig(f"./plots/total_loop_length128x128Ising.png",\
-                    bbox_inches='tight')
+        illu.save_figure("total_loop_length128x128Ising")
+        # plt.savefig(f"./plots/total_loop_length128x128Ising.png",\
+        #             bbox_inches='tight')
     plt.show()
