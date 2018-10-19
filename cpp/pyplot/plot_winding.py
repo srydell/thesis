@@ -18,43 +18,73 @@ rc('font', **{'family': 'serif', 'serif': ['DejaVu Sans']})
 rc('text', usetex=True)
 
 if __name__ == '__main__':
-    simulation_data = calc.process_file("./data/windingnum_tempXY", key=r"L=(\d+):", xy=r"(\d*\.?\d*) (\d*\.?\d*) (\d*\.?\d*)")
+    # simulation_data = calc.process_file("./data/windingnum_tempXY", key=r"L=(\d+):", xy=r"(\d*\.?\d*) (\d*\.?\d*) (\d*\.?\d*)")
+    simulation_data = calc.process_file("./winding", key=r"L=(\d+):", xy=r"(\d*\.?\d*) (\d*\.?\d*) (\d*\.?\d*) (\d*\.?\d*)")
 
-    colors = {4: "#9999ff", 8: "#4c4cff", 16: "#0000e5", 32: "#000066", 64: "#000066"}
-    # colors = const.COLORS
+    fig, ax = plt.subplots()
+
+    # colors = {4: "#9999ff", 8: "#4c4cff", 16: "#0000e5", 32: "#000066", 64: "#000066"}
+    colors = const.GRADIENT["blue"]
     c_id = 0
+    plot_dict = {}
+    zoomed_data = {}
     for size in simulation_data:
         c_id += 1
         c = colors[c_id % len(colors)]
 
-        avg_winding_number = simulation_data[size][0]
-        temperatures = simulation_data[size][1]
-        number_measurements = simulation_data[size][2]
+        temperatures = simulation_data[size][0]
+        avg_winding_number = simulation_data[size][1]
+        std_winding_number = simulation_data[size][2]
+        number_measurements = simulation_data[size][3]
+
+        # Old way of calculating winding number
+        # avg_winding_number = simulation_data[size][0]
+        # temperatures = simulation_data[size][1]
+        # number_measurements = simulation_data[size][2]
 
         unique_temperatures = sorted(list(set(temperatures)))
 
         # Create the data in the format that calc.plot_errorbars wants
-        plot_dict = {}
+        avg_ws = []
+        errorbars_dict = {}
         for temp in unique_temperatures:
             # All indices for t = temp
             # NOTE: Done since the order of the data is random
             indices = [i for i, t in enumerate(temperatures) if t == temp]
 
             avg_w = calc.add_mean([avg_winding_number[i] for i in indices])
+            std_w = calc.add_mean([std_winding_number[i] for i in indices])
             n = [number_measurements[i] for i in indices]
-            plot_dict[temp] = [calc.add_mean(avg_w), calc.add_std(avg_w), sum(n)]
+            errorbars_dict[temp] = [avg_w, std_w, sum(n)]
 
-        calc.plot_errorbars(plot_dict, f"${int(size)}^3$", color=c)
+            # For plotting lines between averages
+            avg_ws.append(avg_w)
 
-        # Plot the lines between the error bars
-        avg_windings = []
-        for t in sorted(list(unique_temperatures)):
-            avg_windings.append(np.mean(plot_dict[t]))
-        plt.plot(list(unique_temperatures), avg_windings, color=c)
 
-    plt.xlabel("Temperature")
-    plt.ylabel(r"$\langle W^2 \rangle \propto \frac{L}{T} \rho_s$")
-    plt.title(r"Superfluid density, $\rho_s$, determined in terms of the winding number on a 3D XY lattice")
-    plt.legend(loc=1)
+        calc.plot_errorbars(errorbars_dict, f"${int(size)}^3$", color=c, axis=ax)
+        ax.plot(unique_temperatures, avg_ws, color=c)
+
+        zoomed_data[size] = [unique_temperatures, avg_ws]
+        plot_dict[size] = errorbars_dict
+
+    # [x0, x1, y0, y1, zoom_factor]
+    zoomed_size = [0.330, 0.335, -0.1, 1.0, 3]
+    ticks = [[0.330, 0.333, 0.335], [0.0, 0.5, 1.0]]
+    # (x|y)0 refers to the lower left corner of the inset
+    # rel_size_(x|y) is relative the whole plot
+    # [rel_x0, rel_y0, rel_width, rel_height]
+    inset_position = [0.1, 0.5, 0.4, 0.4]
+    calc.plot_zoomed_inset(zoomed_data,
+                           zoomed_size,
+                           ax,
+                           colors,
+                           plot_dict,
+                           ticks=ticks,
+                           inset_position=inset_position)
+
+    ax.set_xlabel("Temperature")
+    ax.set_ylabel(r"$\langle W^2 \rangle \propto \frac{L}{T} \rho_s$")
+    ax.set_title(r"Average winding square on a 3D XY lattice")
+    ax.legend(loc=1)
     plt.show()
     # illu.save_figure("winding_number_Tc")

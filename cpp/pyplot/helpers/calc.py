@@ -17,6 +17,24 @@ from mpl_toolkits.axes_grid1.inset_locator import InsetPosition
 rc('font', **{'family': 'serif', 'serif': ['DejaVu Sans']})
 rc('text', usetex=True)
 
+def add_std(std):
+    """Calculate the standard deviation of a list of standard deviations
+
+    :std: 1xn Array - [std0, std1, ...]
+    :returns: Float - Square root of the average variance
+    """
+
+    variance = [np.power(s, 2) for s in std]
+    return np.sqrt(sum(variance)/len(variance))
+
+def add_mean(mean):
+    """Calculate the mean of a list of means
+
+    :mean: 1xn Array - [mean0, mean1, ...]
+    :returns: Float - sum(mean) / len(mean)
+    """
+    return sum(mean)/len(mean)
+
 def process_file(filename, key, xy):
     """Go through filename and split it into arrays
        NOTE: process_file assumes that both the data from key and xy are floats
@@ -78,50 +96,98 @@ def process_file(filename, key, xy):
 
     return out_dict
 
-def plot_errorbars(data_dict, label, color="#202020"):
+def plot_errorbars(data_dict, label=None, color="#202020", axis=None):
     """Plot Monte Carlo style error bars where yerr=std(y)/sqrt(number_measurements)
 
     :data_dict: dict - Assumed to be {x0: [avg(y0), std(y0), num_measurements(y0)], x1: ...}
     :label: string - label for the plot
     :color: string - color for the plot
+    :axis: Plot Object - Optional axis to plot on
     :returns: None
     """
     # To only label once
-    labeled = False
+    labeled = False if label is not None else True
+    # print(label)
+    # print(labeled)
     for x in data_dict:
 
         # NOTE: Naive. Breaks on "axe", "flex", ...
-        if 'x' in label:
-            label = label.format(x=x)
+        if label is not None:
+            if 'x' in label:
+                label = label.format(x=x)
 
         avg_y = data_dict[x][0]
         std_y = data_dict[x][1]
         num_measurements_y = data_dict[x][2]
 
+        if axis is None:
+            axis = plt
+
         if not labeled:
-            plt.errorbar(x, avg_y, yerr=std_y/np.sqrt(num_measurements_y),\
+            axis.errorbar(x, avg_y, yerr=std_y/np.sqrt(num_measurements_y),\
                 ecolor='gray', elinewidth=2, fmt=f'{color}', marker='.',\
                 linestyle="None", capsize=3, capthick=2, label=rf"{label}")
             labeled = True
         else:
-            plt.errorbar(x, avg_y, yerr=std_y/np.sqrt(num_measurements_y),\
+            axis.errorbar(x, avg_y, yerr=std_y/np.sqrt(num_measurements_y),\
                 ecolor='gray', elinewidth=2, fmt=f'{color}', marker='.',\
                 linestyle="None", capsize=3, capthick=2)
 
-def add_std(std):
-    """Calculate the standard deviation of a list of standard deviations
+def plot_zoomed_inset(data, zoomed_size, axis, colors, plot_errorbar=None, ticks=None, inset_position=None):
+    """Use a subplot to show an inset
 
-    :std: 1xn Array - [std0, std1, ...]
-    :returns: Float - Square root of the average variance
+    :data: dict - {key0: [x0, y0], ...} will be called plot() upon each key
+    :zoomed_size: 1x5 array - [xlim0, xlim1, ylim0, ylim1, zoom_factor], where to zoom in and how much
+    :axis: Plot Object - The original axis to plot the insert in
+    :colors: 1xn array - Strings of hex values, will be used on data and plot_errorbar
+    :plot_errorbar: 1x2 array - (OPTIONAL) [plot_dict, colors],
+                                will be called plot_errorbars upon each key
+    :plot_errorbar: 1x2 array - (OPTIONAL) [plot_dict, colors],
+                                will be called plot_errorbars upon each key
+    :ticks: 1x2 array - (OPTIONAL) [xticks, yticks],
+                        Set ticks, if None, hide all ticks
+    :inset_position: 1x2 array - (OPTIONAL) [relpos_lowerleftcorner_x, relpos_lowerleftcorner_y,
+                                 rel_width, rel_height],
+                                 Position of the inset, if None, loc=2
+    :returns: None
     """
+    # Get the axis
+    # Parameters: [original_axis, zoom_factor, location]
+    zoomed_axis = zoomed_inset_axes(axis, zoomed_size[-1], loc=2)
 
-    variance = [np.power(s, 2) for s in std]
-    return np.sqrt(sum(variance)/len(variance))
+    # If got an inset_position override default position
+    if inset_position is not None:
+        ip = InsetPosition(axis, inset_position)
+        zoomed_axis.set_axes_locator(ip)
 
-def add_mean(mean):
-    """Calculate the mean of a list of means
+    # data is plotted using ax.plot
+    if data:
+        c_id = 0
+        for key in data:
+            c_id += 1
+            c = colors[c_id % len(colors)]
+            zoomed_axis.plot(data[key][0], data[key][1], c=c)
 
-    :mean: 1xn Array - [mean0, mean1, ...]
-    :returns: Float - sum(mean) / len(mean)
-    """
-    return sum(mean)/len(mean)
+    # plot_errorbar is plotted using the function plot_errorbars
+    if plot_errorbar is not None:
+        c_id = 0
+        error_data = plot_errorbar
+        for key in error_data:
+            c_id += 1
+            c = colors[c_id % len(colors)]
+            plot_errorbars(error_data[key], color=c, axis=zoomed_axis)
+
+    # Apply limits
+    zoomed_axis.set_xlim(zoomed_size[0], zoomed_size[1])
+    zoomed_axis.set_ylim(zoomed_size[2], zoomed_size[3])
+
+    # Default to no ticks on the inset
+    if ticks is None:
+        plt.yticks(visible=False)
+        plt.xticks(visible=False)
+    else:
+        zoomed_axis.set_xticks(ticks[0])
+        zoomed_axis.set_yticks(ticks[1])
+
+    # This draws the lines between the inset and the zoomed in box of the original axis
+    mark_inset(axis, zoomed_axis, loc1=3, loc2=1, fc="none", ec="0.5")
