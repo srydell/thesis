@@ -119,5 +119,7 @@ def save_figure(figname, form = "pdf"):
     :form: String - postfix
     :returns: None
     """
-    plt.savefig(f"./plots/{figname}.{form}",\
-                bbox_inches='tight', format=form, dpi=1200)
+    plt.savefig(f"./plots/{figname}.{form}",
+                format=form, dpi=1200)
+    # plt.savefig(f"./plots/{figname}.{form}",
+    #             bbox_inches='tight', format=form, dpi=1200)

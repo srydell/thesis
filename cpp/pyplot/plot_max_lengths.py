@@ -9,6 +9,7 @@ Python Version:      3.7
 '''
 
 import numpy as np
+import random
 import matplotlib.pyplot as plt
 from matplotlib import rc
 from scipy.optimize import curve_fit
@@ -122,6 +123,36 @@ def wrong_function(x, a, b):
     """
     return a * np.power(x, 2) + b
 
+def bootstrap(fit_func, xdata, ydata, iterations=100):
+    """Perform bootstrap resampling and get the average and standard deviation from the optimal parameters
+
+    :fit_func: Function Object - To fit against
+    :xdata: 1xn array
+    :ydata: 1xn array
+    :returns: dict of size m - {average: std, ...}, m is the number of parameters to fit against in fit_func
+    """
+    opt_parameters, _ = curve_fit(fit_func, xdata, ydata)
+    # NOTE: Do not use [[]]*len(...) since this creates three references to the same []
+    samples = [[] for i in range(len(opt_parameters))]
+
+    new_xdata = [0 for i in range(len(xdata))]
+    new_ydata = [0 for i in range(len(ydata))]
+
+    for _ in range(iterations):
+        # Resample
+        for i in range(len(ydata)):
+            index_choice = random.randrange(0, len(xdata))
+            new_xdata[i] = xdata[index_choice]
+            new_ydata[i] = ydata[index_choice]
+
+        # Curve fit and store the samples
+        sampled_pars, _spcov = curve_fit(fit_func, new_xdata, new_ydata)
+
+        for i, sp in enumerate(sampled_pars):
+            samples[i].append(sp)
+
+    return {np.average(sample): np.std(sample) for sample in samples}
+
 def plot_syssize_vs_fit(data_dict):
     """Fit against the function loop_length = system_size^(D_H)
 
@@ -145,6 +176,9 @@ def plot_syssize_vs_fit(data_dict):
     # ydata
     loop_lengths = np.array(loop_lengths)
 
+    stderr_pars = bootstrap(fit_function, system_sizes, loop_lengths, 100)
+    dh_error = stderr_pars[list(stderr_pars.keys())[1]]
+
     opt_parameters, _pcov = curve_fit(fit_function, system_sizes, loop_lengths)
     correct_opt_parameters, _pcov = curve_fit(correct_function, system_sizes, loop_lengths)
     wrong_opt_parameters, _pcov = curve_fit(wrong_function, system_sizes, loop_lengths)
@@ -154,7 +188,7 @@ def plot_syssize_vs_fit(data_dict):
     # colors = ["#966842", "#f44747", "#eedc31", "#7fdb6a", "#0e68ce"]
     plt.loglog(xdata, fit_function(xdata, *opt_parameters),
                c=const.COLOR_MAP["blue"],
-               label=fr"$\propto L^{{ {opt_parameters[1]:.4f} }}$")
+               label=fr"$\propto L^{{ {opt_parameters[1]:.3f} \pm {dh_error:.2f} }}$")
     plt.loglog(xdata, correct_function(xdata, *correct_opt_parameters),
                c=const.COLOR_MAP["green"],
                label=r"$\propto L^{1.375}$")
@@ -162,7 +196,7 @@ def plot_syssize_vs_fit(data_dict):
                c=const.COLOR_MAP["red"],
                label=r"$\propto L^{2}$")
 
-    print(f"D_H = {opt_parameters[1]:.6}")
+    print(f"D_H = {opt_parameters[1]:.6} +- {dh_error:.2f}")
 
 if __name__ == '__main__':
     simulation_data = process_file("./data/loop_lengths128x128.txt")
@@ -177,7 +211,9 @@ if __name__ == '__main__':
                                np.std(simulation_data[size]),
                                len(simulation_data[size])]
 
-    calc.plot_errorbars(errorbar_data, label=r"$\bar{D}_H \pm \sigma_{\bar{D}_H}$", color=const.COLOR_MAP["black"])
+    calc.plot_errorbars(errorbar_data,
+                        # label=r"$\bar{D}_H \pm \sigma_{\bar{D}_H}$",
+                        color=const.COLOR_MAP["black"])
 
     plot_syssize_vs_fit(simulation_data)
 
@@ -188,5 +224,5 @@ if __name__ == '__main__':
 
     savefig=False
     if savefig:
-        illu.save_figure(f"maximum_loop_length_for_2D_Ising.png")
+        illu.save_figure(f"maximum_loop_length_for_2D_Ising")
     plt.show()

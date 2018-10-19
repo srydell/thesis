@@ -43,5 +43,6 @@ if __name__ == '__main__':
         ans = input(f"Save figure as: {figname}? ")
 
         if ans in 'yY':
-            plt.savefig(f"./plots/{figname}.{form}",\
-                        bbox_inches='tight', format=form, dpi=1200)
+            illu.save_figure(figname)
+            # plt.savefig(f"./plots/{figname}.{form}",\
+            #             bbox_inches='tight', format=form, dpi=1200)
