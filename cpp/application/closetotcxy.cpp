@@ -35,7 +35,7 @@ int main(/*int argc, char** argv*/) {
 
 				std::cout << "On length: " << length << "\n";
 				std::cout << "On temperature: " << T << "\n";
-;
+
 				// Create a new graph
 				int long seed = rand();
 				Graph lattice(dimension, length, seed + getpid());
