@@ -1,7 +1,7 @@
 \section{Monte Carlo Simulations}
 \label{sec:MonteCarloSims}
 
-
+% TODO: Write about Monte Carlo sims
 
 \section{Ergodicity}
 \label{sec:Ergodicity}
@@ -31,9 +31,128 @@ This describes an equal rate of flow into the state $a$ as out of it.
 
 % TODO: Write dividing W_ab and write about acceptance ratio.
 
-
 \section{Worm Algorithm}
 \label{sec:WormAlgorithm}
+
+% TODO: Write about worm algo from the article on Telegram
+
+
+
+\section{Graph Dividing Algorithm}
+\label{sec:GraphDivisonAlgorithm}
+
+\begin{figure}[h!]
+    \centering
+        \includegraphics[width=0.8\textwidth]{figures/graphDividing.pdf}
+    \caption{One step in the graph dividing algorithm where $l_i = 4$. $e^0_i$ and $e^1_i$ are drawn from site $s_i$. Summed permutations of $\{e^0_i, e^1_i\}$ give the starts for the next boxes. The next iteration of boxes are shown via the dividing dotted lines.}
+    \label{fig:graphdividingalgo}
+\end{figure}
+
+In order to calculate the box dimension the lattice need to be divided into boxes of decreasing size. A step by step instruction of a graph dividing algorithm is provided below, and an implementation in pseudocode is available in the Appendix at Section \ref{sec:pseudocodeboxdivisionalgo}.
+
+For brevity some abbreviations are introduced.
+
+\begin{equation*}
+    \begin{aligned}
+        d =& \ \text{dimension} &\quad l_i =& \ \text{side length of the current box}\\
+%
+        l_0 =& \ \text{side length of the} &\quad e_i^j =& \ \text{vector of length } l_i / 2 \\
+%
+             & \ \text{smallest box allowed} & & \text{ in the }j\text{'th direction} \\
+%
+        \text{perm}(v) =& \ \text{All permutations of } v &\quad s_i =& \ \text{starting site of the current box}
+    \end{aligned}
+\end{equation*}
+
+\begin{enumerate}
+    \item If $l_i \geq l_0$, go to 2, else stop.
+%
+    \item Save all sites in the current box, starting for $s_i$ going $l_i$ in $d$ directions.
+%
+    \item Find all starting points for new boxes.
+%
+    \begin{enumerate}[label=(\roman*)]
+%
+        \item Form the matrix $E = (e_i^0, e_i^1, \  \ldots, e_i^d)^T$
+%
+        \item For all vectors $v_k$ in perm$(0, 0, \ \ldots , 0)$, perm$(1, 0, \ \ldots , 0)$, \\ \ldots, perm$(1, 1, \ \ldots , 1)$, create the new start $s_k$ as $$s_k = v_k E$$
+%
+    \end{enumerate}
+%
+    \item For each start $s_k$:
+    \begin{enumerate}[label=(\roman*)]
+        \item $s_i = s_k$, $l_i = l_i / 2$
+        \item Go to 1.
+    \end{enumerate}
+%
+\end{enumerate}
+
+
+\section{Error Estimation}
+\label{sec:ErrorEst}
+
+In this thesis a number of error estimation techniques were used to know how much data was needed for each measurement. In this section the techniques will be described intuitively.
+
+\subsection{Monte Carlo error estimation}
+\label{subsec:MonteCarloErrorEst}
+
+Given a Monte Carlo simulation where polling of some quantity $A$ has been done $N$ times an estimation of the expectation value of $A$ is
+
+\begin{equation}
+    \bar A = \frac{1}{N} \sum_{i = 1}^{N} A_i
+\end{equation}
+
+where each sampling was labeled $A_i$. To show that this is an unbiased estimator the expectation value of the difference between the estimation and the real value $\langle A \rangle$ is used.
+
+\begin{align}
+    \langle \bar A - \langle A \rangle \rangle &= \langle \bar A \rangle - \langle A \rangle \\
+%
+    &= \left \langle \frac{1}{N} \sum_{i = 1}^{N} A_i \right \rangle - \langle A \rangle \\
+%
+    &= \frac{1}{N} \sum_{i = 1}^{N} \langle A_i \rangle - \langle A \rangle \\
+\label{eq:unbiasedEst}
+%
+    &= \frac{1}{N} \sum_{i = 1}^{N} \langle A \rangle - \langle A \rangle \\
+%
+    &= \frac{1}{N} N \langle A \rangle - \langle A \rangle = 0
+\end{align}
+
+where the fact that $A_i$ is a random sampling from the distribution of $A$ was used in (\ref{eq:unbiasedEst}).
+
+The standard deviation of this estimate can be calculated through the variance.
+
+\begin{align}
+    \sigma_{\bar A}^{2} &= V\left( \bar A - \langle A \rangle \right ) \\
+%
+    &= V\left(\bar A\right) - V\left(\langle A \rangle\right) \\
+%
+    &= \{ \langle A \rangle \ \text{is a constant} \Rightarrow V(\langle A \rangle) = 0 \} \\
+%
+    &= V \left ( \frac{1}{N} \sum_{i = 1}^{N} A_i \right ) \\
+%
+    &= \{ \text{Monte Carlo simulations give independent samples} \} \\
+%
+    &= \frac{1}{N^2} \sum_{i = 1}^{N} V(A_i) \\
+%
+    &= \{ V(A_i) = \sigma_{A}^2 \} \\
+%
+    &= \frac{1}{N^2} N \sigma_{A}^2 = \frac{\sigma_{A}^2}{N}
+\end{align}
+
+or
+
+\begin{equation}
+    \sigma_{\bar A} = \frac{\sigma_A}{\sqrt{N}}
+\end{equation}
+
+So the standard error in this estimation decreases as $N^{-1/2}$.
+
+\subsection{Bootstrap}
+\label{subsec:Bootstrap}
+
+Bootstrap is a resampling method to examine a probability distribution. In this thesis it was used to estimate the error propagation of parameters in curve fitting.
+
+Given a set $\bm x$ of $N$ measurements from an unknown distribution $\hat \phi$, some statistical calculation of interest can be done as $\theta = s(\bm x)$. A resampling $\bm x_0$ of $\bm x$ comprised of $N$ random measurements from $\bm x$ (where one measurement can be included several times), can then be used to calculate $\theta^*_0 = s(\bm x_0)$. Repeating this $N_B$ times gives an estimate $\theta^* = (\theta^*_0, \theta^*_1, ..., \theta^*_{N_B})$ of the distribution $\hat \theta$. Assuming $N_B$ is large then, by the central limit theorem, $\hat \theta$ is a normal distribution with some standard deviation $\sigma_\theta$ that can be used as an error estimation for $\theta$.
 
 \section{Testing}
 \label{sec:Testing}
@@ -57,3 +176,5 @@ When multiple unit tests are tested together, it is called integration testing. 
 Rerunning the relevant tests in a continuous manner after each update is called regression testing. This ensures that, however many unintended consequences were introduced during the update, the expected behaviour of the program is still intact.
 
 This was done by writing a `hook' such that, whenever a piece of code were recompiled, the relevant tests were subsequently compiled and run. With sufficient tests in place, the correctness of the code after the update was assumed.
+
+

@@ -1,65 +1,29 @@
-\section{Error Estimation}
-\label{sec:ErrorEst}
+\begin{figure}[h!]
+    \centering
+        \includegraphics[width=0.8\textwidth]{figures/susceptibility128x128Ising.pdf}
+    \caption{Scaling of susceptibility at $T_c$ on an Ising lattice of varying sizes. The measured critical exponent $\eta = 0.26 \pm 0.002$ is compared to the theoretical value $\eta_{Ising} = 0.25$. The red line labeled $\propto L^2$ is there for comparison.}
+    \label{fig:results_isingsusc}
+\end{figure}
 
-In this thesis a number of error estimation techniques were used to know how much data was needed for each measurement. In this section the techniques will be described intuitively.
+\begin{figure}[h!]
+    \centering
+        \includegraphics[width=0.8\textwidth]{figures/box_dim_128x128Ising.pdf}
+    \caption{Estimation of the Hausdorff dimension of the longest worm loop on a $128^2$ Ising lattice at $T_c$ using the box dimension. The $x$ axis show the size of one box relative to the side length of the lattice. The green line indicates the theoretical dimension of the geometric Ising cluster, $D_H^G = 1.375$.}
+    \label{fig:results_boxdimension}
+\end{figure}
 
-\subsection{Monte Carlo error estimation}
-\label{subsec:MonteCarloErrorEst}
+\begin{figure}[h!]
+    \centering
+        \includegraphics[width=0.8\textwidth]{figures/maximum_loop_length_for_2D_Ising.pdf}
+    \caption{Log-log plot of the longest worm loop at $T_c$ on an Ising lattice of varying sizes. The measured scaling factor is $1.386 \pm 0.02$ compared to the theoretical Hausdorff dimension of $1.375$. The red plot labeled $\propto L^2$ is there for comparison.}
+    \label{fig:results_maxloopdimension}
+\end{figure}
 
-Given a Monte Carlo simulation where polling of some quantity $A$ has been done $N$ times an estimation of the expectation value of $A$ is
 
-\begin{equation}
-    \bar A = \frac{1}{N} \sum_{i = 1}^{N} A_i
-\end{equation}
+\begin{figure}[h!]
+    \centering
+        \includegraphics[width=0.8\textwidth]{figures/winding_number_Tc.pdf}
+    \caption{Average winding number squared, $\langle W^2 \rangle \propto \rho_s$, plotted on a 3D XY lattice of varying sizes. Due to the Villain approximation the transition is flipped such that $\rho_s \neq 0$ for $T > T_c$, and $T_c$ is translated from $\approx 2.2$ to $\approx 0.333$ indicated by the intersection.}
+    \label{fig:results_windingnumberTc}
+\end{figure}
 
-where each sampling was labeled $A_i$. To show that this is an unbiased estimator the expectation value of the difference between the estimation and the real value $\langle A \rangle$ is used.
-
-\begin{align}
-    \langle \bar A - \langle A \rangle \rangle &= \langle \bar A \rangle - \langle A \rangle \\
-%
-    &= \left \langle \frac{1}{N} \sum_{i = 1}^{N} A_i \right \rangle - \langle A \rangle \\
-%
-    &= \frac{1}{N} \sum_{i = 1}^{N} \langle A_i \rangle - \langle A \rangle \\
-\label{eq:unbiasedEst}
-%
-    &= \frac{1}{N} \sum_{i = 1}^{N} \langle A \rangle - \langle A \rangle \\
-%
-    &= \frac{1}{N} N \langle A \rangle - \langle A \rangle = 0
-\end{align}
-
-where the fact that $A_i$ is a random sampling from the distribution of $A$ was used in (\ref{eq:unbiasedEst}).
-
-The standard deviation of this estimate can be calculated through the variance.
-
-\begin{align}
-    \sigma_{\bar A}^{2} &= V\left( \bar A - \langle A \rangle \right ) \\
-%
-    &= V\left(\bar A\right) - V\left(\langle A \rangle\right) \\
-%
-    &= \{ \langle A \rangle \ \text{is a constant} \Rightarrow V(\langle A \rangle) = 0 \} \\
-%
-    &= V \left ( \frac{1}{N} \sum_{i = 1}^{N} A_i \right ) \\
-%
-    &= \{ \text{Monte Carlo simulations give independent samples} \} \\
-%
-    &= \frac{1}{N^2} \sum_{i = 1}^{N} V(A_i) \\
-%
-    &= \{ V(A_i) = \sigma_{A}^2 \} \\
-%
-    &= \frac{1}{N^2} N \sigma_{A}^2 = \frac{\sigma_{A}^2}{N}
-\end{align}
-
-or
-
-\begin{equation}
-    \sigma_{\bar A} = \frac{\sigma_A}{\sqrt{N}}
-\end{equation}
-
-So the standard error in this estimation decreases as $N^{-1/2}$.
-
-\subsection{Bootstrap}
-\label{subsec:Bootstrap}
-
-Bootstrap is a resampling method to examine a probability distribution. In this thesis it was used to estimate the error propagation of parameters in curve fitting.
-
-Given a set $\bm x$ of $N$ measurements from an unknown distribution $\hat \phi$, some statistical calculation of interest can be done as $\theta = s(\bm x)$. A resampling $\bm x_0$ of $\bm x$ comprised of $N$ random measurements from $\bm x$ (where one measurement can be included several times), can then be used to calculate $\theta^*_0 = s(\bm x_0)$. Repeating this $N_B$ times gives an estimate $\theta^* = (\theta^*_0, \theta^*_1, ..., \theta^*_{N_B})$ of the distribution $\hat \theta$. Assuming $N_B$ is large then, by the central limit theorem, $\hat \theta$ is a normal distribution with some standard deviation $\sigma_\theta$ that can be used as an error estimation for $\theta$.
