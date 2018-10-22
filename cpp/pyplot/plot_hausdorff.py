@@ -19,7 +19,7 @@ rc('text', usetex=True)
 
 if __name__ == '__main__':
     system_size = 128
-    # {system_size: [avg(D_H), std(D_H)], ...}
+    # {box_size: [avg(D_H), std(D_H)], ...}
     simulation_data = calc.process_file(f"./data/hdims/box_size{system_size}.txt",
                                         key=r"box_size=(\d*\.?\d*):",
                                         xy=r"(\d*\.?\d*) (\d*\.?\d*e?-?\d*)")
@@ -33,6 +33,8 @@ if __name__ == '__main__':
     for size in simulation_data:
         avg_dh = simulation_data[size][0][0]
         std_dh = simulation_data[size][1][0]
+        if size == min(list(simulation_data)):
+            print(f"D_H = {avg_dh:.5f} += {std_dh:.0e}")
         if not labeled:
 
             plt.errorbar(size / system_size, avg_dh, yerr=std_dh,\
@@ -69,7 +71,7 @@ if __name__ == '__main__':
     plt.xlim(ranges)
     plt.xlabel("Relative size of box division")
     plt.ylabel(r"$D_H$")
-    plt.title(rf"Geometric Hausdorff dimension on a ${system_size}^2$ Ising lattice")
+    plt.title(rf"Geometric Hausdorff dimension, $D_H$, on a ${system_size}^2$ Ising lattice")
     plt.legend(loc=2)
     plt.show()
     # illu.save_figure(f"box_dim_{system_size}x{system_size}Ising")

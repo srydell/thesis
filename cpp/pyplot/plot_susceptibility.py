@@ -253,12 +253,12 @@ if __name__ == '__main__':
 
     plot_syssize_vs_fit(simulation_data)
 
-    plt.xticks(list(simulation_data.keys()),
-               list(simulation_data.keys()))
+    # plt.xticks(list(simulation_data.keys()),
+    #            list(simulation_data.keys()))
 
     plt.legend()
 
-    savefig = False
+    savefig = True
     if savefig:
         illu.save_figure("susceptibility128x128Ising")
-    plt.show()
+    # plt.show()

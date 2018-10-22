@@ -8,8 +8,10 @@ Python Version:      3.7
 
 import re
 import numpy as np
+import random
 import matplotlib.pyplot as plt
 from matplotlib import rc
+from scipy.optimize import curve_fit
 from mpl_toolkits.axes_grid1.inset_locator import zoomed_inset_axes
 from mpl_toolkits.axes_grid1.inset_locator import mark_inset
 from mpl_toolkits.axes_grid1.inset_locator import InsetPosition
@@ -149,7 +151,7 @@ def plot_zoomed_inset(data, zoomed_size, axis, colors, plot_errorbar=None, ticks
     :inset_position: 1x2 array - (OPTIONAL) [relpos_lowerleftcorner_x, relpos_lowerleftcorner_y,
                                  rel_width, rel_height],
                                  Position of the inset, if None, loc=2
-    :returns: None
+    :returns: Plot Object - Inset axis
     """
     # Get the axis
     # Parameters: [original_axis, zoom_factor, location]
@@ -191,3 +193,65 @@ def plot_zoomed_inset(data, zoomed_size, axis, colors, plot_errorbar=None, ticks
 
     # This draws the lines between the inset and the zoomed in box of the original axis
     mark_inset(axis, zoomed_axis, loc1=3, loc2=1, fc="none", ec="0.5")
+    return zoomed_axis
+
+def get_intersection(l0, l1):
+    """Return intersection between line l0 and line l1
+
+    :l0: 1x4 array of numbers - [x0, x1, y0, y1]
+    :l1: 1x4 array of numbers - [x2, x3, y2, y3]
+    :returns: 1x2 array of numbers - [x_intersect, y_intersect
+    """
+    # Source: https://en.wikipedia.org/wiki/Line–line_intersection
+
+    denominator = (l0[0] - l0[1]) * (l1[2] - l1[3]) -\
+                  (l0[2] - l0[3]) * (l1[0] - l1[1])
+
+    x_nominator = (l0[0] * l0[3] - l0[2] * l0[1]) * (l1[0] - l1[1]) -\
+                 (l1[0] * l1[3] - l1[2] * l1[1]) * (l0[0] - l0[1])
+    y_nominator = (l0[0] * l0[3] - l0[2] * l0[1]) * (l1[2] - l1[3]) -\
+                 (l1[0] * l1[3] - l1[2] * l1[1]) * (l0[2] - l0[3])
+
+    return [x_nominator / denominator, y_nominator / denominator]
+
+def weighted_average(array, weights):
+    """Calculate the weighted average of array
+
+    weighted_average = sum(w_i * x_i) / sum(w_i)
+
+    :array: 1xn array
+    :weights: 1xn array
+    :returns: Number - The weighted average of array
+    """
+    assert len(array) == len(weights)
+    return sum([x * w for x, w in zip(array, weights)]) / sum(weights)
+
+def bootstrap(fit_func, xdata, ydata, iterations=100):
+    """Perform bootstrap resampling and get the average and standard deviation from the optimal parameters
+
+    :fit_func: Function Object - To fit against
+    :xdata: 1xn array
+    :ydata: 1xn array
+    :returns: dict of size m - {average: std, ...}, m is the number of parameters to fit against in fit_func
+    """
+    opt_parameters, _ = curve_fit(fit_func, xdata, ydata)
+    # NOTE: Do not use [[]]*len(...) since this creates three references to the same []
+    samples = [[] for i in range(len(opt_parameters))]
+
+    new_xdata = [0 for i in range(len(xdata))]
+    new_ydata = [0 for i in range(len(ydata))]
+
+    for _ in range(iterations):
+        # Resample
+        for i in range(len(ydata)):
+            index_choice = random.randrange(0, len(xdata))
+            new_xdata[i] = xdata[index_choice]
+            new_ydata[i] = ydata[index_choice]
+
+        # Curve fit and store the samples
+        sampled_pars, _spcov = curve_fit(fit_func, new_xdata, new_ydata)
+
+        for i, sp in enumerate(sampled_pars):
+            samples[i].append(sp)
+
+    return {np.average(sample): np.std(sample) for sample in samples}

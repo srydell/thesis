@@ -121,7 +121,7 @@ def wrong_function(x, a, b):
     :b: Float - Unknown data
     :returns: Float
     """
-    return a * np.power(x, 2) + b
+    return a * np.power(x, 2)
 
 def bootstrap(fit_func, xdata, ydata, iterations=100):
     """Perform bootstrap resampling and get the average and standard deviation from the optimal parameters
@@ -185,14 +185,16 @@ def plot_syssize_vs_fit(data_dict):
 
     # Used for plotting against the fitted function
     xdata = np.linspace(min(system_sizes), max(system_sizes), 50)
+    # Used to add to the comparison data
+    min_constant = min(fit_function(xdata, *opt_parameters))
     # colors = ["#966842", "#f44747", "#eedc31", "#7fdb6a", "#0e68ce"]
     plt.loglog(xdata, fit_function(xdata, *opt_parameters),
                c=const.COLOR_MAP["blue"],
                label=fr"$\propto L^{{ {opt_parameters[1]:.3f} \pm {dh_error:.2f} }}$")
     plt.loglog(xdata, correct_function(xdata, *correct_opt_parameters),
                c=const.COLOR_MAP["green"],
-               label=r"$\propto L^{1.375}$")
-    plt.loglog(xdata, wrong_function(xdata, *wrong_opt_parameters),
+               label=r"$\propto L^{D_H^G}$")
+    plt.loglog(xdata, [w + min_constant for w in wrong_function(xdata, *wrong_opt_parameters)],
                c=const.COLOR_MAP["red"],
                label=r"$\propto L^{2}$")
 
