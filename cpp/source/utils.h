@@ -22,7 +22,7 @@
 * @return: decltype(auto)
 */
 template<typename TString>
-decltype(auto) GetUniqueFile(const TString& filename) {
+auto GetUniqueFile(const TString& filename) -> decltype(auto) {
 	std::ofstream file;
 	std::stringstream ss;
 	ss <<  filename << getpid();

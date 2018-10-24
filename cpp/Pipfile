@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 matplotlib = "*"
 scipy = "*"
+"pypdf2" = "*"
 
 [dev-packages]
 

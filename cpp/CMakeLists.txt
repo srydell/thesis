@@ -65,3 +65,15 @@ target_link_libraries(measure_graphdiv PRIVATE XYGraph)
 add_executable(convert_warmups application/convert_warmups.cpp)
 target_include_directories(convert_warmups PRIVATE source source/xy)
 target_link_libraries(convert_warmups PRIVATE XYGraph)
+
+# Set gen_frames executable
+# Generates a set of xy graph files which will be used for animation
+add_executable(gen_frames application/gen_frames.cpp)
+target_include_directories(gen_frames PRIVATE source source/xy)
+target_link_libraries(gen_frames PRIVATE XYGraph)
+
+# Set gen_frames_ising executable
+# Generates a set of xy graph files which will be used for animation
+add_executable(gen_frames_ising application/gen_frames_ising.cpp)
+target_include_directories(gen_frames_ising PRIVATE source source/Ising)
+target_link_libraries(gen_frames_ising PRIVATE IsingGraph)
