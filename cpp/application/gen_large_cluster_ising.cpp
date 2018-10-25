@@ -43,9 +43,16 @@ bool PosXDir(const int site0, const int site1, const int length) {
 	return 0;
 }
 
-void SaveGraphToFile(const std::string& filename, Graph& lattice, const WNENS& data, bool debug) {
+auto GetFile(const std::string& filename) -> decltype(auto) {
 	std::ofstream file;
-	file.open(filename, std::ios_base::out);
+	std::stringstream ss;
+	ss << "animation/ising/large_cluster/" <<  filename;
+	file.open(ss.str());
+	return file;
+}
+
+void SaveGraphToFile(const std::string& filename, Graph& lattice, const WNENS& data, bool debug) {
+	auto file = GetFile(filename);
 
 	// Write energy and winding_number
 	{
@@ -166,13 +173,23 @@ int IsingSimulation(Graph & lattice, double K, int current_frame, int max_frame,
 	return current_frame;
 }
 
-auto GetFile(const std::string& filename) -> decltype(auto) {
-	std::ofstream file;
-	std::stringstream ss;
-	ss << "animation/ising/" <<  filename;
-	file.open(ss.str());
-	return file;
+void RemoveAllBut(Graph& lattice, const std::vector<int>& exceptv) {
+	int l = lattice.GetLength();
+	int d = lattice.GetDimension();
+	for (int i = 0; i < std::pow(l, d); ++i) {
+		// If not in vector
+		if (std::find(exceptv.begin(), exceptv.end(), i) == exceptv.end()) {
+			std::vector<int> neighbours;
+			lattice.GetLinkedNeighbours(i, neighbours);
+			for (auto& n : neighbours) {
+				// Know these are 1 before since GetLinkedNeighbours,
+				// so a switch turns them into 0
+				lattice.SwitchLinkBetween(i, n);
+			}
+		}
+	}
 }
+
 int main() {
 	try {
 		int nulltime = time(nullptr);
@@ -183,50 +200,27 @@ int main() {
 		constexpr double T = 2.269185314213;
 		constexpr double K = 1/T;
 		constexpr int dimension = 2;
-		constexpr int length = 8;
+		constexpr int length = 128;
+		// constexpr int length = 8;
 
 		// Create a new graph
 		// const int long seed = rand();
 		// std::cout << seed << "\n";
-		// Good enough seed. Freeze frame at ~350
+		// Good enough seed
 		constexpr int long seed = 1253900500;
 		Graph lattice(dimension, length, seed);
 
 		bool only_return_on_loop = 1;
 		bool save_graph = 0;
-		constexpr int warmup_runs = 100'000 * length;
+		constexpr int warmup_runs = 500'000;
 		for (int i = 0; i < warmup_runs; ++i) {
 			IsingSimulation(lattice, K, 0, 0, save_graph, only_return_on_loop);
 		}
 		std::cout << "Warmed up" << "\n";
 
-		only_return_on_loop = 0;
-		save_graph = 1;
-		constexpr int number_of_frames = 350;
-		int current_frame = 0;
-		while (current_frame < number_of_frames) {
-			std::cout << "Current frame: " << current_frame << "\n";
-			current_frame = IsingSimulation(lattice, K, current_frame,
-					number_of_frames, save_graph, only_return_on_loop);
-		}
-
 		// This will store {Cluster index: [sites_in_cluster]}
 		std::unordered_map<int, std::vector<int>> clusters;
 		lattice.HKIndex(clusters);
-
-		// Split up the graph into boxes of decreasing sizes
-		std::unordered_map<int, std::vector<int>> blocks;
-		lattice.DivideGraph(blocks);
-
-		auto blocks_file = GetFile("blocks");
-		for (auto& key_list : blocks) {
-			if (key_list.first != length) {
-				blocks_file << "block_number=" << key_list.first << "\n";
-				for (auto& site : key_list.second) {
-					blocks_file << site << "\n";
-				}
-			}
-		}
 
 		// This will store {Cluster index: Loop lengths}
 		std::unordered_map<int, int> loop_lengths;
@@ -239,6 +233,11 @@ int main() {
 		for (auto& s : largest_worm) {
 			largest_worm_file << s << "\n";
 		}
+
+		RemoveAllBut(lattice, largest_worm);
+
+		// SaveGraphToFile(const std::string& filename, Graph& lattice, const WNENS& data, bool debug) {
+		SaveGraphToFile("largest_cluster", lattice, {0, 0, 0}, 0);
 
 	} catch(std::string& error) {
 		std::cout << error << "\n";

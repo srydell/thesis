@@ -12,7 +12,6 @@ import helpers.illustrations as illu
 import helpers.animate as ani
 import matplotlib.pyplot as plt
 import numpy as np
-import matplotlib.patches as patches
 
 def plot_setup(size, pltlattice=True):
     """Setup 2d ising plot
