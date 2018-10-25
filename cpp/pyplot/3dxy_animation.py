@@ -26,18 +26,17 @@ if __name__ == '__main__':
     c = const.COLOR_MAP["red"]
     pdf_frames = []
     # TODO: Change here for making moving graph
-    # current_frame = -1
+    current_frame = -1
     # max_angle = 20
     max_angle = 360
     # TODO: Change here for making moving graph
-    # for angle in np.arange(0, max_angle, 0.5):
-    angle = 30
-    for frame in range(max_angle * 2):
-    # for frame in range(1):
+    for angle in np.arange(0, max_angle, 0.5):
+    # angle = 30
+    # for frame in range(max_angle * 2):
 
         # TODO: Change here for making moving graph
-        # current_frame += 1
-        current_frame = frame
+        current_frame += 1
+        # current_frame = frame
 
         print("\n=========================")
         print(f"On frame number: {current_frame}")
@@ -56,16 +55,16 @@ if __name__ == '__main__':
         for site in sites:
             site.plot_arrows_to_neighbours(ax, system_size, color=c)
 
-        print("Assuming a test run. Quitting...")
-        quit()
+        # print("Assuming a test run. Quitting...")
+        # quit()
 
         illu.save_figure(f"frames/xy/{current_frame:03}")
         pdf_frames.append(f"plots/frames/xy/{current_frame:03}.pdf")
         ax.cla()
 
     # TODO: Change here for making moving graph
-    # output_file = "plots/3dxy_animation"
-    output_file = "plots/3dxy_animation_still"
+    output_file = "plots/3dxy_animation_test"
+    # output_file = "plots/3dxy_animation_still"
 
     print(f"Merging the pdfs into {output_file}.pdf")
     ani.merge_pdfs(pdf_frames, output_file)

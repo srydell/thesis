@@ -40,7 +40,7 @@ def draw_arrow(x0, x1, axis, color, style, weight):
     elif len(x0) == 2:
         axis.plot([x0[0], x1[0]],
                   [x0[1], x1[1]],
-                  c=color, linewidth=weight * 4)
+                  c=color, linewidth=weight * 2)
 
 def plot_lattice(limit, color, axis=None, size=20, d=3):
     """Plot a square lattice from the points x, y

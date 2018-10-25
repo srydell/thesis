@@ -90,6 +90,10 @@ def process_file(filename, key, xy):
             if xy_match:
                 for i in range(num_xy_groups):
                     x = float(xy_match.group(i + 1))
+
+                    if current_key not in out_dict:
+                        out_dict[current_key] = [[] for i in range(num_xy_groups)]
+
                     # Save the data under the current system size
                     out_dict[current_key][i].append(x)
 
