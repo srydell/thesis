@@ -77,3 +77,9 @@ target_link_libraries(gen_frames PRIVATE XYGraph)
 add_executable(gen_frames_ising application/gen_frames_ising.cpp)
 target_include_directories(gen_frames_ising PRIVATE source source/Ising)
 target_link_libraries(gen_frames_ising PRIVATE IsingGraph)
+
+# Set gen_large_cluster_ising executable
+# Generates a set of xy graph files which will be used for animation
+add_executable(gen_large_cluster_ising application/gen_large_cluster_ising.cpp)
+target_include_directories(gen_large_cluster_ising PRIVATE source source/Ising)
+target_link_libraries(gen_large_cluster_ising PRIVATE IsingGraph)
