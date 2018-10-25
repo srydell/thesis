@@ -29,6 +29,7 @@ endif()
 
 include(SetupLibraries)
 include(SetupTests)
+include(SetupBench)
 
 # Set IsingWorm executable
 add_executable(IsingWorm application/isingmain.cpp)
@@ -83,3 +84,10 @@ target_link_libraries(gen_frames_ising PRIVATE IsingGraph)
 add_executable(gen_large_cluster_ising application/gen_large_cluster_ising.cpp)
 target_include_directories(gen_large_cluster_ising PRIVATE source source/Ising)
 target_link_libraries(gen_large_cluster_ising PRIVATE IsingGraph)
+
+# Set testbench executable
+# Generates a set of xy graph files which will be used for animation
+add_executable(graph-bench source/benchmark/bench_divgraph.cpp)
+target_include_directories(graph-bench PRIVATE source source/xy)
+target_link_libraries(graph-bench PRIVATE bench)
+target_link_libraries(graph-bench PRIVATE XYGraph)
