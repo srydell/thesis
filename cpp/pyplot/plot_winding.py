@@ -24,7 +24,7 @@ if __name__ == '__main__':
             key=r"L=(\d+):", xy=r"(\d*\.?\d*) (\d*\.?\d*) (\d*\.?\d*) (\d*\.?\d*)")
 
     # Should the zoomed inset be plotted?
-    zoomed = True
+    zoomed = False
 
     # Necessary for the zoomed inset
     fig, ax = plt.subplots()
@@ -154,5 +154,5 @@ if __name__ == '__main__':
     if zoomed:
         filename += "_zoomed"
         ax.set_xticks([0.32, 0.33, 0.34])
-    illu.save_figure(filename)
-    # plt.show()
+    # illu.save_figure(filename)
+    plt.show()
