@@ -18,7 +18,18 @@ from scipy.optimize import curve_fit
 rc('font', **{'family': 'serif', 'serif': ['DejaVu Sans']})
 rc('text', usetex=True)
 
-def fit_func(x, a, b, c):
+def fit_func_linear(x, a, b, c):
+    """y = a * x^b + c
+
+    :x: Know input
+    :a: Unknown fit data
+    :b: Unknown fit data
+    :c: Unknown fit data
+    :returns: a * x^b + c
+    """
+    return a * np.power(x, b) + c
+
+def fit_func_log(x, a, b, c):
     """y = a * log2(x) * x^b + c
 
     :x: Know input
@@ -27,7 +38,8 @@ def fit_func(x, a, b, c):
     :c: Unknown fit data
     :returns: a * log2(x) * x^b + c
     """
-    return a * np.power(x, b) + c
+    return a * np.log2(x) * np.power(x, b) + c
+
 
 if __name__ == '__main__':
     dimension = 2
@@ -48,20 +60,32 @@ if __name__ == '__main__':
     cpu_time = np.array(cpu_time)
     sites = np.array(sites)
 
-    # fit_data = calc.bootstrap(fit_func, sites, cpu_time, 400)
+    # fit_data_linear = calc.bootstrap(fit_func_linear, sites, cpu_time, 400)
+    # fit_data_log = calc.bootstrap(fit_func_log, sites, cpu_time, 400)
     # print(fit_data)
     # quit()
 
-    ydata = fit_func(sites, 0.07, 1.004, 0.01)
-    plt.loglog(sites, ydata,
+    ydata_linear = fit_func_linear(sites, 0.07, 1.004, 0.01)
+    plt.loglog(sites, ydata_linear,
              c=const.COLOR_MAP["green"],
+             # linestyle="--",
              linewidth=2,
-             label=r"$\propto t^{1.0 \pm 0.05}$")
+             label=r"$\propto n^{1.01 \pm 0.05}$")
+
+    # # a * np.log2(x) * np.power(x, b) + c
+    # ydata_log = fit_func_log(sites, 0.02, 0.88, 0.26)
+    # plt.loglog(sites, ydata_linear,
+    #          c=const.COLOR_MAP["blue"],
+    #          linestyle=":",
+    #          linewidth=2,
+    #          label=r"$\propto \log_2(n) n^{0.88 \pm 0.05}$")
+
     plt.scatter(sites, cpu_time,
                 c=const.COLOR_MAP["black"],
                 s=15,
                 label=r"$\bar t$")
 
+    # How many of the smallest points should be excluded from the plot
     i = 0
     plt.xticks(sites[i:], [rf"${int(s)}^{dimension}$" for s in sizes[i:]])
     plt.yticks([], [])
