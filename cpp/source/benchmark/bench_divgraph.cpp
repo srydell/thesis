@@ -14,12 +14,13 @@ static void BM_DivideGraph(benchmark::State& state) {
 	std::unordered_map<int, std::vector<int>> blocks;
 
 	for (auto _ : state) {
+		benchmark::DoNotOptimize(blocks);
 		lattice.DivideGraph(blocks);
+		benchmark::ClobberMemory();
 	}
 }
 // Register the function as a benchmark
-BENCHMARK(BM_DivideGraph)->ComputeStatistics("max", [](const std::vector<double>& v) -> double {
-		    return *(std::max_element(std::begin(v), std::end(v)));
-			  })->RangeMultiplier(2)->Range(4, 4<<3);
+// BENCHMARK(BM_DivideGraph)->RangeMultiplier(2)->Range(4, 4<<5);
+BENCHMARK(BM_DivideGraph)->RangeMultiplier(2)->Range(4, 4<<2);
 
 BENCHMARK_MAIN();
