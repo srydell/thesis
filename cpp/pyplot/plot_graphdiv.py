@@ -45,7 +45,7 @@ if __name__ == '__main__':
     dimension = 2
     # {box_size: [avg(D_H), std(D_H)], ...}
     # BM_DivideGraph/4        12078 ns      12064 ns      58434
-    simulation_data = calc.process_file(f"./benchie.txt",
+    simulation_data = calc.process_file(f"./data/benchmark_graphdiv.txt",
                                         key=r"xxxx",
                                         xy=r"BM_DivideGraph/(\d*\.?\d*)\s*(\d*\.?\d*) ns\s*(\d*\.?\d*) ns \s* (\d*\.?\d*)")
 

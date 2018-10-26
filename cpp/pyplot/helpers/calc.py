@@ -168,7 +168,7 @@ def plot_zoomed_inset(data, zoomed_size, axis, colors, plot_errorbar=None, ticks
 
     # data is plotted using ax.plot
     if data:
-        c_id = 0
+        c_id = -1
         for key in data:
             c_id += 1
             c = colors[c_id % len(colors)]

@@ -18,19 +18,19 @@ rc('font', **{'family': 'serif', 'serif': ['DejaVu Sans']})
 rc('text', usetex=True)
 
 if __name__ == '__main__':
-    # simulation_data = calc.process_file("./data/windingnum_tempXY",
-    #         key=r"L=(\d+):", xy=r"(\d*\.?\d*) (\d*\.?\d*) (\d*\.?\d*)")
-    simulation_data = calc.process_file("./data/xy_winding.txt",
+    # simulation_data = calc.process_file("./data/xy_winding.txt",
+    #         key=r"L=(\d+):", xy=r"(\d*\.?\d*) (\d*\.?\d*) (\d*\.?\d*) (\d*\.?\d*)")
+    simulation_data = calc.process_file("../winding",
             key=r"L=(\d+):", xy=r"(\d*\.?\d*) (\d*\.?\d*) (\d*\.?\d*) (\d*\.?\d*)")
 
     # Should the zoomed inset be plotted?
-    zoomed = False
+    zoomed = True
 
     # Necessary for the zoomed inset
     fig, ax = plt.subplots()
 
     colors = const.GRADIENT["blue"]
-    c_id = 0
+    c_id = -1
     plot_dict = {}
     zoomed_data = {}
     # Approximations of Tc
@@ -53,10 +53,10 @@ if __name__ == '__main__':
         unique_temperatures = sorted(list(set(temperatures)))
         # Plotting very {low,high} temperatures makes the zoomed_inset look weird
         if zoomed:
-            unique_temperatures.remove(0.1)
-            unique_temperatures.remove(0.31)
-            unique_temperatures.remove(0.35)
-            unique_temperatures.remove(0.6)
+            # temp_to_remove = [0.1, 0.31, 0.35, 0.6]
+            # t = [0.332, 0.333, 0.334]
+            temp_to_keep = [0.31, 0.32, 0.33, 0.331, 0.332, 0.333, 0.334, 0.335, 0.34, .35]
+            unique_temperatures = [ut for ut in unique_temperatures if ut in temp_to_keep]
 
         # Create the data in the format that calc.plot_errorbars wants
         avg_ws = []
@@ -138,6 +138,7 @@ if __name__ == '__main__':
         for axis in [ax, zoomed_axis]:
             axis.plot([avg_tc, avg_tc],
                       [zoomed_size[2], zoomed_size[3]],
+                      linewidth=1,
                       c=const.COLOR_MAP["red"],
                       label=rf"$T_c$")
                       # label=rf"$T_c \approx {avg_tc:.4f} \pm {error_tc:.0e}$")
@@ -154,5 +155,5 @@ if __name__ == '__main__':
     if zoomed:
         filename += "_zoomed"
         ax.set_xticks([0.32, 0.33, 0.34])
-    # illu.save_figure(filename)
-    plt.show()
+    illu.save_figure(filename)
+    # plt.show()

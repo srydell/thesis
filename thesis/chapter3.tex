@@ -87,6 +87,14 @@ For brevity some abbreviations are introduced.
 %
 \end{enumerate}
 
+This algorithm can be written to perform in linear time, as can be seen in Figure (\ref{fig:bench_graphdiv}). 
+
+\begin{figure}[h!]
+    \centering
+        \includegraphics[width=0.8\textwidth]{figures/bench_graph_div.pdf}
+    \caption{Loglog plot of a benchmark of the graph dividing algorithm. The y-axis show the time taken to perform one full graph divide normalized against the smallest time value.}
+    \label{fig:bench_graphdiv}
+\end{figure}
 
 \section{Error Estimation}
 \label{sec:ErrorEst}
@@ -153,6 +161,35 @@ So the standard error in this estimation decreases as $N^{-1/2}$.
 Bootstrap is a resampling method to examine a probability distribution. In this thesis it was used to estimate the error propagation of parameters in curve fitting.
 
 Given a set $\bm x$ of $N$ measurements from an unknown distribution $\hat \phi$, some statistical calculation of interest can be done as $\theta = s(\bm x)$. A resampling $\bm x_0$ of $\bm x$ comprised of $N$ random measurements from $\bm x$ (where one measurement can be included several times), can then be used to calculate $\theta^*_0 = s(\bm x_0)$. Repeating this $N_B$ times gives an estimate $\theta^* = (\theta^*_0, \theta^*_1, ..., \theta^*_{N_B})$ of the distribution $\hat \theta$. Assuming $N_B$ is large then, by the central limit theorem, $\hat \theta$ is a normal distribution with some standard deviation $\sigma_\theta$ that can be used as an error estimation for $\theta$.
+
+\section{Optimization}
+\label{sec:Optimization}
+
+A large part of this project was spent optimizing the simulations. To fascilitate this process, the Google project \textit{benchmark} was used for measuring and comparing running times of different algorithms. Only the C++ code was optimized, since the prototypes written in Python were not concerned with computational speed. What follows is a summation of the biggest optimizations that were achieved during this project.
+
+\subsection{Lattice implementation - Squashing the Graph}
+\label{subsec:LatticeImpl}
+
+During most of the calculations a sweep through the entire lattice was necessary. The computational time taken by such a sweep is heavily affected by the implementation of the lattice data structure.
+
+The first implementation used an array of arrays to represent the lattice. This has the advantage of a similar interface to mathematical matrices with rows and columns. This is however much slower than a single array, or a squashed graph, most likely due to cache misses\cite{Hanlon:CacheMisses}. Figure (\ref{fig:bench_latticeimpl}) shows a comparison between the time it takes to do one full sweep in the two implementations.
+
+Furthermore, this simplifies the generalization to lattices of different dimensions since the need to allocate a set number of arrays in each array disappears. It also makes it easier to reuse the same algorithm for lattices of different dimensions.
+
+The mapping used between the array index and the Euclidean space is
+
+\begin{equation}
+    n = x + y L + z L^2 + ...
+\end{equation}
+
+where $L$ is the linear system size.
+
+\begin{figure}[h!]
+    \centering
+        \includegraphics[width=0.8\textwidth]{figures/bench_latticeimpl.pdf}
+    \caption{Plot of a sweep benchmark of two different lattice implementations. The red dots labeled $\bar t_{multi}$ is an array of arrays, while the green dots labeled $\bar t_{single}$ is a single array. The y-axis show the time taken to perform one full graph divide normalized against the maximum of the smallest time value for the two implementations.}
+    \label{fig:bench_latticeimpl}
+\end{figure}
 
 \section{Testing}
 \label{sec:Testing}
