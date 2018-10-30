@@ -155,5 +155,5 @@ if __name__ == '__main__':
     if zoomed:
         filename += "_zoomed"
         ax.set_xticks([0.32, 0.33, 0.34])
-    illu.save_figure(filename)
-    # plt.show()
+    # illu.save_figure(filename)
+    plt.show()
