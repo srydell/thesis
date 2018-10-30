@@ -1,28 +1,34 @@
 \section{Ising model}
 
-% TODO: Maybe add about the expansion of the correlation function
-\subsection{Loop expansion}
+The Ising model consists of discrete atomic spins $S$ that can be found in two states represented by the values $\{-1, 1\}$. This can be applied to a lattice where $S_i$ is the spin of lattice site $i$.
 
-The Ising model energy
+The energy of such a configuration is then given by the Hamiltonian
 
 \begin{equation}
-    E = - J \sum_{\langle ij \rangle} S_i S_j
+    H = - J \sum_{\langle ij \rangle} S_i S_j
+\label{eq:isingmodelhamiltonian}
 \end{equation}
 
-Let $K = \beta J$ where $\beta = 1/k_{\text{B}} T$.
+Where $J$ is the bond strength in the lattice.
+
+% TODO: Maybe add about the expansion of the correlation function
+\subsection{Loop expansion}
+\label{subsec:IsingLoopExpansion}
+
+Let $K = \beta J$ where $\beta = 1/k_{\text{B}} T$. Then from Equation (\ref{eq:isingmodelhamiltonian})
 
 \begin{equation}
     \beta E = - K \sum_{\langle ij \rangle} S_i S_j
 \end{equation}
 
-The partition function $Z$.
+The partition function $Z$ can therefore be written as
 
 \begin{equation}
     Z = \sum_{\text{all states}} e^{-\beta E} = \sum_{\text{all states}} e^{K \sum_{\langle ij \rangle} S_i S_j} = \sum_{\text{all states}} \Pi_{\langle ij \rangle} e^{K S_i S_j}
 \label{Eq:partitionIsingWithoutExpansion}
 \end{equation}
 
-Since $S_i S_j = \pm 1$ in the Ising model, Euler identities can be used to expand the exponential in equation (\ref{Eq:partitionIsingWithoutExpansion}).
+Since $S_i S_j = \pm 1$ Euler identities can be used to expand the exponential in Equation (\ref{Eq:partitionIsingWithoutExpansion}).
 
 \begin{align*}
     e^{KS_i S_j} &= \frac{e^K + e^{-K}}{2} + S_i S_j \frac{e^K - e^{-K}}{2} \\
@@ -31,7 +37,7 @@ Since $S_i S_j = \pm 1$ in the Ising model, Euler identities can be used to expa
     &= (1 + T S_i S_j) \cosh(K)
 \end{align*}
 
-For $N$ spins there are 2N bonds, therefore the partition function is
+In a $2D$ lattice with $N$ spins and periodic boundary conditions there are $2N$ bonds. Therefore the partition function is
 
 \begin{align*}
     Z &= \sum_{\text{all states}} \Pi_{\langle ij \rangle} (1 + T S_i S_j) \cosh(K) \\
@@ -39,14 +45,14 @@ For $N$ spins there are 2N bonds, therefore the partition function is
     &= \cosh^{2N} (K) \cdot 2^N Z'
 \end{align*}
 
-And
+Where
 
 \begin{align*}
     Z' &= 2^{-N} \sum_{\text{all states}} \Pi_{\langle ij \rangle} (1 + T S_i S_j) \\
     &= 2^{-N} \sum_{S_1 = \pm 1} \sum_{S_2 = \pm 1} \ldots \sum_{S_N = \pm 1} \left ( 1 + T \sum_{l = 1} S_i S_j + T^2 \sum_{l = 2} (S_i S_j)(S_{i'} S_{j'}) + \ldots \right ) 
 \end{align*}
 
-Where the sums $\sum_{l=L}$ should be interpreted as the sum over all sets where the link length is $L$. Link length is the coupling between $S$-terms as can be seen in Figure (\ref{fig:LinkIsing}).
+Where the sums $\sum_{l=L}$ should be interpreted as the sum over all sets where the link length is $L$. Link length is the number of coupling terms $S_i S_j$ as can be seen in Figure (\ref{fig:LinkIsing}).
 
 \begin{figure}[h!]
     \begin{subfigure}{.5\linewidth}
@@ -58,99 +64,64 @@ Where the sums $\sum_{l=L}$ should be interpreted as the sum over all sets where
     \begin{subfigure}{.5\linewidth}
         \centering
         \includegraphics[width=\textwidth]{figures/ising_loop_two_link.pdf}
-        \caption{$(S_1 S_2)(S_2 S_3), \ L = 2$}
+        \caption{$(S_1 S_2)(S_2 S_4), \ L = 2$}
         \label{fig:twoLinkIsing}
     \end{subfigure}\\[1ex]
     \begin{subfigure}{\linewidth}
         \centering
         \includegraphics[width=.5\textwidth]{figures/ising_loop_four_link.pdf}
-        \caption{$(S_1 S_2)(S_2 S_3)(S_3 S_4)(S_4 S_1), \ L = 4$}
+        \caption{$(S_1 S_2)(S_2 S_4)(S_4 S_3)(S_3 S_1), \ L = 4$}
     \label{fig:fourLinkIsing}
     \end{subfigure}
     \caption{Link structure of an Ising lattice where (a) and (b) are open while (c) is closed.}
     \label{fig:LinkIsing}
 \end{figure}
 
-Since $\sum_{S_i = \pm 1} S_i = 0$, only terms with an even number of $S_i$ are contributing to $Z'$. Call these terms closed, indicating that they represent a closed loop. The sum over all contributing terms gives a factor of $2^N$, canceling the $2^{-N}$.
+Since $\sum_{S_i = \pm 1} S_i = 0$, only terms with an even number of $S_i$ are contributing to $Z'$. Call these terms closed, indicating that they represent a closed loop. The sum over all contributing terms gives a factor of $2^N$.
 
-Rewrite $Z'$ in terms of loop lengths.
+Rewriting $Z'$ in terms of loop lengths gives
 
 \begin{equation}
     Z' = \sum_L g(L) T^L
 \end{equation}
 
-Where $g(L)$ is the number of loops with length $L$. Finally write the expression for the partition function.
+Where $g(L)$ is the number of loops with length $L$. Finally, the partition function can be written as
 
 \begin{equation}
     Z = 2^N \cosh^{2N} (K) \sum_L g(L) T^L
 \end{equation}
 
-\subsection{Energy calculation}
+\subsection{Correlation Function}
+\label{subsec:CorrelationFunction}
+
+By the fluctuation-dissipation theorem the susceptibility can be written as \cite{Chaikin:PrincCondencedMatterPhysics}
 
 \begin{equation}
-    E = - \frac{1}{Z} \frac{\partial Z}{\partial \beta} = - \frac{J}{Z} \frac{\partial Z}{\partial K}
+    \chi = \frac{\beta}{N} \sum_{ij} G_{ij}
 \end{equation}
 
-Therefore
+Where $G_{ij} = \langle S_i S_j \rangle - \langle S_i \rangle^2$ is the connected correlation function between two lattice points $i$ and $j$.
 
-\begin{align*}
-    \frac{\partial Z}{\partial K} &= 2^N 2N \cosh^{2N-1}(K) \cdot \frac{\partial \cosh(K)}{\partial K} Z' + 2^N \cosh^{2N}(K) \cdot \frac{\partial Z'}{\partial K} \\
-    &= 2^N \cosh^{2N}(K) \left ( 2N \tanh(K) Z' + \frac{\partial Z'}{\partial K} \right ) \\
-    &= 2^N \cosh^{2N}(K) \tanh(K) \left ( 2N Z' + \frac{1}{\tanh(K)}\frac{\partial Z'}{\partial K} \right )
-\end{align*}
+In the high-temperature expansion the term $\langle S_i \rangle^2$ goes to zero. So for a $2D$ Ising model
 
-Examine $\tanh^{-1}(K) \frac{\partial Z'}{\partial K}$.
+\begin{align}
+    G_{ij} &= \frac{1}{Z} \sum_{\text{all states}} S_i S_j e^{-\beta E} \\
+    &= \left \{ \text{See Section \ref{subsec:IsingLoopExpansion}} \right \} \\
+    &= \frac{1}{Z} \cosh^{2N} (K) \sum_{\text{all states}} S_i S_j \Pi_{\langle ij \rangle} (1 + \tanh(K) S_i S_j)
+\end{align}
 
-\begin{align*}
-    \tanh^{-1}(K) \frac{\partial Z'}{\partial K} &= \tanh^{-1}(K) \frac{\tanh(K)}{\partial K} \sum_L g(L) L \tanh^{L-1}(K) \\
-    &= \frac{1}{\tanh^2(K)\cosh^2(K)} \sum_L g(L) L \tanh^L(K) \\
-    &= \frac{Z'}{\sinh^2(K)} \frac{\sum_L g(L) L \tanh^L(K)}{\sum_L g(L) \tanh^L(K)} \\
-    &= \frac{Z'}{\sinh^2(K)} \langle L \rangle
-\end{align*}
-
-And finally
+So the acceptance probability (See Section \ref{sec:MetropolisAlgorithm}) is \cite{Walter:IntroToMC}
 
 \begin{equation}
-    E = -J \tanh(K) \left ( 2N + \frac{\langle L \rangle}{\sinh^2(K)} \right )
-\end{equation}
-
-where
-
-\begin{equation}
-    \langle L \rangle = \frac{\sum_L g(L) L \tanh^L(K)}{\sum_L g(L) \tanh^L(K)}
+A_{ab} = \left\{
+\begin{array}{ll}
+      \min \left (1, \tanh(K)\right), \ \text{To create a link between $a$ and $b$.} \\
+      \min \left (1, \frac{1}{\tanh(K)} \right), \ \text{To remove a link between $a$ and $b$.}
+\end{array} 
+\right. 
 \end{equation}
 
 
-\subsection{Heat capacity}
-
-\begin{equation}
-    C = \frac{\partial E}{\partial T} = - \beta^2 \frac{\partial E}{\partial \beta} = -K \beta \frac{\partial E}{\partial K}
-\end{equation}
-
-Let $A = 2N + \frac{1}{\sinh^2(K)} \langle L \rangle$. Then
-
-\begin{equation}
-    \frac{E}{J} = - \tanh(K) A
-\end{equation}
-
-and
-
-\begin{equation}
-    \frac{1}{J} \frac{\partial E}{\partial K} = - \frac{\partial \tanh(K)}{\partial K} A - \tanh(K) \frac{\partial A}{\partial K}
-\end{equation}
-
-where
-
-\begin{align*}
-    \frac{\partial A}{\partial K} &= \langle L \rangle \frac{\partial \sinh^{-2}}{\partial K} + \tanh^{-1}(K)\sinh^{-2}(K) \left ( \langle L^2 \rangle - \langle L \rangle^2 \right ) \frac{\partial \tanh(K)}{\partial K} \\
-    &= \frac{1}{\sinh^2(K) \tanh(K)} \left (-2 \langle L \rangle + \frac{\langle L^2 \rangle - \langle L \rangle^2}{\cosh^2(K)} \right )
-\end{align*}
-
-and finally
-
-\begin{equation}
-    C = \frac{K^2}{\sinh^2(K)} \left ( \frac{\langle L^2 \rangle - \langle L \rangle^2}{\cosh^2(K)} - E \tanh(K) - 2 \langle L \rangle \right )
-\end{equation}
 
 \section{$n$-vector model}
 \label{sec:nVector}
@@ -170,6 +141,7 @@ A special case of the $n$-vector model is the XY model when $n = 2$. Here the sp
 
 \begin{equation}
     H = - J \sum_{\langle ij \rangle} \cos(\theta_i - \theta_j)
+\label{eq:xymodel}
 \end{equation}
 
 The partition function is therefore
@@ -212,7 +184,7 @@ leads to the conclusion that the sum of incoming and outgoing flux $J$ into a si
 \subsection{Winding number}
 \label{subsec:XYWindingNum}
 
-In the ground state all the spins are aligned, while at higher energy states, the spins are pointed in random directions as can be seen in figure (\ref{fig:xygroundhigher}).
+In the ground state all the spins are aligned, while at higher energy states, the spins are pointed in random directions as can be seen in Figure (\ref{fig:xygroundhigher}).
 
 \begin{figure}[h!]
 \centering
@@ -232,7 +204,7 @@ In the ground state all the spins are aligned, while at higher energy states, th
 \label{fig:xygroundhigher}
 \end{figure}
 
-Therefore, making a constant phase shift $\Phi_\mu = \frac{A}{L}$ of $\theta_i - \theta_j$ in the $\mu$ direction would change the energy drastically for the ground state while, on a statistical average, not change the higher states energy at all (see figure (\ref{fig:xyphaseshift})).
+Therefore, making a constant phase shift $\Phi_\mu = \frac{A}{L}$ of $\theta_i - \theta_j$ in the $\mu$ direction would change the energy drastically for the ground state while, on a statistical average, not change the higher states energy at all (see Figure (\ref{fig:xyphaseshift})).
 
 \begin{figure}[h!]
 \centering
@@ -298,7 +270,7 @@ Intuitively, this describes the net flux in the $\mu$-direction. Given a loop wi
 \begin{figure}[h!]
     \centering
         \includegraphics[width=0.8\textwidth]{figures/percolatingFlux.pdf}
-    \caption{Three flux clusters on a square lattice. One percolating cluster with $W_x = +1$. The size of arrow corresponds to the number of flux quanta between two sites.}
+    \caption{Three flux clusters on a square lattice. One percolating cluster with $W_x = +1$. The size of each arrow corresponds to the number of flux quanta between two sites.}
     \label{fig:fluxpercolation}
 \end{figure}
 
@@ -333,6 +305,43 @@ The superfluid density can finally be determined as
 
 % TODO: Write about the villain approximation for the energy. The original paper by Villain is in the literature directory.
 
+The Villain model the Hamiltonian has the form \cite{Villain:VillainOriginalPaper}
+
+\begin{equation}    
+    H = \sum_{ij} V_{ij}( \theta_i - \theta_j) + \sum_i U(\theta_i)
+\end{equation}
+
+By taking
+
+\begin{align}
+    V_{ij}( \theta_i - \theta_j) &= -J \cos ( \theta_i - \theta_j) \\
+    U( \theta_i ) &= 0
+\end{align}
+
+The XY model in Equation (\ref{eq:xymodel}) is recovered.
+
+The approximation then made by Villain was to replace the magnetic Hamiltonian by an approximate one \cite{Villain:VillainOriginalPaper}.
+
+Through a series of transformations the energy in this approximation can be written as \cite{Jos:VillainExtended}
+
+\begin{equation}
+    E = \frac{1}{2} \sum_i J_i^2
+\end{equation}
+
+Where $J_i^2$ is the flux from site $i$.
+
+The acceptance probability (See Section \ref{sec:MetropolisAlgorithm}) is therefore
+
+\begin{align}
+    A_{ab} &= \min \left ( 1, e^{-\Delta E} \right ) \\
+    &= \min \left ( 1, e^{-\frac{1}{2} \Delta J_{ab}^2} \right )
+\end{align}
+
+Where $J_{ab}$ is the link between site $a$ and $b$.
+
+\subsection{Energy Scaling}
+\label{subsec:xyenergyScaling}
+
 The scaling behaviour of the heat capacity is% TODO: CITE HERE
 
 \begin{equation}
@@ -360,7 +369,90 @@ where $d$ is the dimension of the sample. This scaling behaviour for the total e
 
 % TODO: Write about Hausdorff dimension from the book on Telegram
 
+Let $X$ be a metric space, $\alpha$ be some positive real number, then the $\alpha$-Hausdorff measure of a subset $A \subset X$ is defined as \cite{Heinonen:HausdorffDimMath}
+
+\begin{equation}
+    \mathcal{H}^{\delta}_\alpha (A) = \inf \left \{ \sum_{B \in \mathcal{B}} \left ( \text{diam}(B) \right)^\alpha \right \}
+\end{equation}
+
+Where $\mathcal{B}$ is a cover of $A$ of closed balls with diameter no larger than $\delta$.
+
+Taking the limit where $\delta \to 0$, the number of possible covers decreases. Since the limit is bounded from below, the limit exists \cite{Rudin:PrincMathAnalysis} and
+
+\begin{equation}
+    \lim_{\delta \to 0} \mathcal{H}^{\delta}_{\alpha} (A) = \mathcal{H}_\alpha (A) \in [0, \infty )
+\label{eq:hausdorffmeasure}
+\end{equation}
+
+Examining Equation (\ref{eq:hausdorffmeasure}) gives
+
+\begin{align}
+    \lim_{\delta \to 0} \mathcal{H}^{\delta}_{\alpha} (A) &= \lim_{\delta \to 0} \inf \left \{ \sum_{B \in \mathcal{B}} \left ( \text{diam}(B) \right)^\alpha \right \} \\
+%
+    &\leq \lim_{\delta \to 0} \inf \left \{ \sum_{B \in \mathcal{B}} \delta^\alpha \right \} \\
+%
+    &= \lim_{\delta \to 0} \inf \left \{ N_{\delta}^A \delta^\alpha \right \}
+\end{align}
+
+Where $N_{\delta}^A$ is the number of balls with diameter $\delta$ that can cover $A$. Though not a proof, one can intuitively say that if for some $\alpha > 0$ the limit is finite, then $\mathcal{H}_{\alpha'} = 0$ for each $\alpha' > \alpha$. Therefore the number
+
+\begin{equation}
+    \text{dim}_H (A) = \inf \{ \alpha > 0 : \mathcal{H}_\alpha (A) = 0 \}
+\end{equation}
+
+exists and is called the Hausdorff dimension of $A$ \cite{Heinonen:HausdorffDimMath}.
+
+
 \section{Box dimension}
 \label{sec:boxdimension}
 
-% TODO: Write about Box dimension from the chaos theory book
+Given some subset $A$ of a metric space $X$, let $N(\epsilon)$ be the number of boxes with side length $\epsilon$ needed to cover $A$. Then the box dimension $d$ of $A$ is defined as \cite{strogatz:dynamics_chaos}
+
+\begin{equation}
+    d = \lim_{\epsilon \to 0} \frac{\ln N(\epsilon)}{\ln 1 / \epsilon}
+\end{equation}
+
+If the limit exists.
+
+For intuition it helps to look at some examples. If $A$ is a smooth line of length $l$, then the number of boxes needed to cover $A$ scales as
+
+\begin{equation}
+    N_l(\epsilon) \propto \frac{L}{\epsilon}
+\end{equation}
+
+While for some two dimensional region with area $\Lambda$ the boxes needed is
+
+\begin{equation}
+    N_{\Lambda}(\epsilon) \propto \frac{\Lambda}{\epsilon^2}
+\end{equation}
+
+Such that for a $d$-dimensional subset $A$, the boxes needed will scale as
+
+\begin{equation}
+    N (\epsilon) \propto \frac{1}{\epsilon^d} \Rightarrow d = \frac{\ln N(\epsilon)}{\ln 1 / \epsilon}
+\end{equation}
+
+Note that the box dimension and the Hausdorff dimension coincides for fractals that satisfy the open set condition \cite{Falconer:RelHausdorffBox}.
+
+The open set condition says that for a sequence of contractions $c_1, c_2, ..., c_m$ exists a nonempty open set $V$ such that \cite{Bandt:OSC}
+
+\begin{equation}
+    \cup_{i = 1}^m c_i(V) \subset V, \ \text{and} \ c_i(V) \cap c_j(V) = \emptyset \ \text{for} \ i \neq j
+\end{equation}
+
+Intuitively, this means that the images $c_i(V)$ do not overlap `too much'.
+
+\subsection{Scaling Dimension}
+\label{subsec:ScalingDimension}
+
+Another way of determining the Hausdorff dimension is to consider a scaling system \cite{Camarda:MethodsDetermineHausdorff}. The scaling behaviour of the largest cluster should then follow
+
+\begin{equation}
+    N = L^{D_H}
+\end{equation}
+
+Where $N$ is the number of links in the largest cluster, $L$ is the linear system length and $D_H$ is the Hausdorff dimension.
+
+This scaling relation can be seen in Figure (\ref{fig:results_maxloopdimension}).
+
+

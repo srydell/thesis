@@ -2,16 +2,7 @@
 \section{Graph Labeling}
 \label{sec:GraphLabeling}
 
-\subsection{Hoshen Kopelman}
-\label{subsec:HoshenKopelman}
 
-To find the clusters a modified version of the Hoshen Kopelman algorithm was used. A raster scan is used to label disjoint sets into groups with some canonical label\cite{Hoshen:HKAlgo}. It is a variant on the union-find algorithm and is most easily described through the associated functions. Intuitively, applying the find function on a site $i$ returns the canonical, often implemented as the smallest, label in the cluster that $i$ belongs to. Union uses find to ensure that two sites $i$ and $j$ are connected by setting the canonical label of $i$ to that of $j$ (or vice versa). 
-
-An example implementation would be to have a 2D graph without periodic boundary conditions of zeros and ones, where a site is occupied if it has a one associated with it, and unoccupied otherwise. A disjoint set here is a number of occupied sites neighbouring each other with unoccupied sites surrounding them. For simplicity the scan can start in the lower left corner, moving right and up, while search for neighbours left and down, ensuring that if a neighbouring site is occupied, it has been labeled before. 
-
-Start by setting each site to a unique label, putting all sites in individual clusters. Go through the lattice until an occupied site $i$ is found. Search the neighbours below and to the left. If none of these neighbours are occupied, label $i$ have a unique label and move to the next site. If $i$ has one occupied neighbour it must have been labeled before, so $i$ inherits the neighbours label. Finally if both neighbours are occupied, site $i$ must be connecting a cluster and a union is performed on the neighbours to join their labels. A final pass through the lattice using the find function ensures that all sites have their canonical label.
-
-In this paper an occupied site corresponds to a site with connections to the neighbouring sites (in the 2D example above, each site could have four such connections). In the original paper by Hoshen and Kopelman the labels for the sites who did not originally carry the canonical label, were set to a negative integer, symbolizing that they were aliases. A positive value was used at the canonical label, showing the number of sites in that cluster. This was not used in this project since the number of links in a cluster is not necessarily equal to the number of sites.
 
 \section{Fractals}
 \label{sec:fractals}
