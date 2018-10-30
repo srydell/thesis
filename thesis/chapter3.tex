@@ -3,12 +3,16 @@
 
 % TODO: Write about Monte Carlo sims
 
+A Monte Carlo simulation is a stochastic algorithm to get statistical results from some system where there are many degrees of freedom.
+
+Markov Chain Monte Carlo is the idea to use Markov Chains to propose the next step in the algorithm. Using a well-chosen stationary probability distribution, together with ergodicity (Section \ref{sec:Ergodicity}), the desired distribution will be sampled.
+
 \section{Ergodicity}
 \label{sec:Ergodicity}
 
 An ergodic system is one where its time average coincides with its ensemble average. 
 
-Intuitively, ergodicity is the assumption that a Markov chain starting from some state $S_a$ with a non zero Boltzmann weight can reach any other state $S_b$ withing a finite number of updates~\cite{Zwanzig:nonequil_stat_mech}.
+Intuitively, ergodicity is the assumption that a Markov chain starting from some state $S_a$ with a non zero Boltzmann weight can reach any other state $S_b$ within a finite number of updates \cite{Zwanzig:nonequil_stat_mech}.
 
 This is necessary to assume, since otherwise there could be a non zero contribution to the partition function not being sampled by the Markov chain.
 
@@ -29,14 +33,47 @@ where $P_a$ is the probability to find the system in the state a, and $W_{ab}$ i
 
 This describes an equal rate of flow into the state $a$ as out of it.
 
+Together with ergodicity, detailed balance ensures a correct algorithm \cite{Walter:IntroToMC}.
+
 % TODO: Write dividing W_ab and write about acceptance ratio.
+
+\section{Metropolis Algorithm}
+\label{sec:MetropolisAlgorithm}
+
+Splitting the transition rate as
+
+\begin{equation}
+    W_{ab} = T_{ab} A_{ab}
+\end{equation}
+
+where $T_{ab}$ is a trial proposition probability and $A_{ab}$ is an acceptance probability. Letting $T_{ab} = T_{ba}, \ \forall a, \ b$ and choosing one of the acceptance probabilities $A_{ab}, \ A_{ba}$ to be equal to $1$, together with detailed balance, the Metropolis algorithm is realized \cite{Walter:IntroToMC}. The acceptance ration is therefore
+
+\begin{equation}
+    A_{ab} = \min \left \{ 1, \frac{P_b}{P_a} \right \} = \min \{ 1, e^{-\beta(E_b - E_a )} \}
+\end{equation}
+
 
 \section{Worm Algorithm}
 \label{sec:WormAlgorithm}
 
 % TODO: Write about worm algo from the article on Telegram
 
+The Worm algorithm operates on graph configurations instead of individual spins. This way, the algorithm can stay local and can avoid, to some extent, the so called critical slowdown that happens near transition points \cite{Prokofev:first_worm_algorithm}.
 
+The algorithm still uses the Metropolis acceptance rates and therefore it fulfills detailed balance (see Section \ref{sec:DetailedBalance}).
+
+Intuitively, the `worm' part can be seen as a `magic marker' that can connect or remove the connection between two sites. This way the marker draws patterns onto a lattice that corresponds to a configuration, typically of the partition function. This paper is only concerned with whenever the marker reaches the same lattice site that it started on, forming loops, or clusters.
+
+\section{Hoshen Kopelman}
+\label{sec:HoshenKopelman}
+
+To find the clusters a modified version of the Hoshen Kopelman algorithm was used. A raster scan is used to label disjoint sets into groups with some canonical label \cite{Hoshen:HKAlgo}. It is a variant on the union-find algorithm and is most easily described through the associated functions. Intuitively, applying the find function on a site $i$ returns the canonical, often implemented as the smallest, label in the cluster that $i$ belongs to. Union uses find to ensure that two sites $i$ and $j$ are connected by setting the canonical label of $i$ to that of $j$ (or vice versa). 
+
+An example implementation would be to have a 2D graph without periodic boundary conditions of zeros and ones, where a site is occupied if it has a one associated with it, and unoccupied otherwise. A disjoint set here is a number of occupied sites neighbouring each other with unoccupied sites surrounding them. For simplicity the scan can start in the lower left corner, moving right and up, while search for neighbours left and down, ensuring that if a neighbouring site is occupied, it has been labeled before. 
+
+Start by setting each site to a unique label, putting all sites in individual clusters. Go through the lattice until an occupied site $i$ is found. Search the neighbours below and to the left. If none of these neighbours are occupied, label $i$ have a unique label and move to the next site. If $i$ has one occupied neighbour it must have been labeled before, so $i$ inherits the neighbours label. Finally if both neighbours are occupied, site $i$ must be connecting a cluster and a union is performed on the neighbours to join their labels. A final pass through the lattice using the find function ensures that all sites have their canonical label.
+
+In this paper an occupied site corresponds to a site with connections to the neighbouring sites (in the 2D example above, each site could have four such connections). In the original paper by Hoshen and Kopelman the labels for the sites who did not originally carry the canonical label, were set to a negative integer, symbolizing that they were aliases. A positive value was used at the canonical label, showing the number of sites in that cluster. This was not used in this project since the number of links in a cluster is not necessarily equal to the number of sites.
 
 \section{Graph Dividing Algorithm}
 \label{sec:GraphDivisonAlgorithm}
@@ -67,7 +104,7 @@ For brevity some abbreviations are introduced.
 \begin{enumerate}
     \item If $l_i \geq l_0$, go to 2, else stop.
 %
-    \item Save all sites in the current box, starting for $s_i$ going $l_i$ in $d$ directions.
+    \item Save all sites in the current box, starting from $s_i$ going $l_i$ in $d$ directions.
 %
     \item Find all starting points for new boxes.
 %
@@ -165,14 +202,14 @@ Given a set $\bm x$ of $N$ measurements from an unknown distribution $\hat \phi$
 \section{Optimization}
 \label{sec:Optimization}
 
-A large part of this project was spent optimizing the simulations. To fascilitate this process, the Google project \textit{benchmark} was used for measuring and comparing running times of different algorithms. Only the C++ code was optimized, since the prototypes written in Python were not concerned with computational speed. What follows is a summation of the biggest optimizations that were achieved during this project.
+A large part of this project was spent optimizing the simulations. To fascilitate this process, the Google C++ framework \textit{benchmark} was used for measuring and comparing running times of different algorithms. Only the C++ code was optimized in this way since the prototypes written in Python were not concerned with computational speed. What follows is a summation of the biggest optimizations that were achieved during this project.
 
 \subsection{Lattice implementation - Squashing the Graph}
 \label{subsec:LatticeImpl}
 
 During most of the calculations a sweep through the entire lattice was necessary. The computational time taken by such a sweep is heavily affected by the implementation of the lattice data structure.
 
-The first implementation used an array of arrays to represent the lattice. This has the advantage of a similar interface to mathematical matrices with rows and columns. This is however much slower than a single array, or a squashed graph, most likely due to cache misses\cite{Hanlon:CacheMisses}. Figure (\ref{fig:bench_latticeimpl}) shows a comparison between the time it takes to do one full sweep in the two implementations.
+The first implementation used an array of arrays to represent the lattice. This has the advantage of a similar interface to mathematical matrices with rows and columns. However, it is much slower than a single array, or a squashed graph, most likely due to cache misses\cite{Hanlon:CacheMisses}. Figure (\ref{fig:bench_latticeimpl}) shows a comparison between the time it takes to do one full sweep in the two implementations.
 
 Furthermore, this simplifies the generalization to lattices of different dimensions since the need to allocate a set number of arrays in each array disappears. It also makes it easier to reuse the same algorithm for lattices of different dimensions.
 
@@ -191,6 +228,15 @@ where $L$ is the linear system size.
     \label{fig:bench_latticeimpl}
 \end{figure}
 
+\subsection{Saving Warmed Up Graphs}
+\label{subsec:SavingWarmedUpGraphs}
+
+Since there is no reliable way to guess a physical state at the start of a simulation, each system must be `warmed up' to produce valid results. One way of doing this is to continuously measure the quantity of interest, and while each measurement is quantifiably different from the previous one, keep updating the system.
+
+When the system finally produces sufficiently close results, a representation of the graph can be stored on disk. In this project, the graph was saved to a simple text file that could be parsed using regex. This greatly helped with performance, and in some cases halved the simulation times.
+
+The drawback of this solution is the need for a self-written parser. Since the simulation and plotting were done in two different programming languages, the better solution would be a combined interface such as an \textit{sqllite} database.
+
 \section{Testing}
 \label{sec:Testing}
 
@@ -205,7 +251,7 @@ This was done by manually calculating the expected output of some code, given so
 
 The parts of the simulation using a pseudorandom number generator were tested by randomly selecting a set of seeds on which the tests were run upon. The correctness is then assumed from this subset of possible inputs.
 
-When multiple unit tests are tested together, it is called integration testing. This assumes that each unit is correct by itself, and it was used to more closely ressemble the actual simulation.
+Combining multiple units into one test is called integration testing. This assumes that each unit is correct by itself, and it was used to more closely ressemble the actual simulation.
 
 \subsection{Regression Testing}
 \label{sec:RegressionTesting}

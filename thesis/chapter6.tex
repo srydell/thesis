@@ -2,7 +2,7 @@
 \begin{figure}[h!]
     \centering
         \includegraphics[width=0.8\textwidth]{figures/susceptibility128x128Ising.pdf}
-    \caption{Scaling of susceptibility at $T_c$ on an Ising lattice of varying sizes. The measured critical exponent $\eta = 0.26 \pm 0.002$ is compared to the theoretical value $\eta_{Ising} = 0.25$. The red line labeled $\propto L^2$ illustrates data where susceptibility scales with system size.}
+    \caption{Scaling of susceptibility at $T_c$ on an Ising lattice of varying sizes. The measured critical exponent $\eta = 0.26 \pm 0.002$ is compared to the theoretical value $\eta_{Ising} = 0.25$ \cite{Plischke:EqStatMech}. The red line labeled $\propto L^2$ illustrates data where susceptibility scales with system size.}
     \label{fig:results_isingsusc}
 \end{figure}
 
@@ -23,6 +23,13 @@
 
 \begin{figure}[h!]
     \centering
+        \includegraphics[width=0.8\textwidth]{figures/largest_cluster_testing_nolattice.pdf}
+    \caption{Isolated largest cluster on a $128^2$ Ising lattice with periodic boundary conditions.}
+    \label{fig:largest_cluster_illu}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
         \includegraphics[width=0.8\textwidth]{figures/winding_number_Tc.pdf}
     \caption{Average winding number squared, $\langle W^2 \rangle \propto \rho_s$, plotted on a 3D XY lattice of varying sizes. The overall structure of the average winding number squared as a function of the temperature is shown.}
     \label{fig:results_windingnumberTc}
@@ -32,7 +39,7 @@
 \begin{figure}[h!]
     \centering
         \includegraphics[width=0.8\textwidth]{figures/winding_number_Tc_zoomed.pdf}
-    \caption{Average winding number squared, $\langle W^2 \rangle \propto \rho_s$, plotted on a 3D XY lattice of varying sizes. Due to the Villain approximation the transition is flipped such that $\rho_s \neq 0$ for $T > T_c$, and $T_c$ is translated from $\approx 2.2$ to $\approx 0.333$ indicated by the intersection. By taking the weighted average of the intersections the critical temperature can be estimated to $T_c = 0.3330 \pm 1 \cdot 10^{-4}$.}
+    \caption{Average winding number squared, $\langle W^2 \rangle \propto \rho_s$, plotted on a 3D XY lattice of varying sizes. Due to the Villain approximation the transition is flipped such that $\rho_s \neq 0$ for $T > T_c$, and $T_c$ is translated from $\approx 2.2$ \cite{Gottlob:CritBehaviour3DXY} to $\approx 0.333$ indicated by the intersection. By taking the weighted average of the intersections the critical temperature can be estimated to $T_c = 0.3331 \pm 1 \cdot 10^{-4}$.}
     \label{fig:results_windingnumberTcZoomed}
 \end{figure}
 
@@ -50,3 +57,4 @@
     \caption{Log-log plot of the energy at $T_c$ on an 3D XY lattice of varying sizes. The measured scaling factor is $2.91 \pm 0.09$. The energy in the Villain approximation is proportional to the sum of the squares of flux flowing through the lattice.}
     \label{fig:results_energyxy}
 \end{figure}
+
