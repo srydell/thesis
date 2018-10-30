@@ -85,6 +85,12 @@ add_executable(gen_large_cluster_ising application/gen_large_cluster_ising.cpp)
 target_include_directories(gen_large_cluster_ising PRIVATE source source/Ising)
 target_link_libraries(gen_large_cluster_ising PRIVATE IsingGraph)
 
+# Set gen_large_cluster_xy executable
+# Generates a set of xy graph files which will be used for animation
+add_executable(gen_large_cluster_xy application/gen_large_cluster_xy.cpp)
+target_include_directories(gen_large_cluster_xy PRIVATE source source/xy)
+target_link_libraries(gen_large_cluster_xy PRIVATE XYGraph)
+
 # Benchmark
 add_executable(divgraph-bench source/benchmark/bench_divgraph.cpp)
 target_include_directories(divgraph-bench PRIVATE source source/xy)
