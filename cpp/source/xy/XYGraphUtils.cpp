@@ -190,7 +190,7 @@ void Graph::SetLinks(int site0, int site1, int link) {
 		} else {
 			// Error handling for siteX and siteY not neighbours
 			std::stringstream ss;
-			ss << "Call to Graph::SwitchLinkBetween failed since "
+			ss << "Call to Graph::SetLinks failed since "
 				<< site0 << " and " << site1 << " are not in neighbours." << "\n";
 			throw ss.str();
 		}
