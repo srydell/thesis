@@ -194,7 +194,8 @@ def plot_syssize_vs_fit(data_dict):
     plt.loglog(xdata, correct_function(xdata, *correct_opt_parameters),
                c=const.COLOR_MAP["green"],
                label=r"$\propto L^{D_H^G}$")
-    plt.loglog(xdata, [w + min_constant for w in wrong_function(xdata, *wrong_opt_parameters)],
+
+    plt.loglog(xdata, [w*8.3 for w in wrong_function(xdata, *wrong_opt_parameters)],
                c=const.COLOR_MAP["red"],
                label=r"$\propto L^{2}$")
 

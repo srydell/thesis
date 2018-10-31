@@ -41,33 +41,36 @@ if __name__ == '__main__':
     color = const.COLOR_MAP["black"]
     avg_es = []
     for size in simulation_data:
-        avg_es.append(calc.add_mean(simulation_data[size][0]))
+        if 2 * size in simulation_data:
+            avg_es.append(calc.add_mean(simulation_data[size][0]))
 
-        simulation_data[size][0] = calc.add_mean(simulation_data[size][0])
-        simulation_data[size][1] = calc.add_std(simulation_data[size][1])
-        simulation_data[size][2] = sum(simulation_data[size][2])
+            simulation_data[size][0] = calc.add_mean(simulation_data[2 * size][0]) - calc.add_mean(simulation_data[size][0])
+            simulation_data[size][1] = calc.add_std(simulation_data[2 * size][1]) - calc.add_std(simulation_data[size][1])
+            simulation_data[size][2] = sum(simulation_data[size][2])
 
 
-    calc.plot_errorbars(simulation_data, r"$\bar{E} \pm \sigma_{\bar{E}}$", color=color, axis=ax)
+    simulation_data.pop(max(list(simulation_data.keys())))
+
+    calc.plot_errorbars(simulation_data, r"$\Delta \bar{E} \pm \sigma_{\Delta \bar{E}}$", color=color, axis=ax)
 
     # xdata
     system_sizes = np.array(list(simulation_data.keys()))
     # ydata
     average_energy = np.array(avg_es)
 
-    stderr_pars = calc.bootstrap(fit_function, system_sizes, average_energy, 100)
+    stderr_pars = calc.bootstrap(fit_function, system_sizes, average_energy, 10000)
+    print(stderr_pars)
     opt_pars = list(stderr_pars.keys())
-
-    # Used for plotting against the fitted function
+    # # Used for plotting against the fitted function
     xdata = np.linspace(min(system_sizes), max(system_sizes), 50)
     # colors = ["#966842", "#f44747", "#eedc31", "#7fdb6a", "#0e68ce"]
     plt.loglog(xdata, fit_function(xdata, *opt_pars),\
             c="#0e68ce",\
-            label=fr"$\propto L^{{ {opt_pars[1]:.2f} \pm {stderr_pars[opt_pars[1]]:.2f}  }}$")
+            label=fr"$\propto L^{{ 1 / ({1 / opt_pars[1]:.2f})  }}$")
 
     plt.xlabel("Linear system size")
-    plt.ylabel(r"$E$")
-    plt.title(rf"Scaling behaviour of energy in the Villain approximation on a 3D XY lattice")
+    plt.ylabel(r"$\Delta E$")
+    plt.title(rf"Scaling behaviour of the rolling difference in energy in the Villain approximation on a 3D XY lattice")
     plt.legend(loc=2)
-    # illu.save_figure(f"energy_scaling_xy")
+    # illu.save_figure(f"energy_scaling_difference_xy")
     plt.show()
