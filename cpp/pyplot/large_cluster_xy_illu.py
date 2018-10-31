@@ -24,7 +24,7 @@ if __name__ == '__main__':
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
 
-    system_size = 128
+    system_size = 64
     dimension = 3
 
     # Camera angle
@@ -35,11 +35,15 @@ if __name__ == '__main__':
 
     # Load graph
     sites = ani.process_graph_file(f"xy/largest_cluster/largest_cluster", dimension, drawer)
+    # Plot all flux
+    for site in sites:
+        site.plot_arrows_to_neighbours(ax, system_size, color=c)
+
 
     pdf_frames = []
     current_frame = -1
-    max_angle = 20
-    for angle in np.arange(0, max_angle, 5):
+    max_angle = 10
+    for angle in np.arange(0, max_angle, 1):
         current_frame += 1
 
         print("\n=========================")
@@ -51,18 +55,11 @@ if __name__ == '__main__':
         # Set viewing angle
         ax.view_init(angle, 0)
 
-        # Plot all flux
-        for site in sites:
-            site.plot_arrows_to_neighbours(ax, system_size, color=c)
-
-        # print("Assuming a test run. Quitting...")
-        # quit()
-
         illu.save_figure(f"frames/xy/largest_cluster/{current_frame:03}")
         pdf_frames.append(f"plots/frames/xy/largest_cluster/{current_frame:03}.pdf")
-        ax.cla()
+        # ax.cla()
 
-    output_file = "plots/3dxy_largest_cluster"
+    output_file = "plots/3dxy_largest_cluster_test"
 
     print(f"Merging the pdfs into {output_file}.pdf")
     ani.merge_pdfs(pdf_frames, output_file)
