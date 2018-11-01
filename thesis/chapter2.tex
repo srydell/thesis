@@ -9,7 +9,7 @@ The energy of such a configuration is then given by the Hamiltonian
 \label{eq:isingmodelhamiltonian}
 \end{equation}
 
-Where $J$ is the bond strength in the lattice.
+Where $J$ is the bond strength in the lattice and $\langle ij \rangle$ refers to an only nearest neighbour interaction.
 
 % TODO: Maybe add about the expansion of the correlation function
 \subsection{Loop expansion}
@@ -37,7 +37,7 @@ Since $S_i S_j = \pm 1$ Euler identities can be used to expand the exponential i
     &= (1 + T S_i S_j) \cosh(K)
 \end{align*}
 
-In a $2D$ lattice with $N$ spins and periodic boundary conditions there are $2N$ bonds. Therefore the partition function is
+In a $2D$ lattice with $N$ spins and periodic boundary conditions there are $2N$ bonds between sites. Therefore the partition function is
 
 \begin{align*}
     Z &= \sum_{\text{all states}} \Pi_{\langle ij \rangle} (1 + T S_i S_j) \cosh(K) \\
@@ -110,7 +110,7 @@ In the high-temperature expansion the term $\langle S_i \rangle^2$ goes to zero.
     &= \frac{1}{Z} \cosh^{2N} (K) \sum_{\text{all states}} S_i S_j \Pi_{\langle ij \rangle} (1 + \tanh(K) S_i S_j)
 \end{align}
 
-So the acceptance probability (See Section \ref{sec:MetropolisAlgorithm}) is \cite{Walter:IntroToMC}
+So the acceptance probability is \cite{Walter:IntroToMC}
 
 \begin{equation}
 A_{ab} = \left\{
@@ -156,7 +156,7 @@ where $K = J \beta$.
 \subsection{Loop expansion}
 \label{subsec:XYLoopexp}
 
-Since equation (\ref{eq:xypart1}) is invariant under the transformation $\theta_i - \theta_j \rightarrow \theta_i - \theta_j + 2 \pi n$, $n \in \mathbb{Z}$, it can be expanded using the identity
+Since Equation (\ref{eq:xypart1}) is invariant under the transformation $\theta_i - \theta_j \rightarrow \theta_i - \theta_j + 2 \pi n$, $n \in \mathbb{Z}$, it can be expanded using the identity
 
 \begin{equation}
     e^{\alpha \cos \beta} = \sum_{\gamma = -\infty}^{\infty} I_\gamma ( \alpha ) e^{i \gamma \beta}
@@ -237,7 +237,7 @@ F = - T \ln(Z) \Rightarrow F'' = T \left(\left(\frac{Z'}{Z}\right) - \left( \fra
 \label{eq:xyfreeenergy}
 \end{equation}
 
-where $F' = \partial F / \partial A$. Examining $Z$ from (\ref{eq:xypart2}) with the added shift
+where $F' = \partial F / \partial A$. Examining $Z$ from Equation (\ref{eq:xypart2}) with the added shift
 
 \begin{align}
     Z &= \prod_i \int \frac{\mathrm d \theta_i}{2 \pi} \sum_{J_{\langle ij \rangle} = -\infty}^{\infty} \prod_{b = \langle ij \rangle} I_{J_{\langle ij \rangle}} ( K ) e^{i J_{\langle ij \rangle} (\theta_i - \theta_j + \Phi_\mu)} \\
@@ -265,7 +265,7 @@ Introduce the winding number in the $\mu$ direction as
 \label{eq:defwinding}
 \end{equation}
 
-Intuitively, this describes the net flux in the $\mu$-direction. Given a loop within the bounds of the lattice, the winding number is always zero. This is since an equal amount of flux in $+\mu$ as in $-\mu$ is needed to form a loop. However, this is not the case for a percolating cluster going, for example, from $-\mu$ to $+\mu$ connecting with periodic boundary conditions. For such a `winding' cluster, the winding number will be $+1$. An example can be seen in figure (\ref{fig:fluxpercolation}).
+Intuitively, this describes the net flux in the $\mu$-direction. Given a loop within the bounds of the lattice, the winding number is always zero. This is since an equal amount of flux in $+\mu$ as in $-\mu$ is needed to form a loop. However, this is not the case for a percolating cluster going, for example, from $-\mu$ to $+\mu$ connecting with periodic boundary conditions. For such a `winding' cluster, the winding number will be $+1$. An example can be seen in Figure (\ref{fig:fluxpercolation}).
 
 \begin{figure}[h!]
     \centering
@@ -274,7 +274,7 @@ Intuitively, this describes the net flux in the $\mu$-direction. Given a loop wi
     \label{fig:fluxpercolation}
 \end{figure}
 
-Using the definition (\ref{eq:defwinding}) for the winding number in the partition function in equation (\ref{eq:xypart3}) yields
+Using the definition (\ref{eq:defwinding}) for the winding number in the partition function in Equation (\ref{eq:xypart3}) yields
 
 \begin{align}
     Z &= \sum_{J_b} \left ( \prod_b I_{J_b} \right ) \prod_i \left ( \int \frac{\mathrm d \theta_i}{2 \pi} e^{i N_i (\theta_i - \theta_j)} \right ) \cdot e^{i A W_\mu} \\
@@ -282,7 +282,7 @@ Using the definition (\ref{eq:defwinding}) for the winding number in the partiti
     &= \sum_{W_\mu} Z_0 \cdot e^{i A W_\mu}
 \end{align}
 
-Using this result in equation (\ref{eq:xyfreeenergy})
+Using this result in Equation (\ref{eq:xyfreeenergy})
 
 \begin{align}
     \frac{\partial^2 F}{\partial A^2} &= T \left ( \left ( \frac{\sum_{W_\mu} (i W_\mu) Z_0 e^{iAW_\mu}}{\sum_{W_\mu} Z_0 e^{iAW_\mu}} \right )^2 - \frac{\sum_{W_\mu} (- W_\mu^2) Z_0 e^{iAW_\mu}}{\sum_{W_\mu} Z_0 e^{iAW_\mu}} \right ) \\
@@ -319,7 +319,7 @@ By taking
 
 The XY model in Equation (\ref{eq:xymodel}) is recovered.
 
-The approximation then made by Villain was to replace the magnetic Hamiltonian by an approximate one \cite{Villain:VillainOriginalPaper}.
+The approximation then made by Villain was to replace the magnetic Hamiltonian one which would simplify the calculations by making the integrals Gaussian \cite{Villain:VillainOriginalPaper}.
 
 Through a series of transformations the energy in this approximation can be written as \cite{Jos:VillainExtended}
 
