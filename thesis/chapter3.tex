@@ -46,7 +46,7 @@ Splitting the transition rate as
     W_{ab} = T_{ab} A_{ab}
 \end{equation}
 
-where $T_{ab}$ is a trial proposition probability and $A_{ab}$ is an acceptance probability. Letting $T_{ab} = T_{ba}, \ \forall a, \ b$ and choosing one of the acceptance probabilities $A_{ab}, \ A_{ba}$ to be equal to $1$, together with detailed balance, the Metropolis algorithm is realized \cite{Walter:IntroToMC}. The acceptance ration is therefore
+where $T_{ab}$ is a trial proposition probability and $A_{ab}$ is an acceptance probability. Letting $T_{ab} = T_{ba}, \ \forall a, \ b$ and choosing one of the acceptance probabilities $A_{ab}, \ A_{ba}$ to be equal to $1$, together with detailed balance, the Metropolis algorithm is realized \cite{Walter:IntroToMC}. The acceptance probability is therefore
 
 \begin{equation}
     A_{ab} = \min \left \{ 1, \frac{P_b}{P_a} \right \} = \min \{ 1, e^{-\beta(E_b - E_a )} \}
@@ -78,14 +78,8 @@ In this paper an occupied site corresponds to a site with connections to the nei
 \section{Graph Dividing Algorithm}
 \label{sec:GraphDivisonAlgorithm}
 
-\begin{figure}[h!]
-    \centering
-        \includegraphics[width=0.8\textwidth]{figures/graphDividing.pdf}
-    \caption{One step in the graph dividing algorithm where $l_i = 4$. $e^0_i$ and $e^1_i$ are drawn from site $s_i$. Summed permutations of $\{e^0_i, e^1_i\}$ give the starts for the next boxes. The next iteration of boxes are shown via the dividing dotted lines.}
-    \label{fig:graphdividingalgo}
-\end{figure}
 
-In order to calculate the box dimension the lattice need to be divided into boxes of decreasing size. A step by step instruction of a graph dividing algorithm is provided below, and an implementation in pseudocode is available in the Appendix at Section \ref{sec:pseudocodeboxdivisionalgo}.
+In order to calculate the box dimension the lattice need to be divided into boxes of decreasing size (see Section \ref{sec:boxdimension}). For this a new algorithm was written using that all graphs in this thesis had a linear system size of $2^{n}$, where $n$ is some integer. The algorithm could easily be generalized to $x^n$ or using other configurations by a well-chosen stopping length $l_0$. What follows is a brief overview of the algorithm and for intuition, one step in the recursion can be seen in Figure (\ref{fig:graphdividingalgo}).
 
 For brevity some abbreviations are introduced.
 
@@ -123,6 +117,14 @@ For brevity some abbreviations are introduced.
     \end{enumerate}
 %
 \end{enumerate}
+
+
+\begin{figure}[h!]
+    \centering
+        \includegraphics[width=0.8\textwidth]{figures/graphDividing.pdf}
+    \caption{One step in the graph dividing algorithm where $l_i = 4$. $e^0_i$ and $e^1_i$ are drawn from site $s_i$. Summed permutations of $\{e^0_i, e^1_i\}$ give the starts for the next boxes. The next iteration of boxes are shown via the dividing dotted lines.}
+    \label{fig:graphdividingalgo}
+\end{figure}
 
 This algorithm can be written to perform in linear time, as can be seen in Figure (\ref{fig:bench_graphdiv}). 
 

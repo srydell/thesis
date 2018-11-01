@@ -131,7 +131,7 @@ def plot_errorbars(data_dict, label=None, color="#202020", axis=None):
 
         if not labeled:
             axis.errorbar(x, avg_y, yerr=std_y/np.sqrt(num_measurements_y),\
-                ecolor='gray', elinewidth=2, fmt=f'{color}', marker='.',\
+                ecolor='gray', elinewidth=2, fmt=f'{color}', marker='o',\
                 linestyle="None", capsize=3, capthick=2, label=rf"{label}")
             labeled = True
         else:
