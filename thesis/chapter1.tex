@@ -1,0 +1,16 @@
+Everyone agrees that the dimension of a point is zero, and that of a smooth line is one, but what about a set of points? 
+% TODO: Add this reference to Nonlinear dynamics and chaos with applications to physics, biology, chemistry, and engineering by Steven H. Strogatz
+% TODO: Add a plot of the Koch curve.
+
+The situation is a bit more complex when examining fractals. Take for example the Koch curve, it starts out as a line segment of length $L_0$, and successively adds a `bump', making the total length $L_1 = 4/3 \cdot L_0$. Iterating $n$ times gives a line length of $L_n = {(4 / 3)}^n \cdot L_0$, and so the final fractal length is infinite. 
+
+Any two point on the final curve has a distance of infinity between them, so parametrization is impossible. But the area is still finite, so the dimension should intuitively be somewhere between one and two.
+
+A useful concept here is the similarity dimension, defined by the scaling of each iteration. If $m$ is the number of similar elements after an iteration and $r$ is the scaling factor, the dimension is defined by $m = r^d$, or equivalently
+
+\begin{equation}
+	d = \frac{\ln m}{\ln r}
+\end{equation}
+
+So for the Koch curve, each segment is divided into fourths with each having one third the length from the previous iteration, giving it a dimension of $\ln 4 / \ln 3 \approx 1.26$.
+
