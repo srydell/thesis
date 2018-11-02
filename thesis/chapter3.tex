@@ -1,11 +1,11 @@
+% TODO: Write about method
+
+The methods used in this thesis are presented in this chapter, starting with the Monte Carlo simulations, laying the background for the Worm algorithm. The Hoshen Kopelman algorithm, used for determining the location of the clusters in the graph is discussed, and an algorithm used for dividing the graph into boxes used in the box counting method is outlined. Finally, error estimation and code implementation is discussed.
+
 \section{Monte Carlo Simulations}
 \label{sec:MonteCarloSims}
 
-% TODO: Write about Monte Carlo sims
-
-A Monte Carlo simulation is a stochastic algorithm to get statistical results from some system where there are many degrees of freedom.
-
-Markov Chain Monte Carlo is the idea to use Markov Chains to propose the next step in the algorithm. Using a well-chosen stationary probability distribution, together with ergodicity (Section \ref{sec:Ergodicity}), the desired distribution will be sampled.
+A Monte Carlo simulation is a stochastic algorithm to get statistical results from some system where there are many degrees of freedom. Markov Chain Monte Carlo is the idea to use Markov Chains to propose the next step in the algorithm, i.e.\ the next proposed step is only dependent on the previous one. Using a well-chosen stationary probability distribution, together with ergodicity, the desired distribution will be sampled.
 
 \section{Ergodicity}
 \label{sec:Ergodicity}
@@ -35,8 +35,6 @@ This describes an equal rate of flow into the state $a$ as out of it.
 
 Together with ergodicity, detailed balance ensures a correct algorithm \cite{Walter:IntroToMC}.
 
-% TODO: Write dividing W_ab and write about acceptance ratio.
-
 \section{Metropolis Algorithm}
 \label{sec:MetropolisAlgorithm}
 
@@ -56,8 +54,6 @@ where $T_{ab}$ is a trial proposition probability and $A_{ab}$ is an acceptance 
 \section{Worm Algorithm}
 \label{sec:WormAlgorithm}
 
-% TODO: Write about worm algo from the article on Telegram
-
 The Worm algorithm operates on graph configurations instead of individual spins. This way, the algorithm can stay local and can avoid, to some extent, the so called critical slowdown that happens near transition points \cite{Prokofev:first_worm_algorithm}.
 
 The algorithm still uses the Metropolis acceptance rates and therefore it fulfills detailed balance (see Section \ref{sec:DetailedBalance}).
@@ -69,11 +65,11 @@ Intuitively, the `worm' part can be seen as a `magic marker' that can connect or
 
 To find the clusters a modified version of the Hoshen Kopelman algorithm was used. A raster scan is used to label disjoint sets into groups with some canonical label \cite{Hoshen:HKAlgo}. It is a variant on the union-find algorithm and is most easily described through the associated functions. Intuitively, applying the find function on a site $i$ returns the canonical, often implemented as the smallest, label in the cluster that $i$ belongs to. Union uses find to ensure that two sites $i$ and $j$ are connected by setting the canonical label of $i$ to that of $j$ (or vice versa). 
 
-An example implementation would be to have a 2D graph without periodic boundary conditions of zeros and ones, where a site is occupied if it has a one associated with it, and unoccupied otherwise. A disjoint set here is a number of occupied sites neighbouring each other with unoccupied sites surrounding them. For simplicity the scan can start in the lower left corner, moving right and up, while search for neighbours left and down, ensuring that if a neighbouring site is occupied, it has been labeled before. 
+An example implementation would be to have a 2D graph without periodic boundary conditions of zeros and ones, where a site is occupied if it has a one associated with it, and unoccupied otherwise. A disjoint set here is a number of occupied sites neighbouring each other with unoccupied sites surrounding them. For simplicity the scan can start in the lower left corner, moving right and up, while search for neighbours left and down, ensuring that if a neighbouring site is occupied, it has been labeled before. This is done by following the steps outlined bellow.
 
 Start by setting each site to a unique label, putting all sites in individual clusters. Go through the lattice until an occupied site $i$ is found. Search the neighbours below and to the left. If none of these neighbours are occupied, label $i$ have a unique label and move to the next site. If $i$ has one occupied neighbour it must have been labeled before, so $i$ inherits the neighbours label. Finally if both neighbours are occupied, site $i$ must be connecting a cluster and a union is performed on the neighbours to join their labels. A final pass through the lattice using the find function ensures that all sites have their canonical label.
 
-In this paper an occupied site corresponds to a site with connections to the neighbouring sites (in the 2D example above, each site could have four such connections). In the original paper by Hoshen and Kopelman the labels for the sites who did not originally carry the canonical label, were set to a negative integer, symbolizing that they were aliases. A positive value was used at the canonical label, showing the number of sites in that cluster. This was not used in this project since the number of links in a cluster is not necessarily equal to the number of sites.
+In this paper an occupied site corresponds to a site with connections to the neighbouring sites (in the 2D example above, each site could have four such connections). In the original paper by Hoshen and Kopelman \cite{Hoshen:HKAlgo} the labels for the sites who did not originally carry the canonical label, were set to a negative integer, symbolizing that they were aliases. A positive value was used at the canonical label, showing the number of sites in that cluster. This was not used in this project since the number of links in a cluster is not necessarily equal to the number of sites.
 
 \section{Graph Dividing Algorithm}
 \label{sec:GraphDivisonAlgorithm}
@@ -192,7 +188,7 @@ or
     \sigma_{\bar A} = \frac{\sigma_A}{\sqrt{N}}
 \end{equation}
 
-So the standard error in this estimation decreases as $N^{-1/2}$.
+so the standard error in this estimation decreases as $N^{-1/2}$.
 
 \subsection{Bootstrap}
 \label{subsec:Bootstrap}
@@ -247,19 +243,11 @@ Testing is an essential part of writing a simulation. The correctness of the cod
 \subsection{Unit Testing}
 \label{sec:UnitTesting}
 
-Unit testing refers to the practice of isolating a `unit' of code and testing its correctness. A unit can be any small piece of code with an expected behaviour.
-
-This was done by manually calculating the expected output of some code, given some input, and ensuring that the piece of code produced an equivalent result.
-
-The parts of the simulation using a pseudorandom number generator were tested by randomly selecting a set of seeds on which the tests were run upon. The correctness is then assumed from this subset of possible inputs.
-
-Combining multiple units into one test is called integration testing. This assumes that each unit is correct by itself, and it was used to more closely ressemble the actual simulation.
+Unit testing refers to the practice of isolating a `unit' of code and testing its correctness. A unit can be any small piece of code with an expected behaviour. This was done by manually calculating the expected output of some code, given some input, and ensuring that the piece of code produced an equivalent result. The parts of the simulation using a pseudorandom number generator were tested by randomly selecting a set of seeds on which the tests were run upon. The correctness is then assumed from this subset of possible inputs. Combining multiple units into one test is called integration testing. This assumes that each unit is correct by itself, and it was used to more closely ressemble the actual simulation.
 
 \subsection{Regression Testing}
 \label{sec:RegressionTesting}
 
-Rerunning the relevant tests in a continuous manner after each update is called regression testing. This ensures that, however many unintended consequences were introduced during the update, the expected behaviour of the program is still intact.
-
-This was done by writing a `hook' such that, whenever a piece of code were recompiled, the relevant tests were subsequently compiled and run. With sufficient tests in place, the correctness of the code after the update was assumed.
+Rerunning the relevant tests in a continuous manner after each update is called regression testing. This ensures that, however many unintended consequences were introduced during the update, the expected behaviour of the program is still intact. This was done by writing a `hook' such that, whenever a piece of code were recompiled, the relevant tests were subsequently compiled and run. With sufficient tests in place, the correctness of the code after the update was assumed.
 
 
