@@ -1,3 +1,7 @@
+In this chapter the different models used in this thesis are described. The loop expansion, giving the context of the Worm algorithm is examined for each model. The method of determining the critical temperature of an XY lattice using the winding number is discussed.
+
+Finally the definition of the Hausdorff dimension is shown and different ways of determining it is discussed.
+
 \section{Ising model}
 
 The Ising model consists of discrete atomic spins $S$ that can be found in two states represented by the values $\{-1, 1\}$. This can be applied to a lattice where $S_i$ is the spin of lattice site $i$.
@@ -9,9 +13,8 @@ The energy of such a configuration is then given by the Hamiltonian
 \label{eq:isingmodelhamiltonian}
 \end{equation}
 
-Where $J$ is the bond strength in the lattice and $\langle ij \rangle$ refers to an only nearest neighbour interaction.
+where $J$ is the bond strength in the lattice and $\langle ij \rangle$ refers to an only nearest neighbour interaction.
 
-% TODO: Maybe add about the expansion of the correlation function
 \subsection{Loop expansion}
 \label{subsec:IsingLoopExpansion}
 
@@ -28,7 +31,7 @@ The partition function $Z$ can therefore be written as
 \label{Eq:partitionIsingWithoutExpansion}
 \end{equation}
 
-Since $S_i S_j = \pm 1$ Euler identities can be used to expand the exponential in Equation (\ref{Eq:partitionIsingWithoutExpansion}).
+Since $S_i S_j = \pm 1$, the Euler identities can be used to expand the exponential in Equation (\ref{Eq:partitionIsingWithoutExpansion}).
 
 \begin{align*}
     e^{KS_i S_j} &= \frac{e^K + e^{-K}}{2} + S_i S_j \frac{e^K - e^{-K}}{2} \\
@@ -45,14 +48,14 @@ In a $2D$ lattice with $N$ spins and periodic boundary conditions there are $2N$
     &= \cosh^{2N} (K) \cdot 2^N Z'
 \end{align*}
 
-Where
+where
 
 \begin{align*}
     Z' &= 2^{-N} \sum_{\text{all states}} \Pi_{\langle ij \rangle} (1 + T S_i S_j) \\
     &= 2^{-N} \sum_{S_1 = \pm 1} \sum_{S_2 = \pm 1} \ldots \sum_{S_N = \pm 1} \left ( 1 + T \sum_{l = 1} S_i S_j + T^2 \sum_{l = 2} (S_i S_j)(S_{i'} S_{j'}) + \ldots \right ) 
 \end{align*}
 
-Where the sums $\sum_{l=L}$ should be interpreted as the sum over all sets where the link length is $L$. Link length is the number of coupling terms $S_i S_j$ as can be seen in Figure (\ref{fig:LinkIsing}).
+where the sums $\sum_{l=L}$ should be interpreted as the sum over all sets where the link length is $L$. Link length is the number of coupling terms $S_i S_j$ as can be seen in Figure (\ref{fig:LinkIsing}).
 
 \begin{figure}[h!]
     \begin{subfigure}{.5\linewidth}
@@ -85,7 +88,7 @@ Rewriting $Z'$ in terms of loop lengths gives
     Z' = \sum_L g(L) T^L
 \end{equation}
 
-Where $g(L)$ is the number of loops with length $L$. Finally, the partition function can be written as
+where $g(L)$ is the number of loops with length $L$. Finally, the partition function can be written as
 
 \begin{equation}
     Z = 2^N \cosh^{2N} (K) \sum_L g(L) T^L
@@ -94,23 +97,23 @@ Where $g(L)$ is the number of loops with length $L$. Finally, the partition func
 \subsection{Correlation Function}
 \label{subsec:CorrelationFunction}
 
-By the fluctuation-dissipation theorem the susceptibility can be written as \cite{Chaikin:PrincCondencedMatterPhysics}
+By the fluctuation-dissipation theorem the susceptibility can be written as 
 
 \begin{equation}
     \chi = \frac{\beta}{N} \sum_{ij} G_{ij}
 \end{equation}
 
-Where $G_{ij} = \langle S_i S_j \rangle - \langle S_i \rangle^2$ is the connected correlation function between two lattice points $i$ and $j$.
+where $G_{ij} = \langle S_i S_j \rangle - \langle S_i \rangle^2$ is the connected correlation function between two lattice points $i$ and $j$ \cite{Chaikin:PrincCondencedMatterPhysics}.
 
-In the high-temperature expansion the term $\langle S_i \rangle^2$ goes to zero. So for a $2D$ Ising model
+In the high-temperature expansion the term $\langle S_i \rangle^2$ goes to zero. Thus, for a $2D$ Ising model
 
 \begin{align}
     G_{ij} &= \frac{1}{Z} \sum_{\text{all states}} S_i S_j e^{-\beta E} \\
-    &= \left \{ \text{See Section \ref{subsec:IsingLoopExpansion}} \right \} \\
+    &= \left \{ \text{see Section \ref{subsec:IsingLoopExpansion}} \right \} \\
     &= \frac{1}{Z} \cosh^{2N} (K) \sum_{\text{all states}} S_i S_j \Pi_{\langle ij \rangle} (1 + \tanh(K) S_i S_j)
 \end{align}
 
-So the acceptance probability is \cite{Walter:IntroToMC}
+hence, the acceptance probability is \cite{Walter:IntroToMC}
 
 \begin{equation}
 A_{ab} = \left\{
@@ -162,7 +165,7 @@ Since Equation (\ref{eq:xypart1}) is invariant under the transformation $\theta_
     e^{\alpha \cos \beta} = \sum_{\gamma = -\infty}^{\infty} I_\gamma ( \alpha ) e^{i \gamma \beta}
 \end{equation}
 
-where $I_\gamma(\alpha)$ is the modified Bessel function. Using that $e^{\sum_i x_i} = \prod_i e^{x_i}$
+where $I_\gamma(\alpha)$ is the modified Bessel function. Using that $e^{\sum_i x_i} = \prod_i e^{x_i}$ gives
 
 \begin{align}
     Z &= \prod_i \int \frac{\mathrm d \theta_i}{2 \pi} \sum_{J_{\langle ij \rangle} = -\infty}^{\infty} \prod_{b = \langle ij \rangle} I_{J_{\langle ij \rangle}} ( K ) e^{i J_{\langle ij \rangle} (\theta_i - \theta_j)} \\
@@ -171,7 +174,7 @@ where $I_\gamma(\alpha)$ is the modified Bessel function. Using that $e^{\sum_i 
     &=  \prod_i \sum_{J_b} \left ( \int \frac{\mathrm d \theta_i}{2 \pi} e^{i N_i (\theta_i - \theta_j)} \right ) \left ( \prod_b I_{J_b} \right ) 
 \end{align}
 
-Where in the last step, $\prod_{\langle ij \rangle} e^{iJ_{\langle ij \rangle} (\theta_i - \theta_j)} = e^{iN_i (\theta_i - \theta_j)}$. $N_i$ is therefore the sum of $J$ for the nearest neighbours of site $i$. Noting that
+where in the last step, $\prod_{\langle ij \rangle} e^{iJ_{\langle ij \rangle} (\theta_i - \theta_j)} = e^{iN_i (\theta_i - \theta_j)}$. $N_i$ is therefore the sum of $J$ for the nearest neighbours of site $i$. Noting that
 
 \begin{equation}
     \int \frac{\mathrm d \theta_i}{2 \pi} e^{i N_i (\theta_i - \theta_j)} = C \delta_{N_i 0}
@@ -282,7 +285,7 @@ Using the definition (\ref{eq:defwinding}) for the winding number in the partiti
     &= \sum_{W_\mu} Z_0 \cdot e^{i A W_\mu}
 \end{align}
 
-Using this result in Equation (\ref{eq:xyfreeenergy})
+Using this result in Equation (\ref{eq:xyfreeenergy}) gives
 
 \begin{align}
     \frac{\partial^2 F}{\partial A^2} &= T \left ( \left ( \frac{\sum_{W_\mu} (i W_\mu) Z_0 e^{iAW_\mu}}{\sum_{W_\mu} Z_0 e^{iAW_\mu}} \right )^2 - \frac{\sum_{W_\mu} (- W_\mu^2) Z_0 e^{iAW_\mu}}{\sum_{W_\mu} Z_0 e^{iAW_\mu}} \right ) \\
@@ -292,7 +295,7 @@ Using this result in Equation (\ref{eq:xyfreeenergy})
     &= T \langle W_\mu^2 \rangle
 \end{align}
 
-Where $\langle W_\mu \rangle = 0$ since there is an equal chance of percolating from $-\mu$ to $\mu$ as the other way around.
+where $\langle W_\mu \rangle = 0$ since there is an equal chance of percolating from $-\mu$ to $\mu$ as the other way around.
 
 The superfluid density can finally be determined as
 
@@ -304,7 +307,7 @@ The superfluid density can finally be determined as
 \label{subsec:villainApprox}
 
 
-The Villain model the Hamiltonian has the form \cite{Villain:VillainOriginalPaper}
+In the Villain model the Hamiltonian has the form \cite{Villain:VillainOriginalPaper}
 
 \begin{equation}    
     H = \sum_{ij} V_{ij}( \theta_i - \theta_j) + \sum_i U(\theta_i)
@@ -317,7 +320,7 @@ By taking
     U( \theta_i ) &= 0
 \end{align}
 
-The XY model in Equation (\ref{eq:xymodel}) is recovered.
+the XY model in Equation (\ref{eq:xymodel}) is recovered.
 
 The approximation then made by Villain was to replace the magnetic Hamiltonian one which would simplify the calculations by making the integrals Gaussian \cite{Villain:VillainOriginalPaper}.
 
@@ -327,21 +330,21 @@ Through a series of transformations the energy in this approximation can be writ
     E = \frac{1}{2} \sum_i J_i^2
 \end{equation}
 
-Where $J_i^2$ is the flux from site $i$.
+where $J_i^2$ is the flux from site $i$.
 
-The acceptance probability (See Section \ref{sec:MetropolisAlgorithm}) is therefore
+The acceptance probability (see Section \ref{sec:MetropolisAlgorithm}) is therefore
 
 \begin{align}
     A_{ab} &= \min \left ( 1, e^{-\Delta E} \right ) \\
     &= \min \left ( 1, e^{-\frac{1}{2} \Delta J_{ab}^2} \right )
 \end{align}
 
-Where $J_{ab}$ is the link between site $a$ and $b$.
+where $J_{ab}$ is the link between site $a$ and $b$.
 
 \subsection{Energy Scaling}
 \label{subsec:xyenergyScaling}
 
-The scaling behaviour of the heat capacity is% TODO: CITE HERE
+The scaling behaviour of the heat capacity is \cite{Plischke:EqStatMech}
 
 \begin{equation}
     C = \frac{e}{t} = \tilde a t^{-\alpha} + \tilde b
@@ -366,15 +369,14 @@ where $d$ is the dimension of the sample. This scaling behaviour for the total e
 \section{Hausdorff dimension}
 \label{sec:hausdorffdimension}
 
-% TODO: Write about Hausdorff dimension from the book on Telegram
 
-Let $X$ be a metric space, $\alpha$ be some positive real number, then the $\alpha$-Hausdorff measure of a subset $A \subset X$ is defined as \cite{Heinonen:HausdorffDimMath}
+Let $X$ be a metric space, $\alpha$ be some positive real number, then the $\alpha$-Hausdorff measure of a subset $A \subset X$ is defined as 
 
 \begin{equation}
     \mathcal{H}^{\delta}_\alpha (A) = \inf \left \{ \sum_{B \in \mathcal{B}} \left ( \text{diam}(B) \right)^\alpha \right \}
 \end{equation}
 
-Where $\mathcal{B}$ is a cover of $A$ of closed balls with diameter no larger than $\delta$.
+where $\mathcal{B}$ is a cover of $A$ of closed balls with diameter no larger than $\delta$ \cite{Heinonen:HausdorffDimMath}.
 
 Taking the limit where $\delta \to 0$, the number of possible covers decreases. Since the limit is bounded from below, the limit exists \cite{Rudin:PrincMathAnalysis} and
 
@@ -393,7 +395,7 @@ Examining Equation (\ref{eq:hausdorffmeasure}) gives
     &= \lim_{\delta \to 0} \inf \left \{ N_{\delta}^A \delta^\alpha \right \}
 \end{align}
 
-Where $N_{\delta}^A$ is the number of balls with diameter $\delta$ that can cover $A$. Though not a proof, one can intuitively say that if for some $\alpha > 0$ the limit is finite, then $\mathcal{H}_{\alpha'} = 0$ for each $\alpha' > \alpha$. Therefore the number
+where $N_{\delta}^A$ is the number of balls with diameter $\delta$ that can cover $A$. Though not a proof, one can intuitively say that if for some $\alpha > 0$ the limit is finite, then $\mathcal{H}_{\alpha'} = 0$ for each $\alpha' > \alpha$. Therefore the number
 
 \begin{equation}
     \text{dim}_H (A) = \inf \{ \alpha > 0 : \mathcal{H}_\alpha (A) = 0 \}
@@ -411,7 +413,7 @@ Given some subset $A$ of a metric space $X$, let $N(\epsilon)$ be the number of 
     d = \lim_{\epsilon \to 0} \frac{\ln N(\epsilon)}{\ln 1 / \epsilon}
 \end{equation}
 
-If the limit exists.
+if the limit exists.
 
 For intuition it helps to look at some examples. If $A$ is a smooth line of length $l$, then the number of boxes needed to cover $A$ scales as
 
@@ -419,13 +421,13 @@ For intuition it helps to look at some examples. If $A$ is a smooth line of leng
     N_l(\epsilon) \propto \frac{L}{\epsilon}
 \end{equation}
 
-While for some two dimensional region with area $\Lambda$ the boxes needed is
+while for some two dimensional region with area $\Lambda$ the boxes needed is
 
 \begin{equation}
     N_{\Lambda}(\epsilon) \propto \frac{\Lambda}{\epsilon^2}
 \end{equation}
 
-Such that for a $d$-dimensional subset $A$, the boxes needed will scale as
+such that for a $d$-dimensional subset $A$, the boxes needed will scale as
 
 \begin{equation}
     N (\epsilon) \propto \frac{1}{\epsilon^d} \Rightarrow d = \frac{\ln N(\epsilon)}{\ln 1 / \epsilon}
@@ -450,7 +452,7 @@ Another way of determining the Hausdorff dimension is to consider a scaling syst
     N = L^{D_H}
 \end{equation}
 
-Where $N$ is the number of links in the largest cluster, $L$ is the linear system length and $D_H$ is the Hausdorff dimension.
+where $N$ is the number of links in the largest cluster, $L$ is the linear system length and $D_H$ is the Hausdorff dimension.
 
 This scaling relation can be seen in Figure (\ref{fig:results_maxloopdimension}).
 
