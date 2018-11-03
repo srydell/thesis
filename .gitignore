@@ -33,3 +33,4 @@ python/venv/*
 !literature/
 !thesis/
 !python/
+!presentation/
