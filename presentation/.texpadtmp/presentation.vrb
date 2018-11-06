@@ -1,6 +1,7 @@
-\frametitle{Sections}
-Sections group slides of the same topic
-
-  \begin{verbatim}    \section{Elements}\end{verbatim}
-
-  for which \themename provides a nice progress indicator \ldots
+\frametitle{Backup slides: Graph Dividing Algorithm}
+\begin{figure}[h!]
+        \centering
+            \includegraphics[width=0.8\textwidth]{figures/bench_graph_div.pdf}
+    %    \caption{}
+    %    \label{fig:}
+    \end{figure}
