@@ -1,7 +1,5 @@
-\frametitle{Backup slides: Graph Dividing Algorithm}
+\frametitle{Extra slides: Graph Dividing Algorithm}
 \begin{figure}[h!]
         \centering
             \includegraphics[width=0.8\textwidth]{figures/bench_graph_div.pdf}
-    %    \caption{}
-    %    \label{fig:}
     \end{figure}

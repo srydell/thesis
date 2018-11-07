@@ -57,6 +57,9 @@
 
 \begin{frame}{Worm Algorithm}
     Idea is to sample non-zero contributions of the partition function at $T = T_c$. Express them in a way as to form `loops'.
+% The Worm algorithm operates on graph configurations instead of individual spins. This way, the algorithm can stay local and can avoid, to some extent, the so called critical slowdown that happens near transition points [5].
+The algorithm still uses the Metropolis acceptance rates and therefore it fulfills detailed balance (see Section 3.3).
+Intuitively, the ‘worm’ part can be seen as a ‘magic marker’ that can connect or remove the connection between two sites. This way the marker draws patterns onto a lattice that corresponds to a configuration, typically of the partition function. This paper is only concerned with whenever the marker reaches the same lattice site that it started on, forming loops, or clusters.   ````~~~~`  
 \end{frame}
 
 \begin{frame}{Hoshen Kopelman Labeling and Graph Dividing}
@@ -198,7 +201,8 @@
         \item Hove, Mo and Sudbo: $D_H = 2.287 \pm 4 \cdot 10^{-3}$
         \item Prokof'ev and Svistunov Comment: $D_H = 1.7655 \pm 2 \cdot 10^{-3}$
     \end{enumerate}
-% In the year 2000 Hove, Mo and Sudbo published 
+% In the year 2000 Hove, Mo and Sudbo published an article with the result of 2.287 for the Hausdorff dimension of an XY system. This was refuted by Prokof'ev and Svistunov in 2005 with a comment, arguing that Hove, Mo and Sudbo made a mistake in their self-similar expression for the dimension. Their result clearly differs from Hove, Mo and Sudbo's.
+% Recreating this with the box dimension...
 \end{frame}
 
 \begin{frame}{Box Counting Method $3D$ XY}
@@ -208,20 +212,26 @@
     %    \caption{}
     %    \label{fig:}
     \end{figure}
+% ...clearly favours Prokof'ev and Svistunov with the value from this thesis being 1.77468. Here Prokof'evs results is labeled D_H^P, while Sudbo's D_H^S. In 2006, Sudbo replied, and the issue concerned if the interactions between the loops are local or not. In this thesis the interactions are completely local, and it does not necessarily correspond to the same fractal dimension.
 \end{frame}
 
 \begin{frame}{Comparison of Dimensions $3D$ XY}
     \begin{figure}[h!]
         \centering
             \includegraphics[width=0.8\textwidth]{figures/dimenson_comparison_XY.pdf}
-    %    \caption{}
-    %    \label{fig:}
     \end{figure}
+% Here is a final comparison without the extra data from my simulations. Now to get a bit more intuition about how these systems actually form I will show two animations, one of a smaller system where each step in the worm algorithm can be seen clearly, and one of the largest cluster of a system more closely to those I've actually measured on.
 \end{frame}
 
 
-\begin{frame}{$3D$ XY Animation}
+\begin{frame}{$3D$ XY Animation - $4^3$ system}
 %  \animategraphics[width=\linewidth,loop]{10}{figures/3dxy_animation}{}{}
+% So here is a completely blank system, where no configurations have been formed. As you can see there are periodic boundary conditions and the size of each arrow represents the weight between the two sites.
+\end{frame}
+
+\begin{frame}{$3D$ XY Animation - Largest cluster}
+%  \animategraphics[width=\linewidth,loop]{10}{figures/3dxy_largest_cluster.pdf}{}{}
+% So here is a 64^3 system where the sites that are linked in the largest cluster is highlighted in red. So this lattice would then be divided into boxes and checked what the minimal cover is.
 \end{frame}
 
 \begin{frame}{Summary}
@@ -250,47 +260,40 @@
             \caption{$3D$ XY}
         }
     \end{table}
+% Finally, here is a small summary of the major results in this thesis. Thank you. Any questions?
 \end{frame}
 
 \appendix
 % --------------- Backup slides ---------------
 
 % --------------- Ising ---------------
-\begin{frame}[fragile]{Backup slides: Box Dimension $64^2$ Ising}
+\begin{frame}[fragile]{Extra slides: Box Dimension $64^2$ Ising}
     \begin{figure}[h!]
         \centering
             \includegraphics[width=0.8\textwidth]{figures/box_dim_64x64Ising.pdf}
-    %    \caption{}
-    %    \label{fig:}
     \end{figure}
 \end{frame}
 
-\begin{frame}[fragile]{Backup slides: Susceptibility $2D$ Ising}
+\begin{frame}[fragile]{Extra slides: Susceptibility $2D$ Ising}
     \begin{figure}[h!]
         \centering
             \includegraphics[width=0.8\textwidth]{figures/susceptibility128x128Ising.pdf}
-    %    \caption{}
-    %    \label{fig:}
     \end{figure}
 \end{frame}
 
 % --------------- Graph Dividing ---------------
 
-\begin{frame}[fragile]{Backup slides: Graph Dividing Algorithm}
+\begin{frame}[fragile]{Extra slides: Graph Dividing Algorithm}
     \begin{figure}[h!]
         \centering
             \includegraphics[width=0.8\textwidth]{figures/graphDividing.pdf}
-    %    \caption{}
-    %    \label{fig:}
     \end{figure}
 \end{frame}
 
-\begin{frame}[fragile]{Backup slides: Graph Dividing Algorithm}
+\begin{frame}[fragile]{Extra slides: Graph Dividing Algorithm}
     \begin{figure}[h!]
         \centering
             \includegraphics[width=0.8\textwidth]{figures/bench_graph_div.pdf}
-    %    \caption{}
-    %    \label{fig:}
     \end{figure}
 \end{frame}
 
