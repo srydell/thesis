@@ -155,8 +155,6 @@ where each sampling was labeled $A_i$. To show that this is an unbiased estimato
     &= \frac{1}{N} \sum_{i = 1}^{N} \langle A_i \rangle - \langle A \rangle \\
 \label{eq:unbiasedEst}
 %
-    &= \frac{1}{N} \sum_{i = 1}^{N} \langle A \rangle - \langle A \rangle \\
-%
     &= \frac{1}{N} N \langle A \rangle - \langle A \rangle = 0
 \end{align}
 
@@ -166,8 +164,6 @@ The standard deviation of this estimate can be calculated through the variance.
 
 \begin{align}
     \sigma_{\bar A}^{2} &= V\left( \bar A - \langle A \rangle \right ) \\
-%
-    &= V\left(\bar A\right) - V\left(\langle A \rangle\right) \\
 %
     &= \{ \langle A \rangle \ \text{is a constant} \Rightarrow V(\langle A \rangle) = 0 \} \\
 %
@@ -179,7 +175,7 @@ The standard deviation of this estimate can be calculated through the variance.
 %
     &= \{ V(A_i) = \sigma_{A}^2 \} \\
 %
-    &= \frac{1}{N^2} N \sigma_{A}^2 = \frac{\sigma_{A}^2}{N}
+    &= \frac{\sigma_{A}^2}{N}
 \end{align}
 
 or
