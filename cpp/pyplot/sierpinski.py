@@ -21,13 +21,12 @@ def plot(points):
 
     plt.plot(xx, yy, 'k,')
 
-def sierpinski(n):
+def sierpinski(n, vertices):
     """
     Generates positions for the Chaos Game Sierpinski
     triangle with 'n iterations in a square of size 1x1.
     """
 
-    vertices = [(0.0, 0.0), (0.5, 1.0), (1.0, 0.0)]
     points = []
 
     # initial vertex
@@ -46,6 +45,12 @@ def sierpinski(n):
     plot(points)
 
 plt.axis('off')
-sierpinski(n=100000)
-# plt.show()
-illu.save_figure("sierpinski")
+n = 50000
+vertices = [(0.0, 0.0), (0.5, 1.0), (1.0, 0.0)]
+sierpinski(n, vertices)
+vertices = [(1.1, 0.0), (1.6, 1.0), (2.1, 0.0)]
+sierpinski(n, vertices)
+vertices = [(0.55, 1.1), (1.05, 2.1), (1.55, 1.1)]
+sierpinski(n, vertices)
+plt.show()
+# illu.save_figure("sierpinski_divided")
