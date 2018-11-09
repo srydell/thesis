@@ -1,18 +1,18 @@
 % TODO: Write about method
 
-The methods used in this thesis are presented in this chapter, starting with the Monte Carlo simulations, laying the background for the Worm algorithm. The Hoshen Kopelman algorithm, used for determining the location of the clusters in the graph is discussed, and an algorithm used for dividing the graph into boxes used in the box counting method is outlined. Finally, error estimation and code implementation is discussed.
+The numberical simulations used in this thesis are presented in this chapter, starting with the Monte Carlo simulations, laying the background for the Worm algorithm. The Hoshen Kopelman algorithm, used for determining the location of the clusters in the graph is discussed, and an algorithm used for dividing the graph into boxes used in the box counting method is outlined. Finally, error estimation and code implementation is discussed.
 
 \section{Monte Carlo Simulations}
 \label{sec:MonteCarloSims}
 
-A Monte Carlo simulation is a stochastic algorithm to get statistical results from some system where there are many degrees of freedom. Markov Chain Monte Carlo is the idea to use Markov Chains to propose the next step in the algorithm, i.e.\ the next proposed step is only dependent on the previous one. Using a well-chosen stationary probability distribution, together with ergodicity, the desired distribution will be sampled.
+A Monte Carlo simulation is a stochastic algorithm to get statistical results for a model system with many degrees of freedom. In Markov Chain Monte Carlo the idea is to use Markov Chains to propose the next step in the algorithm, i.e.\ the next proposed step is only dependent on the previous one. Using a well-chosen stationary probability distribution, together with ergodicity, the desired distribution can be sampled very efficiently.
 
 \section{Ergodicity}
 \label{sec:Ergodicity}
 
-An ergodic system is one where its time average coincides with its ensemble average. 
+An ergodic system is one where time averages coincides with its ensemble averages. 
 
-Intuitively, ergodicity is the assumption that a Markov chain starting from some state $S_a$ with a non zero Boltzmann weight can reach any other state $S_b$ within a finite number of updates \cite{Zwanzig:nonequil_stat_mech}.
+Intuitively, ergodicity is the assumption that a Markov chain starting from some state $S_a$ with a non-zero Boltzmann weight can reach any other state $S_b$ within a finite number of updates \cite{Zwanzig:nonequil_stat_mech}.
 
 This is necessary to assume, since otherwise there could be a non zero contribution to the partition function not being sampled by the Markov chain.
 
@@ -25,7 +25,7 @@ Generally, a Markov process can be described through the Master equation
     \frac{\mathrm d P_a}{\mathrm d t} = \sum_{a \neq b} \left ( P_b W_{ba} - P_a W_{ab} \right )
 \end{equation}
 
-where $P_a$ is the probability to find the system in the state a, and $W_{ab}$ is the transition rate from the state $a$ to $b$. This equation describes the equilibrating of $P_a$ into $P_a^{eq} \propto e^{-\beta E_a}$. The resulting equation is called detailed balance
+\noindent where $P_a$ is the probability to find the system in the state a, and $W_{ab}$ is the transition rate from the state $a$ to $b$. This equation describes the equilibrating of $P_a$ into $P_a^{eq} \propto e^{-\beta E_a}$. The resulting equation is called detailed balance
 
 \begin{equation}
     W_{ba} e^{\beta E_b} = W_{ab} e^{\beta E_a}
@@ -33,18 +33,18 @@ where $P_a$ is the probability to find the system in the state a, and $W_{ab}$ i
 
 This describes an equal rate of flow into the state $a$ as out of it.
 
-Together with ergodicity, detailed balance ensures a correct algorithm \cite{Walter:IntroToMC}.
+Together with ergodicity, detailed balance ensures that the algorithm samples a desired target distribution, here the Boltzmann statistics \cite{Walter:IntroToMC}.
 
 \section{Metropolis Algorithm}
 \label{sec:MetropolisAlgorithm}
 
-Splitting the transition rate as
+It is often very useful to factorize the transition rate according to
 
 \begin{equation}
     W_{ab} = T_{ab} A_{ab}
 \end{equation}
 
-where $T_{ab}$ is a trial proposition probability and $A_{ab}$ is an acceptance probability. Letting $T_{ab} = T_{ba}, \ \forall a, \ b$ and choosing one of the acceptance probabilities $A_{ab}, \ A_{ba}$ to be equal to $1$, together with detailed balance, the Metropolis algorithm is realized \cite{Walter:IntroToMC}. The acceptance probability is therefore
+\noindent where $T_{ab}$ is a trial proposition probability and $A_{ab}$ is an acceptance probability. Letting $T_{ab} = T_{ba}, \ \forall a, \ b$ and choosing one of the acceptance probabilities $A_{ab}, \ A_{ba}$ to be equal to $1$, together with detailed balance, the Metropolis algorithm is realized \cite{Walter:IntroToMC}. The acceptance probability is therefore
 
 \begin{equation}
     A_{ab} = \min \left \{ 1, \frac{P_b}{P_a} \right \} = \min \{ 1, e^{-\beta(E_b - E_a )} \}
@@ -56,14 +56,16 @@ where $T_{ab}$ is a trial proposition probability and $A_{ab}$ is an acceptance 
 
 The Worm algorithm operates on graph configurations instead of individual spins. This way, the algorithm can stay local and can avoid, to some extent, the so called critical slowdown that happens near transition points \cite{Prokofev:first_worm_algorithm}.
 
-The algorithm still uses the Metropolis acceptance rates and therefore it fulfills detailed balance (see Section \ref{sec:DetailedBalance}).
+The algorithm still uses the Metropolis acceptance rates and therefore it fulfills detailed balance (see Sec. \ref{sec:DetailedBalance}).
+
+The algorithm is divided into three parts. First a site and one of its neighbours are chosen at random on the lattice. The site and its neighbour $n$ is then connected with some acceptance probability. If the move was accepted, the `worm' is now at $n$ and chooses a neighbour to $n$ at random, creating a path onto the lattice. The algorithm finishes whenever the worm is back at its starting site, forming a loop. Now thermodynamic quantaties can be sampled and used for averages when sufficient data has been collected.
 
 Intuitively, the `worm' part can be seen as a `magic marker' that can connect or remove the connection between two sites. This way the marker draws patterns onto a lattice that corresponds to a configuration, typically of the partition function. This paper is only concerned with whenever the marker reaches the same lattice site that it started on, forming loops, or clusters.
 
-\section{Hoshen Kopelman}
+\section{Hoshen-Kopelman Algorithm}
 \label{sec:HoshenKopelman}
 
-To find the clusters a modified version of the Hoshen Kopelman algorithm was used. A raster scan is used to label disjoint sets into groups with some canonical label \cite{Hoshen:HKAlgo}. It is a variant on the union-find algorithm and is most easily described through the associated functions. Intuitively, applying the find function on a site $i$ returns the canonical, often implemented as the smallest, label in the cluster that $i$ belongs to. Union uses find to ensure that two sites $i$ and $j$ are connected by setting the canonical label of $i$ to that of $j$ (or vice versa). 
+To find the clusters a modified version of the Hoshen-Kopelman algorithm was used. A raster scan is used to label disjoint sets into groups with some canonical label \cite{Hoshen:HKAlgo}. It is a variant of the union-find algorithm and is most easily described through the associated functions, \textit{find} and \textit{union}. The union-find algorithm groups related sites together under a \textit{label}. Applying the find function on a site $i$ returns the canonical, often implemented as the smallest, label in the cluster that $i$ belongs to. Union uses find to ensure that two sites $i$ and $j$ are connected by setting the canonical label of $i$ to that of $j$ (or vice versa), essentially setting $i$ and $j$ under the same label. 
 
 An example implementation would be to have a 2D graph without periodic boundary conditions of zeros and ones, where a site is occupied if it has a one associated with it, and unoccupied otherwise. A disjoint set here is a number of occupied sites neighbouring each other with unoccupied sites surrounding them. For simplicity the scan can start in the lower left corner, moving right and up, while search for neighbours left and down, ensuring that if a neighbouring site is occupied, it has been labeled before. This is done by following the steps outlined bellow.
 
@@ -75,9 +77,9 @@ In this paper an occupied site corresponds to a site with connections to the nei
 \label{sec:GraphDivisonAlgorithm}
 
 
-In order to calculate the box dimension the lattice need to be divided into boxes of decreasing size (see Section \ref{sec:boxdimension}). For this a new algorithm was written using that all graphs in this thesis had a linear system size of $2^{n}$, where $n$ is some integer. The algorithm could easily be generalized to $x^n$ or using other configurations by a well-chosen stopping length $l_0$. What follows is a brief overview of the algorithm and for intuition, one step in the recursion can be seen in Figure (\ref{fig:graphdividingalgo}).
+In order to calculate the box dimension the lattice is divided into boxes of decreasing size (see Sec. \ref{sec:boxdimension}). For this a new algorithm was written exploiting that all graphs in this thesis had a linear system size of $2^{n}$, where $n$ is some integer. The algorithm could easily be generalized to $x^n$ or using other configurations by a well-chosen stopping length $l_0$. What follows is a brief overview of the algorithm and for intuition, one step in the recursion can be seen in Fig. (\ref{fig:graphdividingalgo}).
 
-For brevity some abbreviations are introduced.
+For brevity some abbreviations are first introduced.
 
 \begin{equation*}
     \begin{aligned}
@@ -90,6 +92,8 @@ For brevity some abbreviations are introduced.
         \text{perm}(v) =& \ \text{All permutations of } v &\quad s_i =& \ \text{starting site of the current box}
     \end{aligned}
 \end{equation*}
+
+The graph dividing algorithm is defined by the following steps:
 
 \begin{enumerate}
     \item If $l_i \geq l_0$, go to 2, else stop.
@@ -122,7 +126,7 @@ For brevity some abbreviations are introduced.
     \label{fig:graphdividingalgo}
 \end{figure}
 
-This algorithm can be written to perform in linear time, as can be seen in Figure (\ref{fig:bench_graphdiv}). 
+This algorithm can be written to perform in linear time, as can be seen in Fig. (\ref{fig:bench_graphdiv}). 
 
 \begin{figure}[h!]
     \centering
@@ -134,7 +138,7 @@ This algorithm can be written to perform in linear time, as can be seen in Figur
 \section{Error Estimation}
 \label{sec:ErrorEst}
 
-In this thesis a number of error estimation techniques were used to know how much data was needed for each measurement. In this section the techniques will be described intuitively.
+In this thesis a number of error estimation techniques were used to control the statistical uncertainty of the results. In this section these techniques will be reviewed.
 
 \subsection{Monte Carlo Error Estimation}
 \label{subsec:MonteCarloErrorEst}
@@ -145,22 +149,20 @@ Given a Monte Carlo simulation where polling of some quantity $A$ has been done 
     \bar A = \frac{1}{N} \sum_{i = 1}^{N} A_i
 \end{equation}
 
-where each sampling was labeled $A_i$. To show that this is an unbiased estimator the expectation value of the difference between the estimation and the real value $\langle A \rangle$ is used.
+\noindent where each sampling was labeled $A_i$. To show that this is an unbiased estimator the expectation value of the difference between the estimation and the real value $\langle A \rangle$ is used.
 
 \begin{align}
     \langle \bar A - \langle A \rangle \rangle &= \langle \bar A \rangle - \langle A \rangle \\
 %
     &= \left \langle \frac{1}{N} \sum_{i = 1}^{N} A_i \right \rangle - \langle A \rangle \\
 %
-    &= \frac{1}{N} \sum_{i = 1}^{N} \langle A_i \rangle - \langle A \rangle \\
-\label{eq:unbiasedEst}
-%
-    &= \frac{1}{N} N \langle A \rangle - \langle A \rangle = 0
+    &= \langle A \rangle - \langle A \rangle = 0
+    \label{eq:unbiasedEst}
 \end{align}
 
-where the fact that $A_i$ is a random sampling from the distribution of $A$ was used in (\ref{eq:unbiasedEst}).
+\noindent where the fact that $A_i$ are random samples from the distribution of $A$ was used in Eq. (\ref{eq:unbiasedEst}).
 
-The standard deviation of this estimate can be calculated through the variance.
+The standard deviation of this estimate can be calculated as
 
 \begin{align}
     \sigma_{\bar A}^{2} &= V\left( \bar A - \langle A \rangle \right ) \\
@@ -173,20 +175,18 @@ The standard deviation of this estimate can be calculated through the variance.
 %
     &= \frac{1}{N^2} \sum_{i = 1}^{N} V(A_i) \\
 %
-    &= \{ V(A_i) = \sigma_{A}^2 \} \\
-%
     &= \frac{\sigma_{A}^2}{N}
 \end{align}
 
-or
+\noindent or
 
 \begin{equation}
     \sigma_{\bar A} = \frac{\sigma_A}{\sqrt{N}}
 \end{equation}
 
-so the standard error in this estimation decreases as $N^{-1/2}$.
+\noindent so the standard error in this estimation decreases as $N^{-1/2}$.
 
-\subsection{Bootstrap}
+\subsection{Bootstrap Error Analysis}
 \label{subsec:Bootstrap}
 
 Bootstrap is a resampling method to examine a probability distribution. In this thesis it was used to estimate the error propagation of parameters in curve fitting.
@@ -196,7 +196,7 @@ Given a set $\bm x$ of $N$ measurements from an unknown distribution $\hat \phi$
 \section{Optimization}
 \label{sec:Optimization}
 
-A large part of this project was spent optimizing the simulations. To fascilitate this process, the Google C++ framework \textit{benchmark} was used for measuring and comparing running times of different algorithms. Only the C++ code was optimized in this way since the prototypes written in Python were not concerned with computational speed. What follows is a summation of the biggest optimizations that were achieved during this project.
+All simulation code were implemented by the author. Hence, a large part of this project was spent optimizing the simulations. To fascilitate this process, the Google C++ framework \textit{benchmark} was used for measuring and comparing running times of different algorithms. Only the C++ code was optimized in this way since the prototypes written in Python were not concerned with computational speed. What follows is a summation of the biggest optimizations that were achieved during this project.
 
 \subsection{Lattice implementation - Squashing the Graph}
 \label{subsec:LatticeImpl}
@@ -213,7 +213,7 @@ The mapping used between the array index and the Euclidean space is
     n = x + y L + z L^2 + ...
 \end{equation}
 
-where $L$ is the linear system size.
+\noindent where $L$ is the linear system size.
 
 \begin{figure}[h!]
     \centering
@@ -225,16 +225,14 @@ where $L$ is the linear system size.
 \subsection{Saving Warmed Up Graphs}
 \label{subsec:SavingWarmedUpGraphs}
 
-Since there is no reliable way to guess a physical state at the start of a simulation, each system must be `warmed up' to produce valid results. One way of doing this is to continuously measure the quantity of interest, and while each measurement is quantifiably different from the previous one, keep updating the system.
+In order to produce valid results from a simulation, a physical system must be sampled. Since there is no reliable way to guess a physical state of a system at the start of a simulation, each system must be `warmed up' to produce valid results. One way of doing this is to iteratively update the system until measurements of the quantity of intereset is sufficiently stable. This is then assumed to be a physical state. A representation of the graph is stored on disk to be used as a starting point for following simulations. This greatly helped with performance as it decreased the simulation times.
 
-When the system finally produces sufficiently close results, a representation of the graph can be stored on disk. In this project, the graph was saved to a simple text file that could be parsed using regex. This greatly helped with performance, and in some cases halved the simulation times.
-
-The drawback of this solution is the need for a self-written parser. Since the simulation and plotting were done in two different programming languages, the better solution would be a combined interface such as an \textit{sqllite} database.
+In this thesis, the graph was saved to a text file, that could then be parsed with Python to plot the data, or C++ to simulate the system further. The drawback of this solution is the need for a self-written parser. Since the simulation and plotting were done in two different programming languages, the better solution would be a combined interface such as a database.
 
 \section{Testing}
 \label{sec:Testing}
 
-Testing is an essential part of writing a simulation. The correctness of the code ensures that the physical model is aptly described. To facilitate the development, a number of coding practices were applied, such as unit testing (Section \ref{sec:UnitTesting}) and regression testing (Section \ref{sec:RegressionTesting}). The tests for the prototypes were written in the Python standard library utility \textit{unittest}, and those for the main simulation used the C++ framework \textit{Catch2}.
+Testing is an essential part of writing a simulation. The correctness of the code ensures that the physical model is aptly described. To facilitate the development, a number of coding practices were applied, such as unit testing (Sec. \ref{sec:UnitTesting}) and regression testing (Section \ref{sec:RegressionTesting}). The tests for the prototypes were written in the Python standard library utility \textit{unittest}, and those for the main simulation used the C++ framework \textit{Catch2}.
 
 \subsection{Unit Testing}
 \label{sec:UnitTesting}
@@ -244,6 +242,6 @@ Unit testing refers to the practice of isolating a `unit' of code and testing it
 \subsection{Regression Testing}
 \label{sec:RegressionTesting}
 
-Rerunning the relevant tests in a continuous manner after each update is called regression testing. This ensures that, however many unintended consequences were introduced during the update, the expected behaviour of the program is still intact. This was done by writing a `hook' such that, whenever a piece of code were recompiled, the relevant tests were subsequently compiled and run. With sufficient tests in place, the correctness of the code after the update was assumed.
+Rerunning the relevant tests in a continuous manner after each update is called regression testing. This ensures that, however many unintended consequences were introduced during the update, the expected behaviour of the program is still intact. This was done by writing a `hook' such that, whenever a piece of code were recompiled, the relevant tests were subsequently compiled and run. With sufficient tests in place, the correctness of the code was verified after any modification was done.
 
 
