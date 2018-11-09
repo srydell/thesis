@@ -47,6 +47,8 @@ if __name__ == '__main__':
                 ecolor='gray', elinewidth=2, fmt=f'{color}', marker='.',\
                 linestyle="None", capsize=3, capthick=2)
 
+    plt.xscale("log")
+
     correct_dh = 1.375
     ranges = [0.7 * min(simulation_data.keys()) / system_size, 1.05 * max(simulation_data.keys()) / system_size]
     plt.plot(ranges,

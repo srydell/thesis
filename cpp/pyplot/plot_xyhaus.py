@@ -45,8 +45,8 @@ if __name__ == '__main__':
         n = [num_measurements[i] for i in indices]
         errorbars_dict[u_relbox] = [avg_dh, std_dh, sum(n)]
         if u_relbox == min_relbox:
-            print(f"D_H = {avg_dh:.5f} += {std_dh/sum(n):.0e}")
-            quit()
+            print(f"D_H = {avg_dh:.5f} += {std_dh/np.sqrt(sum(n)):.0e}")
+            # quit()
 
     # :data_dict: dict - Assumed to be {x0: [avg(y0), std(y0), num_measurements(y0)], x1: ...}
     calc.plot_errorbars(errorbars_dict, r"$\bar D_H \pm \sigma_{\bar D_H}$", color=c, axis=plt)
@@ -60,6 +60,7 @@ if __name__ == '__main__':
         l = r"$\frac{" + ln + r"}{" + ld + r"}$"
         labels.append(l)
 
+    plt.xscale("log")
     positions = sorted([ub for ub in unique_rel_boxes])
     plt.xticks(positions,
                labels,
