@@ -33,8 +33,7 @@ if __name__ == '__main__':
     calc.plot_errorbars({1: [d_p, d_p_std, 1]}, label="Prokof'ev and Svistunov", color=const.COLOR_MAP["blue"])
     calc.plot_errorbars({2: [d_bc, d_bc_std, 1]}, label="Box dimension", color=const.COLOR_MAP["black"])
 
-
-    plt.xticks([0, 0.5, 1], [], rotation=45)
+    plt.xticks([0, 1, 2], [], rotation=45)
     plt.legend(loc=1)
     plt.ylabel(r"$D_H$")
     plt.title(rf"Comparison of fractal dimensions on a $3D$ XY lattice")

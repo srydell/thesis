@@ -27,7 +27,7 @@ if __name__ == '__main__':
     d_dg = 1.375
     # scaling result
     d_sc = 1.38
-    d_sc_std = 0.02
+    d_sc_std = 0.002
     # box counting result
     d_bc = 1.35193
     d_bc_std = 5 * 10 ** (-4)

@@ -151,7 +151,7 @@ def bootstrap(fit_func, xdata, ydata, iterations=100):
         for i, sp in enumerate(sampled_pars):
             samples[i].append(sp)
 
-    return {np.average(sample): np.std(sample) for sample in samples}
+    return {np.average(sample): np.std(sample)/np.sqrt(len(sample)) for sample in samples}
 
 def plot_syssize_vs_fit(data_dict):
     """Fit against the function loop_length = system_size^(D_H)
@@ -190,7 +190,7 @@ def plot_syssize_vs_fit(data_dict):
     # colors = ["#966842", "#f44747", "#eedc31", "#7fdb6a", "#0e68ce"]
     plt.loglog(xdata, fit_function(xdata, *opt_parameters),
                c=const.COLOR_MAP["blue"],
-               label=fr"$\propto L^{{ {opt_parameters[1]:.3f} \pm {dh_error:.2f} }}$")
+               label=fr"$\propto L^{{ {opt_parameters[1]:.3f} \pm {dh_error:.3f} }}$")
     plt.loglog(xdata, correct_function(xdata, *correct_opt_parameters),
                c=const.COLOR_MAP["green"],
                label=r"$\propto L^{D_H^G}$")
@@ -199,7 +199,7 @@ def plot_syssize_vs_fit(data_dict):
                c=const.COLOR_MAP["red"],
                label=r"$\propto L^{2}$")
 
-    print(f"D_H = {opt_parameters[1]:.6} +- {dh_error:.2f}")
+    print(f"D_H = {opt_parameters[1]:.4} +- {dh_error:.3f}")
 
 if __name__ == '__main__':
     simulation_data = process_file("./data/loop_lengths128x128.txt")
@@ -225,7 +225,7 @@ if __name__ == '__main__':
     plt.ylabel("Loop length")
     plt.legend()
 
-    savefig=False
+    savefig=True
     if savefig:
         illu.save_figure(f"maximum_loop_length_for_2D_Ising")
-    plt.show()
+    # plt.show()
