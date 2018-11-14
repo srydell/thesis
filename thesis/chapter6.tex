@@ -29,17 +29,17 @@ Figure (\ref{fig:results_boxdimension}) displays the box dimension of the larges
 
 \newpage
 
-A similar approach is used in Fig. (\ref{fig:results_maxloopdimension}), where the scaling dimension of the largest cluster is examined. The largest cluster in terms of number of links is determined over a sequence of system sizes at $T_c$. This is then fitted to produce a scaling exponent of $D_H = 1.38(2)$ compared to the theoretical value $D_H^G = 1.375$ \cite{Duplantier:GeoHausdorff}. This agrees much better with the theoretical value than the box dimension estimate. 
+A similar approach is used in Fig. (\ref{fig:results_maxloopdimension}), where the scaling dimension of the largest cluster is examined. The largest cluster in terms of number of links is determined over a sequence of system sizes at $T_c$. This is then fitted to produce a scaling exponent of $D_H = 1.386(2)$ compared to the theoretical value $D_H^G = 1.375$ \cite{Duplantier:GeoHausdorff}. This agrees much better with the theoretical value than the box dimension estimate. 
 
 % TODO: Kolla felstaplar 0.02
 \begin{figure}[h!]
     \centering
         \includegraphics[width=0.8\textwidth]{figures/maximum_loop_length_for_2D_Ising.pdf}
-    \caption{Log-log plot of the maximum loop length at $T_c$ on an Ising lattice of varying sizes. The measured scaling factor is $1.38(2)$ compared to the theoretical Hausdorff dimension, $D_H^G = 1.375$ \cite{Duplantier:GeoHausdorff}. Good agreement is obtained.}
+    \caption{Log-log plot of the maximum loop length at $T_c$ on an Ising lattice of varying sizes. The measured scaling factor is $1.386(2)$ compared to the theoretical Hausdorff dimension, $D_H^G = 1.375$ \cite{Duplantier:GeoHausdorff}. Good agreement is obtained.}
     \label{fig:results_maxloopdimension}
 \end{figure}
 
-\newpage
+
 
 Figure (\ref{fig:comparsion_2d_lattice_dimensions}) displays a comparison between the two methods showed in Fig. (\ref{fig:results_boxdimension}-\ref{fig:results_maxloopdimension}) together with the dimensions of random and self avoiding walks. The dimensions computed with the scaling and the box counting method show that the shape of the Ising cluster is similar to that of the self avoiding walk. This can be seen further by examining Figure (\ref{fig:largest_cluster_illu}), where an isolated largest cluster on a $128^2$ Ising lattice is shown.
 
@@ -105,18 +105,22 @@ The intersection between all system sizes of average winding number squared is t
     \label{fig:results_windingnumberTcZoomed}
 \end{figure}
 
+
+%TODO: Newpage
 \newpage
 
-When the critical temperature has been computed, the box counting method can be applied to the XY system. Figure (\ref{fig:results_boxdimension_xy}) displays the Hausdorff dimension as a function of the relative size of the box. The smallest box indicates the most exact value, $D_H = 1.7747(8)$, and is compared to data from Prokof'ev and Svistunov, $D_H^P = 1.765(2)$ \cite{Prokofev:comment_on_hove_hausdorff_crit_fluct}, and Hove, Mo and Sudbo, $D_H^S = 2.287(2)$  \cite{Hove:hausdorff_crit_fluctuations}. Good agreement with Prokof'ev and Svistunov, while Hove et al.\ deviates. This discrepancy is presumably caused by the different quantity studied by Hove et al., namely vortex loops and phase representations.
+When the critical temperature has been computed, the box counting method can be applied to the XY system. Figure (\ref{fig:results_boxdimension_xy}) displays the Hausdorff dimension as a function of the relative size of the box. The smallest box indicates the most exact value, $D_H = 1.7747(8)$, and is compared to data from Prokof'ev and Svistunov, $D_H^{PS} = 1.765(2)$ \cite{Prokofev:comment_on_hove_hausdorff_crit_fluct}, and Hove, Mo and Sudbo, $D_H^{HMS} = 2.287(2)$  \cite{Hove:hausdorff_crit_fluctuations}. Good agreement with Prokof'ev and Svistunov, while Hove et al.\ deviates. This discrepancy is presumably caused by the different quantity studied by Hove et al., namely vortex loops and phase representations.
 
 % TODO: loglogplot
 \begin{figure}[h!]
     \centering
         \includegraphics[width=0.8\textwidth]{figures/box_dimension_xy_128x3.pdf}
-    \caption{Hausdorff dimension of the maximum loop length on a $128^3$ XY lattice at $T_c$ using the box dimension. The $x$ axis shows the size of one box relative to the side length of the lattice. Assuming that the smallest box size gives the best approximation, the result is $D_H = 1.7747(8)$. This is compared to data from Prokof'evs and Svistunovs paper $D_H^P = 1.765(2)$ \cite{Prokofev:comment_on_hove_hausdorff_crit_fluct} and Hove, Mo and Sudbo's paper $D_H^S = 2.287(2)$ \cite{Hove:hausdorff_crit_fluctuations}.}
+    \caption{Hausdorff dimension of the maximum loop length on a $128^3$ XY lattice at $T_c$ using the box dimension. The $x$ axis shows the size of one box relative to the side length of the lattice. Assuming that the smallest box size gives the best approximation, the result is $D_H = 1.7747(8)$. This is compared to data from Prokof'evs and Svistunovs paper $D_H^{PS} = 1.765(2)$ \cite{Prokofev:comment_on_hove_hausdorff_crit_fluct} and Hove, Mo and Sudbo's paper $D_H^{HMS} = 2.287(2)$ \cite{Hove:hausdorff_crit_fluctuations}.}
     \label{fig:results_boxdimension_xy}
 \end{figure}
 
+
+%TODO: Newpage
 \newpage
 
 A comparison without the extra data from the larger box sizes is shown in Fig. (\ref{fig:dim_comparison_xy}). The measured dimension from the box counting method closely ressembles that of Prokof'ev and Svistunov.
@@ -128,6 +132,7 @@ A comparison without the extra data from the larger box sizes is shown in Fig. (
     \label{fig:dim_comparison_xy}
 \end{figure}
 
+% TODO: Newpage
 \newpage
 
 Finally, the total energy of the XY lattice is plotted for a sequence of system sizes at $T_c$. The total energy is calculated in the Villain approximation as shown in Eq. (\ref{eq:results_villain_energy}). This scaling coefficient of the energy here is $2.91(9)$, and is therefore close to scaling as the spatial dimension of the system. This is expected since 

@@ -121,7 +121,7 @@ The graph dividing algorithm is defined by the following steps:
 
 \begin{figure}[h!]
     \centering
-        \includegraphics[width=0.8\textwidth]{figures/graphDividing.pdf}
+        \includegraphics[width=0.7\textwidth]{figures/graphDividing.pdf}
     \caption{One step in the graph dividing algorithm where $l_i = 4$. $e^0_i$ and $e^1_i$ are drawn from site $s_i$. Summed permutations of $\{e^0_i, e^1_i\}$ give the starts for the next boxes. The next iteration of boxes are shown via the dividing dotted lines.}
     \label{fig:graphdividingalgo}
 \end{figure}
@@ -130,10 +130,14 @@ This algorithm can be written to perform in linear time, as can be seen in Fig. 
 
 \begin{figure}[h!]
     \centering
-        \includegraphics[width=0.8\textwidth]{figures/bench_graph_div.pdf}
-    \caption{Loglog plot of a benchmark of the graph dividing algorithm. The y-axis show the time taken to perform one full graph divide normalized against the smallest time value.}
+        \includegraphics[width=0.7\textwidth]{figures/bench_graph_div.pdf}
+    \caption{Loglog plot of a benchmark of the graph dividing algorithm. The y-axis show the time taken to perform one full graph divide normalized with the smallest time value.}
     \label{fig:bench_graphdiv}
 \end{figure}
+
+%TODO: Newpage
+\newpage
+
 
 \section{Error Estimation}
 \label{sec:ErrorEst}

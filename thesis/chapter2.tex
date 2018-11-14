@@ -13,6 +13,9 @@ The energy of an Ising spin configuration is given by the Hamiltonian
 
 \noindent where $J$ is the bond strength in the lattice and $\langle ij \rangle$ refers to a pariwise interaction between nearest neighbours only.
 
+%TODO: Newpage
+\newpage
+
 \subsection{Loop expansion}
 \label{subsec:IsingLoopExpansion}
 
@@ -55,6 +58,20 @@ In a $2D$ lattice with $N$ spins and periodic boundary conditions there are $2N$
 
 \noindent where the sums $\sum_{l=L}$ should be interpreted as the sum over all sets where the link length is $L$. The link length is the number of coupling terms $S_i S_j$ as can be seen in Fig. (\ref{fig:LinkIsing}).
 
+
+Since $\sum_{S_i = \pm 1} S_i = 0$, only terms with an even number of $S_i$ are contributing to $Z'$. Call these terms closed, indicating that they represent a closed loop. The sum over all contributing terms gives a factor of $2^N$. Rewriting $Z'$ in terms of loop lengths gives
+
+\begin{equation}
+    Z' = \sum_L g(L) T^L
+\end{equation}
+
+\noindent where $g(L)$ is the number of loops with length $L$. Finally, the partition function can be written as
+
+\begin{equation}
+    Z = 2^N \cosh^{2N} (K) \sum_L g(L) T^L
+\end{equation}
+
+
 \begin{figure}[h!]
     \begin{subfigure}{.5\linewidth}
         \centering
@@ -78,19 +95,8 @@ In a $2D$ lattice with $N$ spins and periodic boundary conditions there are $2N$
     \label{fig:LinkIsing}
 \end{figure}
 
-Since $\sum_{S_i = \pm 1} S_i = 0$, only terms with an even number of $S_i$ are contributing to $Z'$. Call these terms closed, indicating that they represent a closed loop. The sum over all contributing terms gives a factor of $2^N$.
-
-Rewriting $Z'$ in terms of loop lengths gives
-
-\begin{equation}
-    Z' = \sum_L g(L) T^L
-\end{equation}
-
-\noindent where $g(L)$ is the number of loops with length $L$. Finally, the partition function can be written as
-
-\begin{equation}
-    Z = 2^N \cosh^{2N} (K) \sum_L g(L) T^L
-\end{equation}
+%TODO: Newpage
+\newpage
 
 \subsection{Correlation Function}
 \label{subsec:CorrelationFunction}
@@ -136,6 +142,9 @@ The partition function is therefore
 \end{equation}
 
 \noindent where $K = J \beta$.
+
+%TODO: Newpage
+\newpage
 
 \subsection{Loop expansion}
 \label{subsec:XYLoopexp}
@@ -230,6 +239,10 @@ F = - T \ln(Z) \Rightarrow F'' = T \left(\left(\frac{Z'}{Z}\right) - \left( \fra
 \label{eq:xypart3}
 \end{align}
 
+
+%TODO: Newpage
+\newpage
+
 \noindent where in the last step
 
 \begin{align}
@@ -251,6 +264,10 @@ Geometrically this describes the net number of times the loop crosses the system
     \caption{Three flux clusters on a square lattice. The straight link current percolates the system with $W_x = +1, \ W_y = 0$ and the other two loops do not percolate and therefore has the winding numbers $W_x = 0, \ W_y = 0$.}
     \label{fig:fluxpercolation}
 \end{figure}
+
+
+%TODO: Newpage
+\newpage
 
 Using the definition (\ref{eq:defwinding}) for the winding number in the partition function in Eq. (\ref{eq:xypart3}) yields
 
@@ -278,7 +295,7 @@ The superfluid density can finally be determined as
     \rho_s = L^{2 - d} T \langle W_\mu^2 \rangle 
 \end{equation}
 
-This can be used to determine the critical temperature by varying the temperature and system size $L$ as the superfluid density is expected to drop sharply to zero at $T_c$. 
+\noindent This can be used to determine the critical temperature by varying the temperature and system size $L$ as the superfluid density is expected to drop sharply to zero at $T_c$. 
 
 \subsection{Villain approximation}
 \label{subsec:villainApprox}
@@ -290,7 +307,7 @@ In the Villain model the Hamiltonian has the form \cite{Villain:VillainOriginalP
     H = \sum_{ij} V_{ij}( \theta_i - \theta_j)
 \end{equation}
 
-By taking
+\noindent By taking
 
 \begin{align}
     V_{ij}( \theta_i - \theta_j) &= -J \cos ( \theta_i - \theta_j)
@@ -298,9 +315,7 @@ By taking
 
 \noindent the XY model in Eq. (\ref{eq:xymodel}) is recovered.
 
-The Villain approximation consists of replacing the interaction with a periodic Gaussian function \cite{Villain:VillainOriginalPaper}.
-
-Through a series of transformations the energy in this approximation can be written as \cite{Jos:VillainExtended}
+The Villain approximation consists of replacing the interaction with a periodic Gaussian function \cite{Villain:VillainOriginalPaper}. Through a series of transformations the energy in this approximation can be written as \cite{Jos:VillainExtended}
 
 \begin{equation}
     E = \frac{1}{2} \sum_i J_i^2
@@ -320,21 +335,19 @@ Through a series of transformations the energy in this approximation can be writ
 \subsection{Finite Size Scaling}
 \label{subsec:xyenergyScaling}
 
-The number of particles in a typical physical sample is close in orders of magnitude to Avogadro's number $N_A \sim 10^{23}$, much larger than that of a normal simulated system. Finite size scaling is a way to relate the results from simulations on smaller latices to that of larger, physical systems. When scaling the system by some factor $l$, the singular part of the free-energy density is assumed to scale as \cite{Plischke:EqStatMech}
+The number of particles in a typical physical sample is close in orders of magnitude to Avogadro's number $N_A \sim 10^{23}$, much larger than that of a normal simulated system. Finite size scaling is a way to relate the results from simulations on smaller lattices to that of larger, physical systems. When scaling the system by some factor $l$, the singular part of the free-energy density is assumed to scale as \cite{Plischke:EqStatMech}
 
 \begin{equation}
     f_s(t, L^{-1}) = l^{-d} f_s( l^{y_t} t, l L^{-1})
 \end{equation}
 
-\noindent where $t = (T - T_c) / T_c$, and $L$ is the linear system size. By choosing $l = L$ the free energy only depends on $t$, and the scaling behaviour of any thermodynamic quantity, describable by the free energy, can be determined. The scaling behaviour of the heat capacity is \cite{Plischke:EqStatMech}
+\noindent where $t = (T - T_c) / T_c$, and $L$ is the linear system size, for a system without an external magnetic field. By choosing $l = L$ the free energy only depends on $t$, and the scaling behaviour of any thermodynamic quantity, describable by the free energy, can be determined. The scaling behaviour of the heat capacity is \cite{Plischke:EqStatMech}
 
 \begin{equation}
     C = \frac{e}{t} = \tilde a t^{-\alpha} + \tilde b
 \end{equation}
 
-\noindent where $t = |T - T_c|$, $\alpha = -0.01$, and $\tilde a, \ \tilde b$ are some constants.
-
-Therefore, the energy per site, $e$ is
+\noindent where $t = |T - T_c|$, $\alpha = -0.01$, and $\tilde a, \ \tilde b$ are some constants. Therefore, the energy per site, $e$ is
 
 \begin{equation}
     e = a t^{1 - \alpha} + b
@@ -351,17 +364,13 @@ Therefore, the energy per site, $e$ is
 \section{Hausdorff dimension}
 \label{sec:hausdorffdimension}
 
-This section introduces the Hausdorff measure which can be used to rigorously define the Hausdorff dimension.
-
-Let $X$ be a metric space, $\alpha$ be some positive real number, then the $\alpha$-Hausdorff measure of a subset $A \subset X$ is defined as 
+This section introduces the Hausdorff measure which can be used to rigorously define the Hausdorff dimension. Let $X$ be a metric space, $\alpha$ be some positive real number, then the $\alpha$-Hausdorff measure of a subset $A \subset X$ is defined as 
 
 \begin{equation}
     \mathcal{H}^{\delta}_\alpha (A) = \inf \left \{ \sum_{B \in \mathcal{B}} \left ( \text{diam}(B) \right)^\alpha \right \}
 \end{equation}
 
-\noindent where $\mathcal{B}$ is a cover of $A$ of closed balls with diameter no larger than $\delta$ \cite{Heinonen:HausdorffDimMath}.
-
-Taking the limit where $\delta \to 0$, the number of possible covers decreases. Since the limit is bounded from below, the limit exists \cite{Rudin:PrincMathAnalysis} and
+\noindent where $\mathcal{B}$ is a cover of $A$ of closed balls with diameter no larger than $\delta$ \cite{Heinonen:HausdorffDimMath}. Taking the limit where $\delta \to 0$, the number of possible covers decreases. Since the limit is bounded from below, the limit exists \cite{Rudin:PrincMathAnalysis} and
 
 \begin{equation}
     \lim_{\delta \to 0} \mathcal{H}^{\delta}_{\alpha} (A) = \mathcal{H}_\alpha (A) \in [0, \infty )
@@ -396,13 +405,16 @@ Given some subset $A$ of a metric space $X$, let $N(\epsilon)$ be the number of 
     d = \lim_{\epsilon \to 0} \frac{\ln N(\epsilon)}{\ln 1 / \epsilon}
 \end{equation}
 
-\noindent if the limit exists.
-
-For intuition it helps to look at some examples. If $A$ is a smooth line of length $l$, then the number of boxes needed to cover $A$ scales as
+\noindent if the limit exists. For intuition it helps to look at some examples. If $A$ is a smooth line of length $l$, then the number of boxes needed to cover $A$ scales as
 
 \begin{equation}
     N_l(\epsilon) \propto \frac{L}{\epsilon}
 \end{equation}
+
+
+%TODO: Newpage
+\newpage
+
 
 \noindent while for some two dimensional region with area $\Lambda$ the boxes needed is
 
@@ -416,10 +428,7 @@ For intuition it helps to look at some examples. If $A$ is a smooth line of leng
     N (\epsilon) \propto \frac{1}{\epsilon^d} \Rightarrow d = \frac{\ln N(\epsilon)}{\ln 1 / \epsilon}
 \end{equation}
 
-Note that the box dimension and the Hausdorff dimension coincides for fractals that satisfy the open set condition \cite{Falconer:RelHausdorffBox}.
-
-The open set condition says that for a sequence of contractions $c_1, c_2, ..., c_m$ there exists a nonempty open set $V$ such that \cite{Bandt:OSC}
-
+Note that the box dimension and the Hausdorff dimension coincides for fractals that satisfy the open set condition \cite{Falconer:RelHausdorffBox}. The open set condition \cite{Bandt:OSC} says that for a sequence of contractions $c_1, c_2, ..., c_m$ there exists a nonempty open set $V$ such that
 \begin{equation}
     \cup_{i = 1}^m c_i(V) \subset V, \ \text{and} \ c_i(V) \cap c_j(V) = \emptyset \ \text{for} \ i \neq j
 \end{equation}
@@ -430,7 +439,7 @@ The open set condition says that for a sequence of contractions $c_1, c_2, ..., 
     |f(x) - f(y)| < |x - y|
 \end{equation}
 
-Intuitively, this means that the images $c_i(V)$ do not overlap.
+\noindent Intuitively, this means that the images $c_i(V)$ do not overlap.
 
 \subsection{Scaling Dimension}
 \label{subsec:ScalingDimension}
@@ -441,8 +450,6 @@ Another way of determining the Hausdorff dimension is to consider a scaling syst
     N = L^{D_H}
 \end{equation}
 
-\noindent where $N$ is the number of links in the largest cluster, $L$ is the linear system length and $D_H$ is the Hausdorff dimension.
-
-This relation provides a convenient way of calculating the dimension of loop configurations in simulations.
+\noindent where $N$ is the number of links in the largest cluster, $L$ is the linear system length and $D_H$ is the Hausdorff dimension. This relation provides a convenient way of calculating the dimension of loop configurations in simulations.
 
 

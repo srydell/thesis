@@ -1,4 +1,4 @@
-This chapter introduces the notion of fractal dimension in terms of a scaling property, and as a graph filling measure. The models and algorithms used in this thesis are briefly discussed.
+This chapter first introduces the notion of fractal dimension in terms of a scaling property, as well as a graph filling measure. The models and algorithms used in this thesis are thereafter introduced.
 
 \section{Fractal dimension}
 
@@ -28,7 +28,7 @@ The box counting method used in this thesis ressembles the method used in Eq. (\
     d = \lim_{\epsilon \to 0} \frac{\ln N(\epsilon)}{\ln 1 / \epsilon}
 \end{equation}
 
-where $N(\epsilon)$ is the number of boxes with side length $\epsilon$ needed to cover the fractal \cite{strogatz:dynamics_chaos}. Hence, this is limited by the dimension of each box. This also says something about how a curve that fully covers the plane will have a dimension of $2$, and analogously a curve which covers the whole room will have a dimension of $3$.
+\noindent where $N(\epsilon)$ is the number of boxes with side length $\epsilon$ needed to cover the fractal \cite{strogatz:dynamics_chaos}. Hence, this is limited by the dimension of each box. This also says something about how a curve that fully covers the plane will have a dimension of $2$, and analogously a curve which covers the whole room will have a dimension of $3$.
 
 In condensed matter physics, a lot of simulations operates on a lattice of spins, representing for example atoms in a grid. It is often the case that the models are too large or too complicated to be solved by hand and therefore computational simulations are needed. In 2001 an algorithm called the Worm algorithm was proposed \cite{Prokofev:first_worm_algorithm}. Instead of operating on individual spins, it generates spin configurations by `connecting' lattice sites together. This algorithm then generates a set of objects which have fractal like properties \cite{Duplantier:GeoHausdorff}. 
 
