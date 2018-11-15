@@ -34,3 +34,5 @@ python/venv/*
 !thesis/
 !python/
 !presentation/
+cpp/pyplot/plots/3dxy_largest_cluster.gif
+cpp/pyplot/plots/3dxy_largest_cluster.pdf
