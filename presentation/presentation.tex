@@ -30,7 +30,7 @@
 \date{\today}
 \date{}
 \author{Simon Rydell}
-\institute{Royal Institute of Technology, Stockholm}
+\institute{Royal Institute of Technology, Stockholm \\ \\ bit.ly/2qGMGnR}
 % \titlegraphic{\hfill\includegraphics[height=1.5cm]{logo.pdf}}
 
 \begin{document}
@@ -43,7 +43,7 @@
 % My name is Simon Rydell and this is my master thesis that was made here for the last 8 months. It is called \title and I will start off by giving a small overview of what I will present. Unfortunately, the paper is not back from the printing yet so I've provided a link in the footnote of all the slides.
 
 % Random and self avoiding walks are commonplace in computational physics, where its used for everything from brownian motion to protein folding. Relating these walks to a lattice is often done to simplify the computer simulations, and spin models are often used for relating them to physical particle systems. One way to think about these structures is then as clusters of parallel spins, and this has been studied extensively.
-% Here we will do something more profound, it turns out that the partition function of the dual transformation of these spin models have a geometric interpretation. We will take a look at classifying these structures as fractals, and especially using the Hausdorff dimension. We will see two common spin models, the Ising and the XY model, and finally I will compare out results to literature.
+% Here we will do something more profound, it turns out that the partition function of the dual transformation of these spin models have a geometric interpretation. We will take a look at classifying these structures as fractals, and especially using the Hausdorff dimension. We will see two common spin models, the Ising and the XY model, and finally I will compare our results to literature.
 \begin{frame}{Introduction}
 % First row
     \begin{columns}[c]
@@ -312,6 +312,8 @@
         \centering
             \includegraphics[width=0.8\textwidth]{figures/maximum_loop_length_for_2D_Ising.pdf}
     \end{figure}
+\footnotesize [1] B. Duplantier, Conformally Invariant Fractals and Potential Theory, Physical Review Letters 84, 1363 (2000).
+\\
     \blfootnote{bit.ly/2qGMGnR}
 \end{frame}
 
@@ -321,6 +323,8 @@
         \centering
             \includegraphics[width=0.8\textwidth]{figures/box_dim_128x128Ising.pdf}
     \end{figure}
+\footnotesize [1] B. Duplantier, Conformally Invariant Fractals and Potential Theory, Physical Review Letters 84, 1363 (2000).
+\\
     \blfootnote{bit.ly/2qGMGnR}
 \end{frame}
 
@@ -359,7 +363,7 @@
 
 \begin{frame}{$2D$ Ising Animation}
     % TODO: Uncomment
-     %\animategraphics[width=\linewidth,loop]{10}{figures/2dising_animation}{}{}
+     \animategraphics[width=\linewidth,loop]{10}{figures/2dising_animation}{}{}
      \blfootnote{bit.ly/2qGMGnR}
 \end{frame}
 
@@ -402,7 +406,7 @@
 % So here is a completely blank system, where no configurations have been formed. As you can see there are periodic boundary conditions and the size of each arrow represents the weight between the two sites.
 \begin{frame}{$3D$ XY Animation - $4^3$ system}
 % TODO: Uncomment
-   %\animategraphics[width=\linewidth,loop]{10}{figures/3dxy_animation}{}{}
+   \animategraphics[width=\linewidth,loop]{10}{figures/3dxy_animation}{}{}
    \blfootnote{bit.ly/2qGMGnR}
 \end{frame}
 
@@ -483,7 +487,7 @@
 % So here is a 64^3 system where the sites that are linked in the largest cluster is highlighted in red. So this lattice would then be divided into boxes and checked what the minimal cover is.
 \begin{frame}{$3D$ XY Animation - Largest cluster}
 % TODO: Uncomment
-   %\animategraphics[width=\linewidth,loop]{10}{figures/3dxy_largest_cluster}{}{}
+   \animategraphics[width=\linewidth,loop]{10}{figures/3dxy_largest_cluster}{}{}
    \blfootnote{bit.ly/2qGMGnR}
 \end{frame}
 
