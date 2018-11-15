@@ -1,5 +1,12 @@
 \beamer@endinputifotherversion {3.36pt}
+<<<<<<< HEAD
 \beamer@sectionintoc {1}{Ways of defining fractal dimension}{4}{0}{1}
 \beamer@sectionintoc {2}{Algorithms for Working with Graph Patterns}{11}{0}{2}
 \beamer@sectionintoc {3}{Ising Model}{14}{0}{3}
 \beamer@sectionintoc {4}{XY Model}{22}{0}{4}
+=======
+\beamer@sectionintoc {1}{Fractals}{3}{0}{1}
+\beamer@sectionintoc {2}{Algorithms for Working with Graph Patterns}{12}{0}{2}
+\beamer@sectionintoc {3}{Ising Model}{15}{0}{3}
+\beamer@sectionintoc {4}{XY Model}{23}{0}{4}
+>>>>>>> d9e99dc5bf7f785c05e444320acf2830993db4a3
