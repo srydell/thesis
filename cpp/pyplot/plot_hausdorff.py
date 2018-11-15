@@ -54,7 +54,7 @@ if __name__ == '__main__':
     plt.plot(ranges,
              [correct_dh, correct_dh],
              c=const.COLOR_MAP["green"],
-             label=rf"$D_H^G = {correct_dh}$")
+             label=rf"$D_H^G = {correct_dh}" + r"{}^{[1]}$")
 
     # Ugly way of getting the [(1, 64), (1, 32), ...]
     fractions = list(reversed(sorted([(k/system_size).as_integer_ratio() for k in simulation_data])))

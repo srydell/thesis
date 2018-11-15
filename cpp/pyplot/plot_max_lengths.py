@@ -193,7 +193,7 @@ def plot_syssize_vs_fit(data_dict):
                label=fr"$\propto L^{{ {opt_parameters[1]:.3f} \pm {dh_error:.3f} }}$")
     plt.loglog(xdata, correct_function(xdata, *correct_opt_parameters),
                c=const.COLOR_MAP["green"],
-               label=r"$\propto L^{D_H^G}$")
+               label=r"$\propto L^{D_H^G}{}^{[1]}$")
 
     plt.loglog(xdata, [w*8.3 for w in wrong_function(xdata, *wrong_opt_parameters)],
                c=const.COLOR_MAP["red"],
@@ -225,7 +225,7 @@ if __name__ == '__main__':
     plt.ylabel("Loop length")
     plt.legend()
 
-    savefig=True
+    savefig=False
     if savefig:
         illu.save_figure(f"maximum_loop_length_for_2D_Ising")
-    # plt.show()
+    plt.show()
